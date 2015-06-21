@@ -1,0 +1,130 @@
+<?php
+namespace App\Http\Controllers\Auth;
+
+use App\User;
+use Auth;
+use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Http\Request;
+
+
+class AuthController extends Controller {
+
+  public function __construct()
+  {
+    $this->middleware('guest', ['except' => ['confirm', 'getLogout']]);
+  }
+
+    public function getRegister()
+    {
+      return view('auth/register');
+    }
+
+
+    public function store()
+    {
+
+        $validator = \Validator::make(\Input::all(), [
+                    'fname' => 'required|max:30|alpha',
+                    'lanme' => 'reqyured|max:30|alpha',
+                    'email' => 'required|email|max:255|unique:users',
+                    'password' => 'required|confirmed|min:6',
+                    'account_type' => 'required|integer|min:1|max:3',
+                    'terms_conditions' => 'required|accepted'
+                ]);
+
+        if($validator->fails())
+        {
+            return \Redirect::back()->withErrors($validator)->withInput(\Input::except('password', 'password_confirmation', 'terms_conditions'));
+        }
+
+        $confirmation_code = str_random(30);
+
+        User::create([
+          'fname' => \Input::get('fname'),
+          'lname' => \Input::get('lname'),
+            'email' => \Input::get('email'),
+            'password' => bcrypt(\Input::get('password')),
+            'account_type' => \Input::get('account_type'),
+            'activation_hash' => $confirmation_code,
+            'user_active' => 0
+        ]);
+
+        \Mail::send('emails.verify', array('confirmation_code' => $confirmation_code, 'name' => \Input::get('fname').' '.\Input::get('lname')), function($message) {
+            $message->to(\Input::get('email'), \Input::get('fname').' '.\Input::get('lname'))->subject('Activate your account')->from('no-reply@lextutorexchange.com','Lexington Tutor Exchange');
+        });
+        \Session::flash('status', 'Thanks for signing up! Please check your email.');
+
+        return redirect('home');
+    }
+
+    public function confirm($confirmation_code)
+    {
+       if( ! $confirmation_code)
+       {
+         return redirect('auth/login');
+       }
+
+       $user = User::where('activation_hash', $confirmation_code)->first();
+
+       if ( ! $user)
+       {
+         return redirect('auth/login');
+       }
+
+       $user->user_active = 1;
+       $user->activation_hash = null;
+       $user->save();
+
+       \Session::flash('status', 'You have successfully verified your account.');
+
+       return redirect('auth/login');
+   }
+
+   public function getLogin()
+   {
+     return view('auth/login');
+   }
+
+
+   public function postLogin()
+  {
+      $rules = [
+          'email' => 'required|exists:users',
+          'password' => 'required'
+      ];
+
+      $input = \Input::only('email', 'password');
+
+      $validator = \Validator::make($input, $rules);
+
+      if($validator->fails())
+      {
+          return \Redirect::back()->withInput()->withErrors($validator);
+      }
+
+      $credentials = [
+          'email' => \Input::get('email'),
+          'password' => \Input::get('password'),
+          'user_active' => 1
+      ];
+
+      if (!Auth::attempt($credentials, \Input::get('remember')))
+      {
+          return \Redirect::back()
+              ->withInput()
+              ->withErrors([
+                  'credentials' => 'We were unable to sign you in. Please double check your email/password and make sure you already activated your account.'
+              ]);
+      }
+
+      \Session::flash('status', 'Welcome back!');
+      return redirect()->intended('user/dashboard');
+  }
+
+  public function getLogout()
+  {
+    Auth::logout();
+    return redirect('home');
+  }
+}
