@@ -76,16 +76,15 @@ class SearchController extends Controller
         $classes = array();
 
         if (!empty($form_inputs['classes'])) $classes = $form_inputs['classes'];
-
-              $search = $search->where(function ($query) use($form_inputs, $selected, $classes){
-
-              $query->where('tutor_active', '1')->where(function ($query) use($form_inputs, $selected, $classes){
+              //create seach query, pass in $selected by refrence
+              $search = $search->where(function ($query) use($form_inputs, &$selected, $classes){
+              $query->where('tutor_active', '1')->where(function ($query) use($form_inputs, &$selected, $classes){
 
                 foreach($classes as $class_id)
                 {
                   if (!empty($form_inputs['class_'.$class_id]))
                   {
-                    $query->orWhere(function ($query) use($class_id, $form_inputs, $selected){
+                    $query->orWhere(function ($query) use($class_id, $form_inputs, &$selected){
 
                     $query->where('levels.class_id', $class_id);
                     $query->where('levels.level_num', '>=', $form_inputs['class_'.$class_id]);
@@ -99,6 +98,8 @@ class SearchController extends Controller
        //user_id's who match criteria for array
        $tutors_id = $search->get()->pluck('user_id')->all();
 
+       //collection of user ids and class_matches
+       $id_count_collection = $search->get()->keyBy('user_id');
 
        if (!empty($tutors_id))
        {
@@ -106,9 +107,17 @@ class SearchController extends Controller
        $results = \App\Tutor::tutorinfo($tutors_id)
        ->orderByRaw(\DB::raw("FIELD(user_id, $ids)"))
        ->paginate(15);
+
+       foreach($results as $tutor)
+       {
+         $id = $tutor->user_id;
+         if ($selected < 1) $percent_match = 100;
+         else $percent_match = number_format(($id_count_collection->get($id)->class_matches/$selected)*100, 0);
+         $tutor->percent_match = $percent_match;
+       }
+
       }
       else $results = collect(array());
-
        return view('search/showresults', ['results' => $results]);
      }
 
