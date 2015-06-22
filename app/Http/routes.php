@@ -16,7 +16,8 @@ return redirect('home');
 });
 
 Route::get('search/index', 'SearchController@index');
-Route::any('search/showresults', 'SearchController@showresults');
+Route::post('search/index', 'SearchController@search');
+Route::get('search/showresults', 'SearchController@showresults');
 
 Route::get('home', 'HomeController@index');
 

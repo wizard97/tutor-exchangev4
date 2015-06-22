@@ -17,4 +17,12 @@ class Tutor extends Model
     {
       return $this->hasMany('App\TutorLevel', 'user_id', 'user_id');
     }
+
+    public function scopeTutorInfo($query, $user_ids)
+    {
+      return $query->join('users', 'users.id', '=', 'tutors.user_id')
+      ->whereIn('id', $user_ids)
+      ->select('tutors.*', 'users.*');
+    }
+
 }

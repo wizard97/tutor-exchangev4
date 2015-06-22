@@ -31,7 +31,7 @@
 </ul>
 
 
-<form method="POST" action="/search/showresults">
+<form method="POST" action="/search/index">
 {!! csrf_field() !!}
 
 <div class="tab-content">
@@ -42,7 +42,7 @@
               <label for="start_rate">Price range</label>
               <div class="row">
               <div class="col-xs-4">
-              <input type="number" class="form-control" name="start_rate" id="start_rate" size="5" maxlength="3" placeholder="min"  min="0">
+              <input type="number" class="form-control" name="start_rate" id="start_rate" size="5" maxlength="3" placeholder="min">
               </div>
                <div class="col-xs-4">
               <input class="form-control" type="number" name="end_rate" id="end_rate" size="5" maxlength="3" min="1" placeholder="max">

@@ -9,6 +9,12 @@ use App\Http\Controllers\Controller;
 
 class SearchController extends Controller
 {
+
+  public function __construct(Request $request)
+  {
+    $request->session()->keep(['tutor_search_inputs']);
+  }
+
     /**
      * Display a listing of the resource.
      *
@@ -28,9 +34,18 @@ class SearchController extends Controller
      *
      * @return Response
      */
-    public function create()
+    public function search(Request $request)
     {
-        //
+      $this->validate($request, [
+      'start_rate' => 'min:0|numeric',
+      'end_rate' => 'min:0|numeric',
+      ]);
+      $input = $request->all();
+      //flash form data into session
+
+      $request->session()->flash('tutor_search_inputs', $input);
+
+    return redirect('search/showresults');
     }
 
     /**
@@ -52,31 +67,51 @@ class SearchController extends Controller
      public function showresults(Request $request)
      {
        //get the classes and levels, and join that on the tutor_levels table
-      $search = \DB::table('levels')
-              ->join('tutor_levels', 'levels.id', '=', 'tutor_levels.level_id')
-              ->join('tutors', 'tutors.user_id', '=', 'tutor_levels.user_id')
-              ->join('users', 'tutors.user_id', '=', 'users.id')
-              ->select(\DB::raw('count(*) as class_matches, tutors.*, users.*'));
-
+      $search = \App\Level::findtutors();
         //loop thorugh the form inputs
-       if ($request->has('classes') && is_array($request->input('classes'))) {
-         $classes = $request->input('classes');
+        $selected = 0;
 
-          foreach($classes as $class_id)
-          {
-            if ($request->has('class_'.$class_id))
-            {
-              $search = $search->orWhere(function ($query) use($class_id, $request){
-                $query->where('levels.class_id', $class_id)
-                      ->where('levels.level_num', '>=', $request->input('class_'.$class_id));
+        //get the search inputs from the session
+        $form_inputs = $request->session()->get('tutor_search_inputs');
+        $classes = array();
+
+        if (!empty($form_inputs['classes'])) $classes = $form_inputs['classes'];
+
+              $search = $search->where(function ($query) use($form_inputs, $selected, $classes){
+
+              $query->where('tutor_active', '1')->where(function ($query) use($form_inputs, $selected, $classes){
+
+                foreach($classes as $class_id)
+                {
+                  if (!empty($form_inputs['class_'.$class_id]))
+                  {
+                    $query->orWhere(function ($query) use($class_id, $form_inputs, $selected){
+
+                    $query->where('levels.class_id', $class_id);
+                    $query->where('levels.level_num', '>=', $form_inputs['class_'.$class_id]);
+                    $selected++;
+                    });
+                  }
+                }
+
+              });
             });
-            }
-          }
-       }
-       //find a way to efficiently use paginate
-       $results = $search->where('tutor_active', '1')->groupBy('tutor_levels.user_id')->orderBy('class_matches', 'desc')->paginate(15);
+       //user_id's who match criteria for array
+       $tutors_id = $search->get()->pluck('user_id')->all();
+
+
+       if (!empty($tutors_id))
+       {
+       $ids = implode(',', $tutors_id);
+       $results = \App\Tutor::tutorinfo($tutors_id)
+       ->orderByRaw(\DB::raw("FIELD(user_id, $ids)"))
+       ->paginate(15);
+      }
+      else $results = collect(array());
+
        return view('search/showresults', ['results' => $results]);
      }
+
 
 
     /**
