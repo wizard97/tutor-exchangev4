@@ -19,6 +19,7 @@
         <th>Age</th>
         <th>Hourly Rate</th>
         <th>Tutor Type</th>
+        <th>Percent Match</th>
         <th>Reviews</th>
         <th>Options</th>
 
@@ -56,6 +57,16 @@
       @if($tutor->account_type > 2) Professional Tutor
       @else Standard Tutor
       @endif
+    </td>
+
+    <td class="vert-align">
+      <div class="progress vert-align">
+        <div class="progress-bar progress-bar-primary
+        @if($tutor->percent_match > 60) progress-bar-primary
+        @elseif($tutor->percent_match > 30) progress-bar-warning
+        @else progress-bar-danger
+        @endif
+        " role="progressbar" aria-valuenow="{{ $tutor->percent_match }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $tutor->percent_match }}%">{{ $tutor->percent_match }}%</div>
     </td>
 
     <td class="vert-align">
