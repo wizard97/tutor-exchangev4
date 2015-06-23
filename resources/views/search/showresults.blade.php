@@ -72,9 +72,11 @@
     <td class="vert-align">
       <span class="text-nowrap">
         <span style="font-size: 18px">
-          <i style="color: #FEC601" class="fa fa-star"></i><i style="color: #FEC601" class="fa fa-star"></i><i style="color: #FEC601" class="fa fa-star"></i><i style="color: #FEC601" class="fa fa-star"></i><i style="color: #FEC601" class="fa fa-star"></i>
+@for($i = 0; $i < $tutor->star_count; $i++)<i style="color: #FEC601" class="fa fa-star"></i>@endfor
+@if($tutor->half_star)<i style="color: #FEC601" class="fa fa-star-half-o"></i>@endif
+@for($i = 0; $i < $tutor->empty_stars; $i++)<i style="color: #FEC601" class="fa fa-star-o"></i>@endfor
         </span>
-       (<span class="text-primary"><a href="/search/showtutorprofile/{{ $tutor->id }}"></a></span>)
+       (<span class="text-primary"><a href="/search/showtutorprofile/{{ $tutor->id }}#reviews">{{ $tutor->num_reviews }}</a></span>)
      </span>
     </td>
 

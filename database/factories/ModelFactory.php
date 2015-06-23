@@ -41,3 +41,18 @@ $factory->define(App\Tutor::class, function ($faker) {
 
     ];
 });
+
+
+$factory->define(App\Review::class, function ($faker) {
+    $stud_or_par = rand(0, 1);
+    if ($stud_or_par) $reviewer = 'Student';
+    else $reviewer = 'Parent';
+    return [
+        'reviewer_id' => rand(0, 50),
+        'rating' => rand(1, 5),
+        'title' => $faker->text($maxNbChars = 100),
+        'message' => $faker->paragraph($nbSentences = 7) ,
+        'anonymous' => rand(0, 1),
+        'reviewer' => $reviewer,
+    ];
+});

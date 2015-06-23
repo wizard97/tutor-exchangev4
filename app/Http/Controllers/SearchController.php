@@ -95,11 +95,12 @@ class SearchController extends Controller
 
               });
             });
-       //user_id's who match criteria for array
-       $tutors_id = $search->get()->pluck('user_id')->all();
 
-       //collection of user ids and class_matches
-       $id_count_collection = $search->get()->keyBy('user_id');
+       //array with key user ids, containing an object of id and sqlcount
+       $id_count = $search->get()->keyBy('user_id')->toArray();
+
+       //user_id's who match criteria for array
+       $tutors_id = array_keys($id_count);
 
        if (!empty($tutors_id))
        {
@@ -108,17 +109,12 @@ class SearchController extends Controller
        ->orderByRaw(\DB::raw("FIELD(user_id, $ids)"))
        ->paginate(15);
 
-       foreach($results as $tutor)
-       {
-         $id = $tutor->user_id;
-         if ($selected < 1) $percent_match = 100;
-         else $percent_match = number_format(($id_count_collection->get($id)->class_matches/$selected)*100, 0);
-         $tutor->percent_match = $percent_match;
-       }
-
+       //results passed by reference, function adds tutor classes and reviews
+       \App\Tutor::add_classes_reviews($results, $selected, $id_count);
       }
       else $results = collect(array());
-       return view('search/showresults', ['results' => $results]);
+      
+      return view('search/showresults', ['results' => $results]);
      }
 
 
