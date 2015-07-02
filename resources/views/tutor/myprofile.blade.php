@@ -17,7 +17,7 @@
   <div class="col-md-3">
 
     <div class="row">
-      <img src="{{ $tutor->has_picture }}" width="300" height="300" class="img-thumbnail img-responsive center-block">
+      <img src="http://lextutorexchange.com/public/avatars/1.jpg" width="300" height="300" class="img-thumbnail img-responsive center-block">
     </div>
 
   <div class="row">

@@ -16,10 +16,8 @@ return redirect('home');
 });
 
 Route::get('home', 'HomeController@index');
-Route::get('test', function()
-{
-    return View::make('test');
-});
+Route::get('about', function() { return View::make('about'); });
+Route::get('contact', function() { return View::make('contact'); });
 
 //search
 Route::get('search/index', 'SearchController@index');
