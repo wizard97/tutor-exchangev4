@@ -15,7 +15,9 @@ class Tutor extends Model
 
     public function classes()
     {
-      return $this->hasMany('App\TutorLevel', 'user_id', 'user_id');
+      return $this->hasMany('App\TutorLevel', 'user_id', 'user_id')
+      ->join('levels', 'tutor_levels.level_id', '=', 'levels.id')
+      ->join('classes', 'levels.class_id', '=', 'classes.id');
     }
 
     public function reviews()
@@ -28,14 +30,16 @@ class Tutor extends Model
     public function scopeTutorInfo($query, $user_ids)
     {
       return $query->join('users', 'users.id', '=', 'tutors.user_id')
-      ->whereIn('id', $user_ids)
-      ->select('tutors.*', 'users.*');
+      ->leftjoin('grades', 'tutors.grade', '=', 'grades.id')
+      ->whereIn('users.id', $user_ids);
     }
 
-    //passed by refrence to advoid excessive copying
-    static public function add_classes_reviews(&$tutor_array, $selected, $id_counts)
+
+    static public function add_classes_reviews($tutor_info, $selected = 0, $id_counts = [])
     {
-      foreach($tutor_array as $tutor)
+      $tutor_full = $tutor_info;
+
+      foreach($tutor_full as $tutor)
       {
         $id = $tutor->user_id;
         //add match %
@@ -44,7 +48,7 @@ class Tutor extends Model
         $tutor->percent_match = $percent_match;
 
         //add reviews
-        $user_reviews = \App\Tutor::where('user_id', $id)->firstOrFail()->reviews();
+        $user_reviews = \App\Tutor::where('user_id', $id)->firstOrFail()->reviews()->orderBy('reviews.created_at', 'desc');
         $tutor->num_reviews = $user_reviews->count();
         $tutor->all_reviews = $user_reviews->get();
         //round rating to 1 decimal place
@@ -61,10 +65,31 @@ class Tutor extends Model
           $tutor->half_star = false;
           $tutor->star_count++;
         }
-
         $tutor->empty_stars = 5 - $tutor->star_count;
         if ($tutor->half_star) $tutor->empty_stars--;
-      }
 
+        //get classes
+        $classes = \App\Tutor::where('user_id', $id)->firstOrFail()->classes()->orderBy('class_order', 'asc')->get()->groupBy('class_type');
+
+        //collections suck, key it by class_id
+        $tutor_classes = array();
+        foreach($classes as $subject => $subject_array)
+        {
+          $tutor_classes[$subject] = array();
+          foreach($subject_array as $class)
+          {
+            $tutor_classes[$subject][$class->class_id] = $class;
+          }
+        }
+        $tutor->tutor_classes = $tutor_classes;
+      }
+      return $tutor_full;
+    }
+
+    static public function get_tutor_profile($id)
+    {
+      $tutor = array(\App\Tutor::where('user_id', $id)->TutorInfo([$id])->firstOrfail());
+      $tutor_profile = \app\Tutor::add_classes_reviews($tutor);
+      return $tutor_profile[0];
     }
 }

@@ -12,4 +12,7 @@ class TutorLevel extends Model
   {
     return $this->belongsTo('App\Level', 'level_id', 'id');
   }
+
+
+
 }

@@ -2,6 +2,7 @@
 @extends('app')
 
 @section('content')
+<div class="container">
 <div class="page-header">
   <h1>Login</h1>
 </div>
@@ -22,7 +23,6 @@
 
                           <form action="/auth/login" method="post">
                             {!! csrf_field() !!}
-
                               <div class="form-group">
                                   <label for="user_email" class="control-label">Email</label>
                                   <input type="text" class="form-control" id="email" name="email" value="{{ old('email') }}" title="Please enter you email" placeholder="example@example.com">
@@ -66,5 +66,5 @@
           </div>
       </div>
   </div>
-
+</div>
 @stop

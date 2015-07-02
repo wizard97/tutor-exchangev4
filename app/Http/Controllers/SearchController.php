@@ -26,7 +26,8 @@ class SearchController extends Controller
       ->get()
       ->groupBy('class_type');
       $subjects = \App\SchoolClass::groupBy('class_type')->get()->pluck('class_type');
-      return view('search/index')->with('classes', $classes)->with('subjects', $subjects);
+      $grades = \App\Grade::all();
+      return view('search/index')->with('classes', $classes)->with('subjects', $subjects)->with('grades', $grades);
     }
 
     /**
@@ -39,23 +40,14 @@ class SearchController extends Controller
       $this->validate($request, [
       'start_rate' => 'min:0|numeric',
       'end_rate' => 'min:0|numeric',
+      'grade' => 'numeric',
       ]);
       $input = $request->all();
       //flash form data into session
 
       $request->session()->flash('tutor_search_inputs', $input);
 
-    return redirect('search/showresults');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @return Response
-     */
-    public function store()
-    {
-        //
+      return redirect('search/showresults');
     }
 
     /**
@@ -67,7 +59,8 @@ class SearchController extends Controller
      public function showresults(Request $request)
      {
        //get the classes and levels, and join that on the tutor_levels table
-      $search = \App\Level::findtutors();
+      $search = new \App\Level;
+      $search = $search->findtutors();
         //loop thorugh the form inputs
         $selected = 0;
 
@@ -75,27 +68,31 @@ class SearchController extends Controller
         $form_inputs = $request->session()->get('tutor_search_inputs');
         $classes = array();
 
+        //get array of selected classes
         if (!empty($form_inputs['classes'])) $classes = $form_inputs['classes'];
               //create seach query, pass in $selected by refrence
               $search = $search->where(function ($query) use($form_inputs, &$selected, $classes){
-              $query->where('tutor_active', '1')->where(function ($query) use($form_inputs, &$selected, $classes){
 
+              //handle rates
+              if (!empty($form_inputs['start_rate'])) $query->where('rate', '>=', $form_inputs['start_rate']);
+              if (!empty($form_inputs['end_rate'])) $query->where('rate', '<=', $form_inputs['end_rate']);
+              if (!empty($form_inputs['min_grade'])) $query->where('grade', '>=', $form_inputs['min_grade']);
+
+              //build query for classes the user selects
+              $query->where(function ($query) use($form_inputs, &$selected, $classes){
                 foreach($classes as $class_id)
                 {
                   if (!empty($form_inputs['class_'.$class_id]))
                   {
                     $query->orWhere(function ($query) use($class_id, $form_inputs, &$selected){
-
                     $query->where('levels.class_id', $class_id);
                     $query->where('levels.level_num', '>=', $form_inputs['class_'.$class_id]);
                     $selected++;
                     });
                   }
                 }
-
               });
             });
-
        //array with key user ids, containing an object of id and sqlcount
        $id_count = $search->get()->keyBy('user_id')->toArray();
 
@@ -105,29 +102,35 @@ class SearchController extends Controller
        if (!empty($tutors_id))
        {
        $ids = implode(',', $tutors_id);
-       $results = \App\Tutor::tutorinfo($tutors_id)
-       ->orderByRaw(\DB::raw("FIELD(user_id, $ids)"))
+       $tutors_object =  new \App\Tutor;
+       $basic_info = $tutors_object->tutorinfo($tutors_id)
+       ->orderByRaw(\DB::raw("FIELD(tutors.user_id, $ids)"))
+       ->select('users.id', 'users.fname', 'users.lname', 'users.account_type', 'users.last_login', 'users.last_login', 'users.created_at','tutors.*', 'grades.*')
        ->paginate(15);
 
-       //results passed by reference, function adds tutor classes and reviews
-       \App\Tutor::add_classes_reviews($results, $selected, $id_count);
+       //results passed by reference, function adds tutor match%, classes and reviews
+       $results = \App\Tutor::add_classes_reviews($basic_info, $selected, $id_count);
       }
-      else $results = collect(array());
-      
+      else $results = array();
+
       return view('search/showresults', ['results' => $results]);
      }
 
 
 
     /**
-     * Show the form for editing the specified resource.
+     * Show tutor profile
      *
      * @param  int  $id
      * @return Response
      */
-    public function edit($id)
+    public function showtutorprofile($id)
     {
-        //
+      //get subjects
+      $subjects = \App\SchoolClass::groupBy('class_type')->get()->pluck('class_type');
+      //get basic tutor info
+      $tutor = \App\Tutor::get_tutor_profile($id);
+      return view('search/showtutorprofile')->with('tutor', $tutor)->with('subjects', $subjects);
     }
 
     /**

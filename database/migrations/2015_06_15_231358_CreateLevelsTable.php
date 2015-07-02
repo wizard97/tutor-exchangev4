@@ -18,7 +18,6 @@ class CreateLevelsTable extends Migration
             $table->integer('level_num')->unsigned();
             $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade');
             $table->string('level_name', 50);
-            $table->timestamps();
         });
     }
 

@@ -2,10 +2,14 @@
 @extends('app')
 
 @section('content')
-<div class="container">
-<div class="page-header">
-  <h1>{{ $tutor->fname.' '.$tutor->lname }}</h1>
-</div>
+
+<div class="container-fluid">
+  <div class="row">
+  @include('tutor/sidebar')
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+      <div class="page-header">
+      <h1>{{ $tutor->fname.' '.$tutor->lname }}</h1>
+      </div>
 
 @include('templates/feedback')
 
@@ -196,5 +200,7 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
 </div>
 @stop

@@ -2,6 +2,7 @@
 @extends('app')
 
 @section('content')
+<div class="container">
 @include('templates/feedback')
 <div class="jumbotron">
   <div class="container">
@@ -22,61 +23,56 @@
 </div>
 
 <!-- <div class="alert alert-success" role="alert"><strong>New in V1.12:</strong> Save tutor button now works without page refresh (using ajax requests and jQuery), Crontab jobs now auto emails tutor when listing expires.</div> -->
-    <div class="row social">
-        <div class="col-sm-6 col-md-6 col-lg-3">
 
-                <div class="panel panel-default box-a">
-                    <div class="panel-body">
-                        <small class="social-title">Members</small>
-                        <h3 class="count">
-                            <span class="integers">{{$stats->std_members + $stats->tutor_members}}</span></h3>
-                        <i class="fa-stat fa fa-users"></i>
-                    </div>
-                </div>
+<div class="row social">
 
+    <div class="col-sm-6 col-md-6 col-lg-3">
+        <div class="panel panel-default box-a">
+            <div class="panel-body">
+              <small class="social-title">Members</small>
+              <h3 class="count">
+              <span class="integers">{{$stats->std_members + $stats->tutor_members}}</span></h3>
+              <i class="fa-stat fa fa-users"></i>
+            </div>
         </div>
-        <div class="col-sm-6 col-md-6 col-lg-3">
+      </div>
 
-                <div class="panel panel-default box-b">
-                    <div class="panel-body">
-                        <small class="social-title">Active Tutors</small>
-                        <h3 class="count"><span class="integers">
-                            </span></h3>
-                        <i class="fa-stat fa fa-graduation-cap"></i>
-                    </div>
-                </div>
-
+    <div class="col-sm-6 col-md-6 col-lg-3">
+        <div class="panel panel-default box-b">
+            <div class="panel-body">
+                <small class="social-title">Active Tutors</small>
+                <h3 class="count"><span class="integers">
+                </span></h3>
+                <i class="fa-stat fa fa-graduation-cap"></i>
+            </div>
         </div>
-
-
-
-        <div class="col-sm-6 col-md-6 col-lg-3">
-
-                <div class="panel panel-default box-c">
-                    <div class="panel-body">
-                        <small class="social-title">Tutor Searches</small>
-                        <h3 class="count"><span class="integers">{{$stats->searches}}
-                            </span></h3>
-                        <i class="fa-stat fa fa-search"></i>
-                    </div>
-                </div>
-
-        </div>
-
-                <div class="col-sm-6 col-md-6 col-lg-3">
-
-                <div class="panel panel-default box-d">
-                    <div class="panel-body">
-                        <small class="social-title">Tutor Matches</small>
-                        <h3 class="count">
-                            <span class="integers"></span></h3>
-                        <i class="fa-stat fa fa-envelope"></i>
-                    </div>
-                </div>
-
-        </div>
-
     </div>
+
+
+
+    <div class="col-sm-6 col-md-6 col-lg-3">
+        <div class="panel panel-default box-c">
+            <div class="panel-body">
+                <small class="social-title">Tutor Searches</small>
+                <h3 class="count"><span class="integers">{{$stats->searches}}
+                </span></h3>
+                <i class="fa-stat fa fa-search"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-md-6 col-lg-3">
+        <div class="panel panel-default box-d">
+            <div class="panel-body">
+                <small class="social-title">Tutor Matches</small>
+                <h3 class="count">
+                <span class="integers"></span></h3>
+                <i class="fa-stat fa fa-envelope"></i>
+            </div>
+        </div>
+    </div>
+
+</div>
 
 
 <div class="row">
@@ -171,4 +167,5 @@
             </div>
 
         </div>
+  </div>
 @stop
