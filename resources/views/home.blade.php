@@ -7,7 +7,8 @@
 <div class="jumbotron">
   <div class="container">
   <div class="col-md-8">
- <h1>Lexington Tutor Exchange</h1>
+    <img src="/img/logo2.png" class="img-responsive" />
+ <!-- <h1>Lexington Tutor Exchange</h1> -->
     <h2>Hello, Lexington MA!</h2>
     <p>This site was designed by Lexington students for Lexington students. We will find the best tutor for you based on pricing, subject, and tutor level. This site welcomes both student and professional tutor signups.</p>
     <p>
@@ -16,9 +17,14 @@
     </px>
   </div>
 
+  <div class="col-md-4 hidden-sm hidden-xs">
+  <img  width="300" src="/img/large-logo-black.png">
+  </div>
+<!--
 <div class="col-md-4 hidden-sm hidden-xs">
 <h1><i class="fa fa-exchange fa-5x"></i></h1>
 </div>
+-->
   </div>
 </div>
 
@@ -31,7 +37,8 @@
             <div class="panel-body">
               <small class="social-title">Members</small>
               <h3 class="count">
-              <span class="integers">{{$stats->std_members + $stats->tutor_members}}</span></h3>
+              <span class="integers">{{$stats->std_members + $stats->tutor_members}}
+              </span></h3>
               <i class="fa-stat fa fa-users"></i>
             </div>
         </div>
@@ -41,7 +48,8 @@
         <div class="panel panel-default box-b">
             <div class="panel-body">
                 <small class="social-title">Active Tutors</small>
-                <h3 class="count"><span class="integers">
+                <h3 class="count">
+                <span class="integers">123
                 </span></h3>
                 <i class="fa-stat fa fa-graduation-cap"></i>
             </div>
@@ -54,7 +62,7 @@
         <div class="panel panel-default box-c">
             <div class="panel-body">
                 <small class="social-title">Tutor Searches</small>
-                <h3 class="count"><span class="integers">{{$stats->searches}}
+                <h3 class="count"><span class="integers">342
                 </span></h3>
                 <i class="fa-stat fa fa-search"></i>
             </div>
@@ -66,7 +74,8 @@
             <div class="panel-body">
                 <small class="social-title">Tutor Matches</small>
                 <h3 class="count">
-                <span class="integers"></span></h3>
+                <span class="integers">123
+                </span></h3>
                 <i class="fa-stat fa fa-envelope"></i>
             </div>
         </div>

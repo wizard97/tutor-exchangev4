@@ -8,7 +8,12 @@
         <span class="icon-bar"></span>
       </button>
 
-      <a class="navbar-brand" href="{{ url('home') }}"><i class="fa fa-exchange"></i> Lexington Tutor Exchange</a>
+  <!--    <a class="navbar-brand" href="{{ url('home') }}"><i class="fa fa-exchange"></i> Lexington Tutor Exchange</a> -->
+
+      <a class="navbar-brand" rel="home" href="/home" title="Lexington Tutor Exchange">
+        <img style="max-width:130px; margin-top: -8px;" src="/img/logo.png">
+      </a>
+
     </div>
 
     <div class="collapse navbar-collapse" id="myNavbar">
@@ -33,13 +38,7 @@
         <li class="{{ isExactRoute('contact') }}"><a href="{{ url('contact') }}">Contact Us</a></li>
 
         @if(Auth::check() && Auth::user()->account_type >= 2)
-        <li class="dropdown {{ isActiveRoute('tutor') }}"><a class="dropdown-toggle" data-toggle="dropdown" href="{{ url('tutor/index') }}">My Tutoring
-        <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-        <li class="{{ isExactRoute('tutor/dashboard') }}"><a href="{{ url('tutor/index') }}">Dashboard</a></li>
-        <li class="{{ isExactRoute('tutor/edittutor') }}"><a href="{{ url('tutor/edittutor') }}">Edit Profile</a></li>
-        </ul>
-        </li>
+        <li class="{{ isActiveRoute('tutor') }}"><a href="{{ url('tutor/index') }}">My Tutoring</a></li>
         @endif
 
         @if(Auth::check())

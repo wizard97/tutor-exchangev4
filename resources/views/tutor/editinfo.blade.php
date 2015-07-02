@@ -7,8 +7,9 @@
     @include('tutor/sidebar')
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
+  <div class="page-header">
   <h1>Your Info</h1>
-
+</div>
 
 @include('templates/feedback')
 <p class="alert alert-success"><i class="fa fa-info-circle"></i>  This is where you update your tutoring info. Make sure to fill it out as completely as possible and keep it updated.</p>
@@ -16,7 +17,7 @@
 {!! Form::open(['url' => '/auth/register']) !!}
 {!! csrf_field() !!}
 <div class="col-md-6">
-<div class="panel panel-default">
+<div class="panel panel-primary">
   <div class="panel-heading">Your Info</div>
   <div class="panel-body">
     <div class="col-md-12">
@@ -45,17 +46,15 @@
       </div>
       </div>
   </div>
+
+  <div class="col-xs-4">
+    <button type="submit" class="btn btn-lg btn-primary"> <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Update </button>
+  </div>
+
 </div>
 
 
-
-
 <div class="clearfix"></div>
-
-<hr>
-    <div class="pull-left">
-      <button type="submit" class="btn btn-lg btn-success"> <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Update </button>
-    </div>
 
 {!! Form::close() !!}
 </div>
