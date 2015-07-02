@@ -2,11 +2,19 @@
 @extends('app')
 
 @section('content')
+<div class="container">
 <div class="page-header">
   <h1>Search Results</h1>
 </div>
 
 @include('templates/feedback')
+
+@if(empty($results))
+<div class="alert alert-warning" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <i class="fa fa-frown-o"></i> <strong>Sorry! </strong>We were not able to find a match for you. Perhaps broaden your search criteria and/or check back in a week or two. Would you like to <a href="/search/index" class="alert-link">Search Again</a>?</div>
+@endif
+
 <div class="table-responsive">
   <table class="table table-striped" id="resultsTable">
     <caption>We found you {{ count($results) }} tutors:</caption>
@@ -42,7 +50,7 @@
     </td>
 
     <td class="vert-align">
-      {{ $tutor->grade }}
+      {{ $tutor->grade_name }}
     </td>
 
     <td class="vert-align">
@@ -76,12 +84,12 @@
 @if($tutor->half_star)<i style="color: #FEC601" class="fa fa-star-half-o"></i>@endif
 @for($i = 0; $i < $tutor->empty_stars; $i++)<i style="color: #FEC601" class="fa fa-star-o"></i>@endfor
         </span>
-       (<span class="text-primary"><a href="/search/showtutorprofile/{{ $tutor->id }}#reviews">{{ $tutor->num_reviews }}</a></span>)
+       (<span class="text-primary"><a href="/search/showtutorprofile/{{ $tutor->user_id }}#reviews">{{ $tutor->num_reviews }}</a></span>)
      </span>
     </td>
 
     <td class="vert-align">
-      <a class="btn btn-success btn-sm" target="_blank" href="/search/showtutorprofile/{{ $tutor->id }}" role="button">
+      <a class="btn btn-success btn-sm" target="_blank" href="/search/showtutorprofile/{{ $tutor->user_id }}" role="button">
         <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Profile
       </a>
 
@@ -99,5 +107,8 @@
   </tbody>
 </table>
 
+@if(!empty($results))
 {!! $results->render() !!}
+@endif
+</div>
 @stop

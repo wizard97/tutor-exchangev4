@@ -36,7 +36,7 @@ $factory->define(App\Tutor::class, function ($faker) {
         'about_me' => $faker->text($maxNbChars = 200),
         'tutor_active' => 1,
         'contact_num' => rand(0, 20),
-        'profile_expiration' => $faker->dateTimeThisYear($max = 'now'),
+        'profile_expiration' => $faker->dateTimeBetween($startDate = '-6 months', $endDate = '+6 months'),
 
 
     ];

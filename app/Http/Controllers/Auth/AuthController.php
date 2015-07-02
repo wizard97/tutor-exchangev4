@@ -40,7 +40,7 @@ class AuthController extends Controller {
 
         $confirmation_code = str_random(30);
 
-        User::create([
+        $new_user = User::create([
           'fname' => \Input::get('fname'),
           'lname' => \Input::get('lname'),
             'email' => \Input::get('email'),
@@ -50,10 +50,15 @@ class AuthController extends Controller {
             'user_active' => 0
         ]);
 
+        //if a tutor, create their profile
+        if(\Input::get('account_type') > 1)
+        {
+          $new_user->tutor()->firstOrCreate([]);
+        }
         \Mail::send('emails.verify', array('confirmation_code' => $confirmation_code, 'name' => \Input::get('fname').' '.\Input::get('lname')), function($message) {
             $message->to(\Input::get('email'), \Input::get('fname').' '.\Input::get('lname'))->subject('Activate your account')->from('no-reply@lextutorexchange.com','Lexington Tutor Exchange');
         });
-        \Session::flash('status', 'Thanks for signing up! Please check your email.');
+        \Session::flash('feedback_positive', 'Thanks for signing up! Please check your email.');
 
         return redirect('home');
     }
@@ -69,6 +74,7 @@ class AuthController extends Controller {
 
        if ( ! $user)
        {
+         \Session::flash('feedback_negative', "That was not a valid activation link, are you sure you didn't already activate your account?");
          return redirect('auth/login');
        }
 
@@ -76,7 +82,7 @@ class AuthController extends Controller {
        $user->activation_hash = null;
        $user->save();
 
-       \Session::flash('status', 'You have successfully verified your account.');
+       \Session::flash('feedback_positive', 'You have successfully verified your account.');
 
        return redirect('auth/login');
    }
@@ -114,17 +120,18 @@ class AuthController extends Controller {
           return \Redirect::back()
               ->withInput()
               ->withErrors([
-                  'credentials' => 'We were unable to sign you in. Please double check your email/password and make sure you already activated your account.'
+                  'credentials' => 'We were unable to sign you in. Please double check your credentials and make sure you already activated your account.'
               ]);
       }
-
-      \Session::flash('status', 'Welcome back!');
-      return redirect()->intended('user/dashboard');
+      $user = Auth::user();
+      \Session::flash('feedback_positive', 'Welcome back '.$user->fname.' '.$user->lname.'!');
+      return redirect()->intended('home');
   }
 
   public function getLogout()
   {
     Auth::logout();
+    \Session::flash('feedback_positive', 'You have been logged out.');
     return redirect('home');
   }
 }

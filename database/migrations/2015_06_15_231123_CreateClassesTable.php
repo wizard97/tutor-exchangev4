@@ -17,7 +17,6 @@ class CreateClassesTable extends Migration
             $table->integer('class_order');
             $table->string('class_type', 50)->index();
             $table->string('class_name', 50);
-            $table->timestamps();
         });
     }
 

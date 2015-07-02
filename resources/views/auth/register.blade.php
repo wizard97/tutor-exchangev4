@@ -2,6 +2,7 @@
 @extends('app')
 
 @section('content')
+<div class="container">
   <div class="page-header">
     <h1>Register</h1>
   </div>
@@ -10,7 +11,7 @@
     <div class="col-md-6 well">
         <!-- register form -->
         {!! Form::open(['url' => '/auth/register']) !!}
-          {!! csrf_field() !!}
+        {!! csrf_field() !!}
 
         <div class="form-group">
           {!! Form::label('fname', 'First name') !!}
@@ -70,4 +71,5 @@
 
       {!! Form::close() !!}
     </div>
+  </div>
 @stop

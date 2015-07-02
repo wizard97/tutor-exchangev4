@@ -20,8 +20,8 @@ class CreateTutorsTable extends Migration
             $table->integer('profile_views')->unsigned();
             $table->integer('contact_num')->unsigned();
             $table->integer('age')->unsigned()->nullable();
-            $table->integer('grade');
-            $table->integer('rate');
+            $table->integer('grade')->nullable();
+            $table->integer('rate')->nullable();
             $table->text('about_me');
             $table->timestamps();
         });

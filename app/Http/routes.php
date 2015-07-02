@@ -15,11 +15,23 @@ Route::get('/', function () {
 return redirect('home');
 });
 
+Route::get('home', 'HomeController@index');
+Route::get('test', function()
+{
+    return View::make('test');
+});
+
+//search
 Route::get('search/index', 'SearchController@index');
 Route::post('search/index', 'SearchController@search');
 Route::get('search/showresults', 'SearchController@showresults');
+Route::get('search/showtutorprofile/{id}', 'SearchController@showtutorprofile');
 
-Route::get('home', 'HomeController@index');
+//tutor
+Route::get('tutor/index', 'TutorController@getindex');
+Route::get('tutor/info', 'TutorController@geteditinfo');
+Route::get('tutor/classes', 'TutorController@geteditclasses');
+Route::get('tutor/myprofile', 'TutorController@getmyprofile');
 
 
 Route::get('auth/verify/{confirmationCode}', [

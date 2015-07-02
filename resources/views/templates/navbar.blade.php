@@ -1,4 +1,4 @@
-<nav class="navbar navbar-inverse">
+<nav class="navbar navbar-inverse navbar-fixed-top">
 <div class="container-fluid">
     <div class="navbar-header">
 
@@ -33,17 +33,17 @@
         <li class="{{ isExactRoute('contact') }}"><a href="{{ url('contact') }}">Contact Us</a></li>
 
         @if(Auth::check() && Auth::user()->account_type >= 2)
-        <li class="dropdown {{ isActiveRoute('tutor') }}"><a class="dropdown-toggle" data-toggle="dropdown" href="{{ url('tutor/index') }}">Tutoring Settings
+        <li class="dropdown {{ isActiveRoute('tutor') }}"><a class="dropdown-toggle" data-toggle="dropdown" href="{{ url('tutor/index') }}">My Tutoring
         <span class="caret"></span></a>
         <ul class="dropdown-menu">
-        <li class="{{ isExactRoute('tutor/dashboard') }}"><a href="{{ url('tutor/dashboard') }}">Dashboard</a></li>
+        <li class="{{ isExactRoute('tutor/dashboard') }}"><a href="{{ url('tutor/index') }}">Dashboard</a></li>
         <li class="{{ isExactRoute('tutor/edittutor') }}"><a href="{{ url('tutor/edittutor') }}">Edit Profile</a></li>
         </ul>
         </li>
         @endif
 
         @if(Auth::check())
-        <li class="dropdown {{ isActiveRoute('account') }}"><a class="dropdown-toggle" data-toggle="dropdown" href="{{ url('account/showprofile') }}">Account
+        <li class="dropdown {{ isActiveRoute('account') }}"><a class="dropdown-toggle" data-toggle="dropdown" href="{{ url('account/showprofile') }}">Account Settings
         <span class="caret"></span></a>
         <ul class="dropdown-menu">
         <li><a href="{{ url('account/showprofile') }}">My Account</a></li>

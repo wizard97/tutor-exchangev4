@@ -1,6 +1,7 @@
 @extends('app')
 
 @section('content')
+<div class="container">
 <div class="page-header">
 <h1>Set new password</h1>
 </div>
@@ -35,4 +36,5 @@
 </form>
 </div><!--/col-sm-6-->
 </div><!--/row-->
+</div>
 @stop

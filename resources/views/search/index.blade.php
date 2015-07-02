@@ -2,6 +2,7 @@
 @extends('app')
 
 @section('content')
+<div class="container">
 <div class="page-header">
   <h1>Find Me a Tutor</h1>
 </div>
@@ -13,7 +14,7 @@
   <li class="active"><a data-toggle="tab" href="#Criteria">Tutor Criteria</a></li>
   <li><a data-toggle="tab" href="#Math">Math</a></li>
   <li><a data-toggle="tab" href="#Science">Science</a></li>
-  <li><a data-toggle="tab" href="#Social_Studies">Social Studies</a></li>
+  <li><a data-toggle="tab" href="#SocialStudies">Social Studies</a></li>
   <li><a data-toggle="tab" href="#English">English</a></li>
     <li role="presentation" class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
@@ -33,7 +34,6 @@
 
 <form method="POST" action="/search/index">
 {!! csrf_field() !!}
-
 <div class="tab-content">
   <div id="Criteria" class="tab-pane fade in active">
   <div class="row">
@@ -45,7 +45,7 @@
               <input type="number" class="form-control" name="start_rate" id="start_rate" size="5" maxlength="3" placeholder="min">
               </div>
                <div class="col-xs-4">
-              <input class="form-control" type="number" name="end_rate" id="end_rate" size="5" maxlength="3" min="1" placeholder="max">
+              <input class="form-control" type="number" name="end_rate" id="end_rate" size="5" maxlength="3" placeholder="max">
               </div>
             </div>
             <p class="help-block">Enter your price range in dollars per hour</p>
@@ -54,15 +54,9 @@
               <label for="min_grade">Minimum grade</label>
               <select class="form-control" name="min_grade" id ="min_grade">
                 <option value="">No Preference</option>
-                <option value="7">7th</option>
-                <option value="8">8th</option>
-                <option value="9">9th</option>
-                <option value="10">10th</option>
-                <option value="11">11th</option>
-                <option value="12">12th</option>
-                <option value="13">High School Grad.</option>
-                <option value="14">College</option>
-                <option value="15">College Grad.</option>
+                @foreach($grades as $grade)
+                <option value="{{ $grade->id }}">{{ $grade->grade_name }}</option>
+                @endforeach
               </select>
               <p class="help-block">The minimum grade your tutor should be in</p>
             </div>
@@ -72,7 +66,7 @@
   </div>
 
 @foreach ($subjects as $subject)
-<div id="{{ str_replace(' ', '_', $subject) }}" class="tab-pane fade">
+<div id="{{ str_replace(' ', '', $subject) }}" class="tab-pane fade">
   <div class="row">
     <div class="col-md-6">
       <h3>{{ $subject }}</h3>
@@ -111,5 +105,5 @@
       <button type="submit" class="btn btn-lg btn-success"> <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search </button>
     </div>
 </form>
-
+</div>
 @stop
