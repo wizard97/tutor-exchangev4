@@ -7,10 +7,10 @@
     @include('tutor/sidebar')
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
+@include('templates/feedback')
+
   <h1>Your Classes</h1>
 
-
-@include('templates/feedback')
 <p class="alert alert-success"><i class="fa fa-info-circle"></i>  This is where you update the classes you can tutor. Make sure to fill it out as completely as possible and keep it updated.</p>
 
 <ul class="nav nav-tabs">

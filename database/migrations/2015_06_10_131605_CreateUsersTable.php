@@ -19,9 +19,9 @@ class CreateUsersTable extends Migration
             $table->integer('account_type');
             $table->string('email', 64)->unique();
             $table->boolean('user_active')->default(0);
+            $table->integer('zip')->unsigned();
             $table->boolean('has_picture')->default(0);
             $table->string('password', 255);
-            $table->integer('account_type');
             $table->string('remember_token')->nullable();
             $table->string('activation_hash', 40)->nullable();
             $table->timestamp('last_login')->nullable();

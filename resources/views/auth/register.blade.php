@@ -31,6 +31,12 @@
         </div>
 
         <div class="form-group">
+          {!! Form::label('zip', 'Zip Code') !!}
+          {!! Form::number('zip', null, ['class' => 'form-control']) !!}
+        <p class="help-block">This will help us with performing tutor searches</p>
+        </div>
+
+        <div class="form-group">
           {!! Form::label('password', 'Password') !!}
           {!! Form::password('password', ['class' => 'form-control']) !!}
         <p class="help-block">Minimum 6 characters</p>
