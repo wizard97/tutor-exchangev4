@@ -10,6 +10,9 @@ use App\Http\Controllers\Controller;
 class TutorController extends Controller
 {
   private $id;
+
+  protected $fillable = ['age', 'grade', 'rate', 'about_me'];
+
   public function __construct()
   {
       $this->middleware('\App\Http\Middleware\AuthenticateTutors');
@@ -23,7 +26,6 @@ class TutorController extends Controller
 
   public function geteditclasses()
   {
-    $id = 32;
     $classes = \App\SchoolClass::with('class_levels')->orderBy('class_order', 'asc')
     ->get()
     ->groupBy('class_type');
@@ -31,9 +33,9 @@ class TutorController extends Controller
     $subjects = \App\SchoolClass::groupBy('class_type')->get()->pluck('class_type');
 
     $grades = \App\Grade::all();
-    //get basic tutor info
-    $tutor = \App\Tutor::get_tutor_profile($id);
 
+    //get basic tutor info
+    $tutor = \App\Tutor::get_tutor_profile($this->id);
 
     return view('tutor/editclasses')
     ->with('tutor', $tutor)
@@ -41,15 +43,34 @@ class TutorController extends Controller
     ->with('classes', $classes);
   }
 
-  public function posteditclasses()
+  public function posteditclasses(Request $request)
   {
+    if ($request->has('classes') && is_array($request->input('classes')))
+    {
+      $classes = $request->input('classes');
+      //clear existing levels
+      \App\TutorLevel::where('user_id', $this->id)->delete();
 
+      foreach($classes as $class_id)
+      {
+        if($request->has('class_'.$class_id))
+        {
+          $class_level = $request->input('class_'.$class_id);
+          $new_level = \App\Level::where('class_id', $class_id)->where('level_num', $class_level)->firstOrFail();
+          //do the insert
+          \App\Tutor::where('user_id', $this->id)->firstOrFail()->classes()->firstOrCreate(['level_id' => $new_level->id]);
+        }
+      }
+      $count = \App\Tutor::where('user_id', $this->id)->firstOrFail()->classes()->count();
+      $request->session()->flash('feedback_positive', 'You have successfully updated you classes. You currently tutor '.$count.' classes.');
+    }
+    else \App\TutorLevel::where('user_id', $this->id)->delete();
+    return redirect('/tutor/classes');
   }
 
   public function geteditinfo()
   {
-    $id = 32;
-    $tutor = \App\Tutor::get_tutor_profile($id);
+    $tutor = \App\Tutor::get_tutor_profile($this->id);
 
     $grades = \App\Grade::all();
     return view('tutor/editinfo')
@@ -57,13 +78,31 @@ class TutorController extends Controller
     ->with('grades', $grades);
   }
 
+  public function posteditinfo(Request $request)
+  {
+    $this->validate($request, [
+    'age' => 'numeric|min:13|max:100',
+    'grade' => 'required|numeric',
+    'rate' => 'required|numeric|between:10,150',
+    'about_me' => ''
+    ]);
+    //make sure protected prevents them from changing id and such
+    $tutor = \App\Tutor::where('user_id', $this->id)->firstOrFail();
+    $tutor->age = $request->input('age');
+    $tutor->grade = $request->input('grade');
+    $tutor->rate = $request->input('rate');
+    $tutor->about_me = $request->input('about_me');
+    $tutor->save();
+
+    return redirect('/tutor/info');
+  }
+
   public function getmyprofile()
   {
-    $id = 32;
     //get subjects
     $subjects = \App\SchoolClass::groupBy('class_type')->get()->pluck('class_type');
     //get basic tutor info
-    $tutor = \App\Tutor::get_tutor_profile($id);
+    $tutor = \App\Tutor::get_tutor_profile($this->id);
     return view('tutor/myprofile')->with('tutor', $tutor)->with('subjects', $subjects);
   }
 }

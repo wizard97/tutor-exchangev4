@@ -30,11 +30,10 @@
     <li><a data-toggle="tab" href="#Spanish">Spanish</a></li>
     </ul>
   </li>
-    <li><a data-toggle="tab" href="#music">Music</a></li>
 </ul>
 
 
-{!! Form::open(['url' => '/auth/register']) !!}
+{!! Form::open(['url' => '/tutor/classes']) !!}
 {!! csrf_field() !!}
 
 <div class="tab-content">
@@ -49,7 +48,7 @@
       <label>Which of these classes can you tutor?</label>
 
       @foreach ($classes->get($subject) as $class)
-      <?php unset($level_array); foreach($class->class_levels as $level) $level_array[$level->id] = $level->level_name; ?>
+      <?php unset($level_array); foreach($class->class_levels as $level) $level_array[$level->level_num] = $level->level_name; ?>
 
         <div class="row">
 

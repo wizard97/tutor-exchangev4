@@ -28,7 +28,9 @@ Route::get('search/showtutorprofile/{id}', 'SearchController@showtutorprofile');
 //tutor
 Route::get('tutor/index', 'TutorController@getindex');
 Route::get('tutor/info', 'TutorController@geteditinfo');
+Route::post('tutor/info', 'TutorController@posteditinfo');
 Route::get('tutor/classes', 'TutorController@geteditclasses');
+Route::post('tutor/classes', 'TutorController@posteditclasses');
 Route::get('tutor/myprofile', 'TutorController@getmyprofile');
 
 
