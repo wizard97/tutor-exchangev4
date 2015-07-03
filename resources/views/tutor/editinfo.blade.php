@@ -14,7 +14,7 @@
 @include('templates/feedback')
 <p class="alert alert-success"><i class="fa fa-info-circle"></i>  This is where you update your tutoring info. Make sure to fill it out as completely as possible and keep it updated.</p>
 
-{!! Form::open(['url' => '/auth/register']) !!}
+{!! Form::open(['url' => '/tutor/info']) !!}
 {!! csrf_field() !!}
 <div class="col-md-6">
 <div class="panel panel-primary">
@@ -30,12 +30,12 @@
           <div class="form-group">
             {!! Form::label('grade', 'Your grade') !!}
             <?php foreach($grades as $grade) $grade_array[$grade->id] = $grade->grade_name; ?>
-            {!! Form::select('grade', $grade_array, null ,['class' => 'form-control']) !!}
+            {!! Form::select('grade', $grade_array, $tutor->grade, ['class' => 'form-control']) !!}
           </div>
 
           <div class="form-group">
             {!! Form::label('rate', 'Requested hourly rate') !!}
-            {!! Form::number('rate', $tutor->rate, ['class' => 'form-control', 'placeholder' => 'in $/hour']) !!}
+            {!! Form::number('rate', !empty($tutor->rate) ? $tutor->rate : '', ['class' => 'form-control', 'placeholder' => 'in $/hour']) !!}
           </div>
 
           <div class="form-group">

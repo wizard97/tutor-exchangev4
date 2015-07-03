@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tutor extends Model
 {
+  protected $primaryKey = 'user_id';
+
     public function user()
     {
       return $this->belongsTo('App\User', 'user_id', 'id');
     }
-
-
 
     public function classes()
     {
