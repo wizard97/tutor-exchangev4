@@ -15,8 +15,10 @@ class TutorController extends Controller
 
   public function __construct()
   {
-      $this->middleware('\App\Http\Middleware\AuthenticateTutors');
-      $this->id = \Auth::user()->id;
+    $this->middleware('\App\Http\Middleware\AuthenticateTutors');
+    if (\Auth::check()) {
+    $this->id = \Auth::user()->id;
+    }
   }
 
   public function getindex()
@@ -94,6 +96,7 @@ class TutorController extends Controller
     $tutor->about_me = $request->input('about_me');
     $tutor->save();
 
+    $request->session()->flash('feedback_positive', 'You have successfully updated your tutoring info!');
     return redirect('/tutor/info');
   }
 

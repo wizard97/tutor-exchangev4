@@ -26,7 +26,8 @@ class AuthController extends Controller {
 
         $validator = \Validator::make(\Input::all(), [
                     'fname' => 'required|max:30|alpha',
-                    'lanme' => 'reqyured|max:30|alpha',
+                    'lname' => 'required|max:30|alpha',
+                    'zip'   => 'required|numeric|between:0,99999',
                     'email' => 'required|email|max:255|unique:users',
                     'password' => 'required|confirmed|min:6',
                     'account_type' => 'required|integer|min:1|max:3',
@@ -43,6 +44,7 @@ class AuthController extends Controller {
         $new_user = User::create([
           'fname' => \Input::get('fname'),
           'lname' => \Input::get('lname'),
+          'zip' => \Input::get('zip'),
             'email' => \Input::get('email'),
             'password' => bcrypt(\Input::get('password')),
             'account_type' => \Input::get('account_type'),

@@ -5,8 +5,10 @@
       <div class="row">
         @include('tutor/sidebar')
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Dashboard</h1>
+
           @include('templates/feedback')
+
+          <h1 class="page-header">Dashboard</h1>
 <!--
           <div class="dropdown">
   <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">

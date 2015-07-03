@@ -7,11 +7,12 @@
     @include('tutor/sidebar')
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
+@include('templates/feedback')
+
   <div class="page-header">
   <h1>Your Info</h1>
 </div>
 
-@include('templates/feedback')
 <p class="alert alert-success"><i class="fa fa-info-circle"></i>  This is where you update your tutoring info. Make sure to fill it out as completely as possible and keep it updated.</p>
 
 {!! Form::open(['url' => '/tutor/info']) !!}
