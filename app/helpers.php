@@ -30,6 +30,7 @@ function isExactRoute($route)
     return $active;
 }
 
+/*
 function val($value, $default = null)
 {
     if (isset($value) && !empty($value))
@@ -47,6 +48,6 @@ function exists($var)
   }
   else return false;
 }
-
+*/
 
 ?>

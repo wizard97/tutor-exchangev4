@@ -1,24 +1,8 @@
-<!-- resources/views/auth/register.blade.php -->
-@extends('app')
-
-@section('content')
-
-<div class="container-fluid">
-  <div class="row">
-  @include('tutor/sidebar')
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
-      @include('templates/feedback')
-
-      <div class="page-header">
-      <h1>{{ $tutor->fname.' '.$tutor->lname }}</h1>
-      </div>
-
 <div class="row">
   <div class="col-md-3">
 
     <div class="row">
-      <img src="http://lextutorexchange.com/public/avatars/1.jpg" width="300" height="300" class="img-thumbnail img-responsive center-block">
+      <img src="{{ $tutor->has_picture }}" width="300" height="300" class="img-thumbnail img-responsive center-block">
     </div>
 
   <div class="row">
@@ -49,9 +33,10 @@
         <li class="list-group-item text-right"><span class="pull-left"><i class="fa fa-birthday-cake"></i> <strong>Age:</strong></span>{{ $tutor->age or 'N/A' }}</li>
         <li class="list-group-item text-right"><span class="pull-left"><i class="fa fa-graduation-cap"></i> <strong>Grade:</strong></span> {{ $tutor->grade_name or 'N/A'}}</li>
         <li class="list-group-item text-right"><span class="pull-left"><i class="fa fa-money"></i> <strong>Rate:</strong></span> ${{ $tutor->rate or 'N/A'}}</li>
-        <li class="list-group-item text-right"><span class="pull-left"><i class="fa fa-clock-o"></i> <strong>Listing Expiration:</strong></span> {{ date('m.d.y', strtotime($tutor->profile_expiration)) or 'N/A'}}</li>
-        <li class="list-group-item text-right"><span class="pull-left"><i class="fa fa-sign-in"></i> <strong>Last Login:</strong></span> {{ date('m.d.y', strtotime($tutor->last_login)) or 'N/A'}}</li>
-        <li class="list-group-item text-right"><span class="pull-left"><i class="fa fa-exchange"></i> <strong>Joined:</strong></span> {{ date('m.d.y', strtotime($tutor->created_at)) }}</li>
+        <li class="list-group-item text-right"><span class="pull-left"><i class="fa fa-map-marker"></i> <strong>Zip Code:</strong></span> {{ $tutor->zip or 'N/A'}}</li>
+        <li class="list-group-item text-right"><span class="pull-left"><i class="fa fa-clock-o"></i> <strong>Listing Expiration:</strong></span> {{ isset($tutor->profile_expiration) ? date('m/d/y', strtotime($tutor->profile_expiration)) : 'N/A' }}</li>
+        <li class="list-group-item text-right"><span class="pull-left"><i class="fa fa-sign-in"></i> <strong>Last Login:</strong></span> {{ isset($tutor->last_login) ? date('m/d/y', strtotime($tutor->last_login)) : 'N/A' }}</li>
+        <li class="list-group-item text-right"><span class="pull-left"><i class="fa fa-exchange"></i> <strong>Joined:</strong></span> {{ date('m/d/y', strtotime($tutor->created_at)) }}</li>
       </ul>
     </div>
   </div>
@@ -201,7 +186,3 @@
         </div>
       </div>
     </div>
-  </div>
-</div>
-</div>
-@stop

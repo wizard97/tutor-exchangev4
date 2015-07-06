@@ -17,7 +17,7 @@
 
 <div class="table-responsive">
   <table class="table table-striped" id="resultsTable">
-    <caption>We found you {{ count($results) }} tutors:</caption>
+    <caption>We found you {{ $num_results }} possible tutor(s):</caption>
 
     <thead>
     <tr>

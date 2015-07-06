@@ -113,7 +113,8 @@ class SearchController extends Controller
       }
       else $results = array();
 
-      return view('search/showresults', ['results' => $results]);
+      $num_results = count($id_count);
+      return view('search/showresults', ['results' => $results, 'num_results' => $num_results]);
      }
 
 

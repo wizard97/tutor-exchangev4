@@ -20,18 +20,48 @@ Route::get('about', function() { return View::make('about'); });
 Route::get('contact', function() { return View::make('contact'); });
 
 //search
-Route::get('search/index', 'SearchController@index');
-Route::post('search/index', 'SearchController@search');
-Route::get('search/showresults', 'SearchController@showresults');
-Route::get('search/showtutorprofile/{id}', 'SearchController@showtutorprofile');
+Route::get('search/index', [
+    'as' => 'searchPage', 'uses' => 'SearchController@index'
+]);
+Route::post('search/index', [
+    'as' => 'searchResultsPost', 'uses' => 'SearchController@search'
+]);
+Route::get('search/showresults', [
+    'as' => 'searchResultsGet', 'uses' => 'SearchController@showresults'
+]);
+Route::get('search/showtutorprofile/{id}', [
+    'as' => 'searchTutorProfile', 'uses' => 'SearchController@showtutorprofile'
+]);
+
 
 //tutor
-Route::get('tutor/index', 'TutorController@getindex');
-Route::get('tutor/info', 'TutorController@geteditinfo');
-Route::post('tutor/info', 'TutorController@posteditinfo');
-Route::get('tutor/classes', 'TutorController@geteditclasses');
-Route::post('tutor/classes', 'TutorController@posteditclasses');
-Route::get('tutor/myprofile', 'TutorController@getmyprofile');
+Route::get('account/tutoring/index', 'TutorController@getindex');
+Route::get('account/tutoring/info', 'TutorController@geteditinfo');
+Route::post('account/tutoring/info', 'TutorController@posteditinfo');
+Route::get('account/tutoring/classes', 'TutorController@geteditclasses');
+Route::post('account/tutoring/classes', 'TutorController@posteditclasses');
+Route::get('account/tutoring/myprofile', 'TutorController@getmyprofile');
+
+//settings
+Route::get('account/settings/index', [
+    'as' => 'accountSettings', 'uses' => 'SettingsController@index'
+]);
+Route::post('account/settings/editname', [
+    'as' => 'editName', 'uses' => 'SettingsController@editname'
+]);
+Route::post('account/settings/editemail', [
+    'as' => 'editEmail', 'uses' => 'SettingsController@editemail'
+]);
+Route::post('account/settings/editzip', [
+    'as' => 'editZip', 'uses' => 'SettingsController@editzip'
+]);
+Route::post('account/settings/editaccounttype', [
+    'as' => 'editAccountType', 'uses' => 'SettingsController@editaccounttype'
+]);
+Route::post('account/settings/editpassword', [
+    'as' => 'editPassword', 'uses' => 'SettingsController@editpassword'
+]);
+
 
 
 Route::get('auth/verify/{confirmationCode}', [

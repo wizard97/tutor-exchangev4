@@ -4,14 +4,14 @@
 @section('content')
 <div class="container-fluid">
   <div class="row">
-    @include('tutor/sidebar')
+    @include('/account/tutoring/sidebar')
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
 @include('templates/feedback')
 
   <h1>Your Classes</h1>
 
-<p class="alert alert-success"><i class="fa fa-info-circle"></i>  This is where you update the classes you can tutor. Make sure to fill it out as completely as possible and keep it updated.</p>
+<p class="alert alert-info"><i class="fa fa-info-circle"></i>  This is where you update your tutoring info. Make sure to fill it out as completely as possible and keep it updated.</p>
 
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href="#Math">Math</a></li>
@@ -33,7 +33,7 @@
 </ul>
 
 
-{!! Form::open(['url' => '/tutor/classes']) !!}
+{!! Form::open(['url' => '/account/tutoring/classes']) !!}
 {!! csrf_field() !!}
 
 <div class="tab-content">
