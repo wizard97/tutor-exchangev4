@@ -19,8 +19,105 @@ class SettingsController extends Controller
 
   public function index()
   {
-
     return view('account/settings/index');
   }
 
+  public function editname(Request $request)
+  {
+    $this->validate($request, [
+      'fname' => 'required|max:30|alpha',
+      'lname' => 'required|max:30|alpha',
+    ]);
+
+    $user = \App\User::findOrFail($this->id);
+    $user->fname = $request->input('fname');
+    $user->lname = $request->input('lname');
+    $user->save();
+
+    \Session::flash('feedback_positive', 'You have successfully updated your name.');
+    return back();
+  }
+
+  public function editemail(Request $request)
+  {
+    $this->validate($request, [
+      'email' => 'required|email|max:255|unique:users',
+    ]);
+
+    $user = \App\User::findOrFail($this->id);
+    $user->email = $request->input('email');
+    $user->save();
+
+    \Session::flash('feedback_positive', 'You have successfully updated your email address.');
+    return back();
+  }
+
+  public function editzip(Request $request)
+  {
+    $this->validate($request, [
+      'zip'   => 'required|digits:5|numeric',
+    ]);
+
+    $user = \App\User::findOrFail($this->id);
+    $user->zip = $request->input('zip');
+    $user->save();
+
+    \Session::flash('feedback_positive', 'You have successfully updated your Zip code.');
+    return back();
+  }
+
+  public function editaccounttype(Request $request)
+  {
+    $this->validate($request, [
+      'account_type' => 'required|integer|min:1|max:3',
+    ]);
+    $user = \App\User::findOrFail($this->id);
+
+    if ($user->account_type == $request->input('account_type'))
+    {
+      \Session::flash('feedback_negative', 'You are already this account type');
+      return back();
+    }
+
+    //if downgrading from tutor
+    if ($request->input('account_type') == 1)
+    {
+      \App\TutorLevel::where('user_id', $user->id)->delete();
+      $user->tutor()->delete();
+      $user->account_type = $request->input('account_type');
+      $user->save();
+      \Session::flash('feedback_positive', 'You have successfully downgraded your account, your tutoring info has been deleted.');
+    }
+    //if upgrading from standard user
+    elseif($user->account_type == 1)
+    {
+      $user->tutor()->firstOrCreate([]);
+      $user->account_type = $request->input('account_type');
+      $user->save();
+      \Session::flash('feedback_positive', 'You have successfully upgraded your account.');
+    }
+    //if only changing tutoring type
+    else
+    {
+      $user->account_type = $request->input('account_type');
+      $user->save();
+      \Session::flash('feedback_positive', 'You have successfully changed your account type.');
+    }
+
+    return back();
+  }
+
+  public function editpassword(Request $request)
+  {
+    $this->validate($request, [
+      'password' => 'required|confirmed|min:6',
+    ]);
+
+    $user = \App\User::findOrFail($this->id);
+    $user->password = bcrypt($request->input('password'));
+    $user->save();
+
+    \Session::flash('feedback_positive', 'You have successfully changed your password.');
+    return back();
+  }
 }

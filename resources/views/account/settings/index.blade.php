@@ -91,13 +91,13 @@
   <div class="modal fade" id="name" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
+        {!! Form::open(['url' => route('editName')]) !!}
+        {!! csrf_field() !!}
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="myModalLabel">Edit My Name</h4>
         </div>
         <div class="modal-body">
-          {!! Form::open(['url' => route('editName')]) !!}
-          {!! csrf_field() !!}
 
           <div class="form-group">
             {!! Form::label('fname', 'New first name') !!}
@@ -108,12 +108,12 @@
             {!! Form::label('lname', 'New last name') !!}
             {!! Form::text('lname', null, ['class' => 'form-control']) !!}
           </div>
-          {!! Form::close() !!}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle fa-fw"></i> Cancel</button>
-          <button type="button" class="btn btn-success"><i class="fa fa-floppy-o fa-fw"></i> Update</button>
+          <button type="submit" class="btn btn-success"><i class="fa fa-floppy-o fa-fw"></i> Update</button>
         </div>
+        {!! Form::close() !!}
       </div>
     </div>
   </div>
@@ -122,23 +122,23 @@
   <div class="modal fade" id="email" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
+        {!! Form::open(['url' => route('editEmail')]) !!}
+        {!! csrf_field() !!}
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="myModalLabel">Edit My Email</h4>
         </div>
         <div class="modal-body">
-          {!! Form::open(['url' => '/auth/register']) !!}
-          {!! csrf_field() !!}
           <div class="form-group">
             {!! Form::label('email', 'New email') !!}
             {!! Form::email('email', null, ['class' => 'form-control']) !!}
           </div>
-          {!! Form::close() !!}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle fa-fw"></i> Cancel</button>
-          <button type="button" class="btn btn-success"><i class="fa fa-floppy-o fa-fw"></i> Update</button>
+          <button type="submit" class="btn btn-success"><i class="fa fa-floppy-o fa-fw"></i> Update</button>
         </div>
+        {!! Form::close() !!}
       </div>
     </div>
   </div>
@@ -147,23 +147,23 @@
   <div class="modal fade" id="zip" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
+        {!! Form::open(['url' => route('editZip')]) !!}
+        {!! csrf_field() !!}
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="myModalLabel">Edit My Zip Code</h4>
         </div>
         <div class="modal-body">
-          {!! Form::open(['url' => route('editName')]) !!}
-          {!! csrf_field() !!}
           <div class="form-group">
-            {!! Form::label('zip', 'New zip code') !!}
+            {!! Form::label('zip', 'New Zip code') !!}
             {!! Form::text('zip', null, ['class' => 'form-control']) !!}
           </div>
-          {!! Form::close() !!}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle fa-fw"></i> Cancel</button>
-          <button type="button" class="btn btn-success"><i class="fa fa-floppy-o fa-fw"></i> Update</button>
+          <button type="submit" class="btn btn-success"><i class="fa fa-floppy-o fa-fw"></i> Update</button>
         </div>
+        {!! Form::close() !!}
       </div>
     </div>
   </div>
@@ -172,13 +172,13 @@
   <div class="modal fade" id="account_type" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
+        {!! Form::open(['url' => route('editAccountType')]) !!}
+        {!! csrf_field() !!}
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="myModalLabel">Change My Account Type</h4>
         </div>
         <div class="modal-body">
-          {!! Form::open(['url' => '/auth/register']) !!}
-          {!! csrf_field() !!}
           <label>New account type</label>
           <br>
           <div class="btn-group" data-toggle="buttons">
@@ -192,12 +192,12 @@
               {!! Form::radio('account_type', '3') !!} Professional Tutor
             </label>
           </div>
-          {!! Form::close() !!}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle fa-fw"></i> Cancel</button>
-          <button type="button" class="btn btn-success"><i class="fa fa-floppy-o fa-fw"></i> Update</button>
+          <button type="submit" class="btn btn-success"><i class="fa fa-floppy-o fa-fw"></i> Update</button>
         </div>
+        {!! Form::close() !!}
       </div>
     </div>
   </div>
@@ -206,13 +206,13 @@
   <div class="modal fade" id="password" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
+        {!! Form::open(['url' => route('editPassword')]) !!}
+        {!! csrf_field() !!}
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="myModalLabel">Change My Password</h4>
         </div>
         <div class="modal-body">
-          {!! Form::open(['url' => '/auth/register']) !!}
-          {!! csrf_field() !!}
           <div class="form-group">
             {!! Form::label('password', 'New password') !!}
             {!! Form::password('password', ['class' => 'form-control']) !!}
@@ -224,12 +224,12 @@
             {!! Form::label('password_confirmation', 'Repeat Password') !!}
             {!! Form::password('password_confirmation', ['class' => 'form-control']) !!}
           </div>
-          {!! Form::close() !!}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle fa-fw"></i> Cancel</button>
-          <button type="button" class="btn btn-success"><i class="fa fa-floppy-o fa-fw"></i> Update</button>
+          <button type="submit" class="btn btn-success"><i class="fa fa-floppy-o fa-fw"></i> Update</button>
         </div>
+        {!! Form::close() !!}
       </div>
     </div>
   </div>
