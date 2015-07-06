@@ -27,7 +27,7 @@ class AuthController extends Controller {
         $validator = \Validator::make(\Input::all(), [
                     'fname' => 'required|max:30|alpha',
                     'lname' => 'required|max:30|alpha',
-                    'zip'   => 'required|numeric|between:0,99999',
+                    'zip'   => 'required|digits:5|numeric',
                     'email' => 'required|email|max:255|unique:users',
                     'password' => 'required|confirmed|min:6',
                     'account_type' => 'required|integer|min:1|max:3',
@@ -126,6 +126,10 @@ class AuthController extends Controller {
               ]);
       }
       $user = Auth::user();
+      $model = \App\User::findOrFail($user->id);
+      $model->last_login = date('Y-m-d H:i:s');
+      $model->save();
+
       \Session::flash('feedback_positive', 'Welcome back '.$user->fname.' '.$user->lname.'!');
       return redirect()->intended('home');
   }

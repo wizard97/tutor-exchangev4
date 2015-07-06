@@ -16,7 +16,7 @@ class CreateTutorsTable extends Migration
             $table->integer('user_id')->unsigned()->primary();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('tutor_active');
-            $table->dateTime('profile_expiration');
+            $table->dateTime('profile_expiration')->nullable();;
             $table->integer('profile_views')->unsigned();
             $table->integer('contact_num')->unsigned();
             $table->integer('age')->unsigned()->nullable();

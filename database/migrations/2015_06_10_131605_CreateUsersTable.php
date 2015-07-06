@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->integer('account_type');
             $table->string('email', 64)->unique();
             $table->boolean('user_active')->default(0);
-            $table->integer('zip')->unsigned();
+            $table->char('zip', 5);
             $table->boolean('has_picture')->default(0);
             $table->string('password', 255);
             $table->string('remember_token')->nullable();

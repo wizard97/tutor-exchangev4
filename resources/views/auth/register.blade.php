@@ -32,7 +32,7 @@
 
         <div class="form-group">
           {!! Form::label('zip', 'Zip Code') !!}
-          {!! Form::number('zip', null, ['class' => 'form-control']) !!}
+          {!! Form::text('zip', null, ['class' => 'form-control']) !!}
         <p class="help-block">This will help us with performing tutor searches</p>
         </div>
 

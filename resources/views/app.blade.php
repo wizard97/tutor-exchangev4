@@ -17,6 +17,8 @@
       <!-- Dashboard CSS -->
       <link rel="stylesheet" href="/css/dashboard.css">
 
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+
       <!-- jquery -->
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
       <!-- Latest compiled and minified JavaScript -->
@@ -30,6 +32,10 @@
       <script src="/js/readmore.js"></script>
       <!-- counterupJS -->
       <script src="/js/counterup.js"></script>
+
+      <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+
+     <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 
       <style type="text/css">
       .table tbody>tr>td.vert-align{

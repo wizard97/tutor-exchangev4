@@ -23,7 +23,7 @@ class TutorController extends Controller
 
   public function getindex()
   {
-    return view('tutor/index');
+    return view('/account/tutoring/index');
   }
 
   public function geteditclasses()
@@ -39,7 +39,7 @@ class TutorController extends Controller
     //get basic tutor info
     $tutor = \App\Tutor::get_tutor_profile($this->id);
 
-    return view('tutor/editclasses')
+    return view('/account/tutoring/editclasses')
     ->with('tutor', $tutor)
     ->with('subjects', $subjects)
     ->with('classes', $classes);
@@ -67,7 +67,7 @@ class TutorController extends Controller
       $request->session()->flash('feedback_positive', 'You have successfully updated you classes. You currently tutor '.$count.' classes.');
     }
     else \App\TutorLevel::where('user_id', $this->id)->delete();
-    return redirect('/tutor/classes');
+    return redirect('/account/tutoring/classes');
   }
 
   public function geteditinfo()
@@ -75,7 +75,7 @@ class TutorController extends Controller
     $tutor = \App\Tutor::get_tutor_profile($this->id);
 
     $grades = \App\Grade::all();
-    return view('tutor/editinfo')
+    return view('/account/tutoring/editinfo')
     ->with('tutor', $tutor)
     ->with('grades', $grades);
   }
@@ -97,7 +97,7 @@ class TutorController extends Controller
     $tutor->save();
 
     $request->session()->flash('feedback_positive', 'You have successfully updated your tutoring info!');
-    return redirect('/tutor/info');
+    return redirect('/account/tutoring/info');
   }
 
   public function getmyprofile()
@@ -106,6 +106,6 @@ class TutorController extends Controller
     $subjects = \App\SchoolClass::groupBy('class_type')->get()->pluck('class_type');
     //get basic tutor info
     $tutor = \App\Tutor::get_tutor_profile($this->id);
-    return view('tutor/myprofile')->with('tutor', $tutor)->with('subjects', $subjects);
+    return view('/account/tutoring/myprofile')->with('tutor', $tutor)->with('subjects', $subjects);
   }
 }
