@@ -47,7 +47,7 @@ class ProfileImageController extends Controller
    *
    * @return Response
    */
-  public function getShowSmall()
+  public function getShowSmall($id)
   {
     $user = \App\User::findOrFail($id);
     $directory = storage_path().'/app/images/'.$id.'/';

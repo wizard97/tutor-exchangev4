@@ -99,7 +99,7 @@
         </div>
         <!-- /.panel-heading -->
         <div class="panel-body">
-          <img src="{{ route('profileimage.full.show', ['id' => Auth::user()->id]) }}" class="img-responsive img-rounded" alt="Profle Picture">
+          <img src="{{ route('profileimage.showfull', ['id' => Auth::user()->id]) }}" class="img-responsive img-rounded" alt="Profle Picture">
           <br>
           <button class="btn btn-info btn-block" data-toggle="modal" data-target="#image"><i class="fa fa-upload"></i> Upload Picutre</button>
           <a href="{{ route('profileimage.destroy') }}" class="btn btn-danger btn-block"><i class="fa fa-trash"></i> Delete Picture</a>
@@ -305,14 +305,18 @@
             {!! csrf_field() !!}
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="myModalLabel">Change My Password</h4>
+              <h4 class="modal-title" id="myModalLabel">Upload Profile Picture</h4>
             </div>
             <div class="modal-body">
-              {!! Form::file('image') !!}
+              <div class="form-group">
+                <label>Image Input</label>
+                {!! Form::file('image') !!}
+                <p class="help-block">Only registered user's will be able to view your profile image.</p>
+              </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle fa-fw"></i> Cancel</button>
-              <button type="submit" class="btn btn-success"><i class="fa fa-floppy-o fa-fw"></i> Update</button>
+              <button type="submit" class="btn btn-success"><i class="fa fa-upload fa-fw"></i> Upload</button>
             </div>
             {!! Form::close() !!}
           </div>

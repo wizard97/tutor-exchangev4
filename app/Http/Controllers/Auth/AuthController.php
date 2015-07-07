@@ -139,6 +139,7 @@ class AuthController extends Controller {
 
   public function getLogout()
   {
+    \Session::flush();
     Auth::logout();
     \Session::flash('feedback_positive', 'You have been logged out.');
     return redirect('home');
