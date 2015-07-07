@@ -49,7 +49,7 @@
             <div class="panel-body">
                 <small class="social-title">Active Tutors</small>
                 <h3 class="count">
-                <span class="integers">123
+                <span class="integers">{{ $stats->active_tutors }}
                 </span></h3>
                 <i class="fa-stat fa fa-graduation-cap"></i>
             </div>
@@ -62,7 +62,7 @@
         <div class="panel panel-default box-c">
             <div class="panel-body">
                 <small class="social-title">Tutor Searches</small>
-                <h3 class="count"><span class="integers">342
+                <h3 class="count"><span class="integers">{{ $stats->searches }}
                 </span></h3>
                 <i class="fa-stat fa fa-search"></i>
             </div>
@@ -122,26 +122,26 @@
 
             <div class="col-md-3 col-sm-6 hero-feature">
                 <div class="thumbnail">
-                    <img src="" alt="">
+                    <img src="/img/minuteman.jpg" alt="">
                     </div>
                     <div class="caption">
                         <h3>Lexington MA Only</h3>
                         <p>This site was designed exclusively for students, parents, and tutors of the Lexington Community.</p>
                         <p>
-                            <a href="" class="btn btn-default">About Us »</a>
+                            <a href="/about" class="btn btn-default">About Us »</a>
                         </p>
                     </div>
             </div>
 
             <div class="col-md-3 col-sm-6 hero-feature">
                 <div class="thumbnail">
-                    <img src="" alt="">
+                    <img src="/img/search.jpg" alt="">
                     </div>
                     <div class="caption">
                         <h3>Find The Perfect Tutor</h3>
                         <p>Just select the credentials you require in your tutor, and we will search all our listing to find you the best one. You can even rate tutors. Currently there are  tutors,  of which are active.</p>
                         <p>
-                            <a href="" class="btn btn-default">Find a Tutor »</a>
+                            <a href="/search/index" class="btn btn-default">Find a Tutor »</a>
                         </p>
                     </div>
 
@@ -149,13 +149,13 @@
 
             <div class="col-md-3 col-sm-6 hero-feature">
                 <div class="thumbnail">
-                    <img src="" alt="">
+                    <img src="/img/profile.jpg" alt="">
                     </div>
                     <div class="caption">
                         <h3>Become a Tutor Yourself</h3>
                         <p>Interested in tutoring? We provide a free easy way to be found. Just register as a tutor, and complete your tutor profile. We will do the rest. Both student and professional tutors are welcome.</p>
                         <p>
-                            <a href="" class="btn btn-default">Start Tutoring »</a>
+                            <a href="/auth/register" class="btn btn-default">Start Tutoring »</a>
                         </p>
                     </div>
 
@@ -163,7 +163,7 @@
 
             <div class="col-md-3 col-sm-6 hero-feature">
                 <div class="thumbnail">
-                    <img src="" alt="">
+                    <img src="/img/github.jpg" alt="">
                     </div>
                     <div class="caption">
                         <h3>Site Run & Created by LHS Students</h3>

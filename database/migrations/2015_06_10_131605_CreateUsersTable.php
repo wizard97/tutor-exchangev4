@@ -19,6 +19,7 @@ class CreateUsersTable extends Migration
             $table->integer('account_type');
             $table->string('email', 64)->unique();
             $table->boolean('user_active')->default(0);
+            $table->string('address', 64);
             $table->char('zip', 5);
             $table->boolean('has_picture')->default(0);
             $table->string('password', 255);

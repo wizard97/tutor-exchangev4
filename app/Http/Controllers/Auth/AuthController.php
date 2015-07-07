@@ -27,6 +27,7 @@ class AuthController extends Controller {
         $validator = \Validator::make(\Input::all(), [
                     'fname' => 'required|max:30|alpha',
                     'lname' => 'required|max:30|alpha',
+                    'address' => 'required',
                     'zip'   => 'required|digits:5|numeric',
                     'email' => 'required|email|max:255|unique:users',
                     'password' => 'required|confirmed|min:6',
@@ -44,6 +45,7 @@ class AuthController extends Controller {
         $new_user = User::create([
           'fname' => \Input::get('fname'),
           'lname' => \Input::get('lname'),
+          'address' => \Input::get('address'),
           'zip' => \Input::get('zip'),
             'email' => \Input::get('email'),
             'password' => bcrypt(\Input::get('password')),
@@ -131,7 +133,8 @@ class AuthController extends Controller {
       $model->save();
 
       \Session::flash('feedback_positive', 'Welcome back '.$user->fname.' '.$user->lname.'!');
-      return redirect()->intended('home');
+      if ($user->account_type > 1) return redirect()->intended(route('tutorDashboard'));
+      else return redirect()->intended('home');
   }
 
   public function getLogout()
