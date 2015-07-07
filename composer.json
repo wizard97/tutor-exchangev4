@@ -14,7 +14,8 @@
         "iron-io/iron_mq": "~2.0",
         "predis/predis": "~1.0",
         "laravelcollective/html": "~5.0",
-        "patricktalmadge/bootstrapper": "~5"
+        "patricktalmadge/bootstrapper": "~5",
+        "intervention/image": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
