@@ -28,7 +28,7 @@ class Level extends Model
   ->where('tutors.tutor_active', '=', '1')
   ->where('tutors.profile_expiration', '>=', date('Y-m-d H:i:s'))
   ->select(\DB::raw('count(*) as class_matches, tutor_levels.user_id, users.account_type'))
-  ->groupBy('tutor_levels.user_id')->orderBy('lname', 'asc')->orderBy('class_matches', 'desc');
+  ->groupBy('tutor_levels.user_id')->orderBy('class_matches', 'desc')->orderBy('lname', 'asc');
   }
 
 }
