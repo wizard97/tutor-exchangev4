@@ -69,8 +69,8 @@ Route::post('account/settings/editpassword', [
 
 //images
 Route::controller('profileimage', 'ProfileImageController', [
-    'getShowFull' => 'profileimage.full.show',
-    'getShowSmall' => 'profileimage.small.show',
+    'getShowFull' => 'profileimage.showfull',
+    'getShowSmall' => 'profileimage.showsmall',
     'postStore' => 'profileimage.store',
     'getDestroy' => 'profileimage.destroy',
 ]);

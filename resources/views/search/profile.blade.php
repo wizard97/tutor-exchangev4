@@ -2,7 +2,7 @@
   <div class="col-md-3">
 
     <div class="row">
-      <img src="{{ $tutor->has_picture }}" width="300" height="300" class="img-thumbnail img-responsive center-block">
+      <img src="{{ route('profileimage.showfull', ['id' => $tutor->user_id]) }}" width="300" height="300" class="img-thumbnail img-responsive center-block">
     </div>
 
   <div class="row">

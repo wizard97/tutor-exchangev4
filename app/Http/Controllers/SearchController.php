@@ -12,7 +12,7 @@ class SearchController extends Controller
 
   public function __construct(Request $request)
   {
-    $request->session()->keep(['tutor_search_inputs']);
+    //$request->session()->keep(['tutor_search_inputs']);
   }
 
     /**
@@ -44,7 +44,7 @@ class SearchController extends Controller
       ]);
       $input = $request->all();
       //flash form data into session
-      $request->session()->flash('tutor_search_inputs', $input);
+      $request->session()->put('tutor_search_inputs', $input);
       //searchcounter++
       \App\Stat::increment('searches');
 

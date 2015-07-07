@@ -42,7 +42,7 @@
     @endif
 
     <td class="vert-align">
-      <a target="_blank" href=""><img href="" class="img-rounded" height="50" width="50" src=""/></a>
+      <a target="_blank" href="{{ route('profileimage.showfull', ['id' => $tutor->user_id]) }}"><img src="{{ route('profileimage.showsmall', ['id' => $tutor->user_id]) }}" class="img-rounded" height="50" width="50" /></a>
     </td>
 
     <td class="vert-align">
