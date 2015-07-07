@@ -35,7 +35,9 @@ Route::get('search/showtutorprofile/{id}', [
 
 
 //tutor
-Route::get('account/tutoring/index', 'TutorController@getindex');
+Route::get('account/tutoring/index', [
+    'as' => 'tutorDashboard', 'uses' => 'TutorController@getindex'
+]);
 Route::get('account/tutoring/info', 'TutorController@geteditinfo');
 Route::post('account/tutoring/info', 'TutorController@posteditinfo');
 Route::get('account/tutoring/classes', 'TutorController@geteditclasses');
@@ -51,6 +53,9 @@ Route::post('account/settings/editname', [
 ]);
 Route::post('account/settings/editemail', [
     'as' => 'editEmail', 'uses' => 'SettingsController@editemail'
+]);
+Route::post('account/settings/editaddress', [
+    'as' => 'editAddress', 'uses' => 'SettingsController@editaddress'
 ]);
 Route::post('account/settings/editzip', [
     'as' => 'editZip', 'uses' => 'SettingsController@editzip'

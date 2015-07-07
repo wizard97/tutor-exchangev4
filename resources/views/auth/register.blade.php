@@ -13,40 +13,51 @@
         {!! Form::open(['url' => '/auth/register']) !!}
         {!! csrf_field() !!}
 
-        <div class="form-group">
-          {!! Form::label('fname', 'First name') !!}
-          {!! Form::text('fname', null, ['class' => 'form-control']) !!}
+        <div class="row">
+          <div class="form-group col-xs-6">
+            {!! Form::label('fname', 'First name') !!}
+            {!! Form::text('fname', null, ['class' => 'form-control']) !!}
+          </div>
         </div>
 
-        <div class="form-group">
-          {!! Form::label('lname', 'Last name') !!}
-          {!! Form::text('lname', null, ['class' => 'form-control']) !!}
+        <div class="row">
+          <div class="form-group col-xs-6">
+            {!! Form::label('lname', 'Last name') !!}
+            {!! Form::text('lname', null, ['class' => 'form-control']) !!}
+          </div>
         </div>
-
 
         <div class="form-group">
           {!! Form::label('email', 'Email') !!}
           {!! Form::email('email', null, ['class' => 'form-control']) !!}
-        <p class="help-block">Please use a real email, you'll recieve an email with an activation link</p>
+          <p class="help-block">Please use a real email, you'll recieve an email with an activation link</p>
         </div>
 
         <div class="form-group">
-          {!! Form::label('zip', 'Zip Code') !!}
-          {!! Form::text('zip', null, ['class' => 'form-control']) !!}
-        <p class="help-block">This will help us with performing tutor searches</p>
+          {!! Form::label('address', 'Street Address') !!}
+          {!! Form::text('address', null, ['class' => 'form-control', 'placeholder' => '123 Massachusetts Ave']) !!}
+          <p class="help-block">This will be kept private, we only use it for our tutor search algorithm.</p>
         </div>
+
+        <div class="row">
+          <div class="form-group col-xs-4">
+            {!! Form::label('zip', 'Zip Code') !!}
+            {!! Form::text('zip', null, ['class' => 'form-control']) !!}
+          </div>
+        </div>
+
+
 
         <div class="form-group">
           {!! Form::label('password', 'Password') !!}
           {!! Form::password('password', ['class' => 'form-control']) !!}
-        <p class="help-block">Minimum 6 characters</p>
+          <p class="help-block">Minimum 6 characters</p>
         </div>
-
-
         <div class="form-group">
           {!! Form::label('password_confirmation', 'Repeat Password') !!}
           {!! Form::password('password_confirmation', ['class' => 'form-control']) !!}
         </div>
+
 
 
         {!! Form::label('Account Type') !!}

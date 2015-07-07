@@ -44,8 +44,9 @@ class SearchController extends Controller
       ]);
       $input = $request->all();
       //flash form data into session
-
       $request->session()->flash('tutor_search_inputs', $input);
+      //searchcounter++
+      \App\Stat::increment('searches');
 
       return redirect('search/showresults');
     }

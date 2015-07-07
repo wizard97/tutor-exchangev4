@@ -52,6 +52,20 @@ class SettingsController extends Controller
     return back();
   }
 
+  public function editaddress(Request $request)
+  {
+    $this->validate($request, [
+      'address' => 'required'
+    ]);
+
+    $user = \App\User::findOrFail($this->id);
+    $user->address = $request->input('address');
+    $user->save();
+
+    \Session::flash('feedback_positive', 'You have successfully updated your street address.');
+    return back();
+  }
+
   public function editzip(Request $request)
   {
     $this->validate($request, [
