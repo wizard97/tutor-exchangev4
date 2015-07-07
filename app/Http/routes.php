@@ -68,9 +68,12 @@ Route::post('account/settings/editpassword', [
 ]);
 
 //images
-Route::resource('image', 'ImagesController',
-['only' => ['show', 'store', 'destroy']]);
-
+Route::controller('profileimage', 'ProfileImageController', [
+    'getShowFull' => 'profileimage.full.show',
+    'getShowSmall' => 'profileimage.small.show',
+    'postStore' => 'profileimage.store',
+    'getDestroy' => 'profileimage.destroy',
+]);
 
 Route::get('auth/verify/{confirmationCode}', [
     'as' => 'confirmation_path',
