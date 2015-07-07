@@ -99,10 +99,10 @@
         </div>
         <!-- /.panel-heading -->
         <div class="panel-body">
-          <img src="{{ route('image.show', ['id' => Auth::user()->id]) }}" class="img-responsive img-rounded" alt="Profle Picture">
+          <img src="{{ route('profileimage.full.show', ['id' => Auth::user()->id]) }}" class="img-responsive img-rounded" alt="Profle Picture">
           <br>
           <button class="btn btn-info btn-block" data-toggle="modal" data-target="#image"><i class="fa fa-upload"></i> Upload Picutre</button>
-          <a href="#" class="btn btn-danger btn-block"><i class="fa fa-trash"></i> Delete Picture</a>
+          <a href="{{ route('profileimage.destroy') }}" class="btn btn-danger btn-block"><i class="fa fa-trash"></i> Delete Picture</a>
         </div>
         <!-- /.panel-body -->
     </div>
@@ -301,7 +301,7 @@
       <div class="modal fade" id="image" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
-            {!! Form::open(['url' => route('image.store'), 'files' => true]) !!}
+            {!! Form::open(['url' => route('profileimage.store'), 'files' => true]) !!}
             {!! csrf_field() !!}
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
