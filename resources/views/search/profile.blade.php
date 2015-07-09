@@ -68,8 +68,10 @@
 @foreach($subjects as $subject)
 <div id="{{ str_replace(' ', '', $subject) }}" class="tab-pane fade in @if($subject == 'Math') active @endif">
     <h3>{{ $subject }} Tutoring</h3>
-    <strong>Highest Completed {{ $subject }}: </strong>
-
+    <br>
+    <strong class="">Highest Completed {{ $subject }}:</strong> <span class="text-success">{{ $tutor->{'highest_'.strtolower(str_replace(' ', '', $subject))} or 'N/A' }}</span>
+    <br>
+    <br>
     <table class="table table-striped">
       <caption>I can tutor/teach the following:</caption>
 
@@ -183,6 +185,9 @@
           <hr>
 @endforeach
 
+@if(!empty($tutor->all_reviews))
+{!! $tutor->all_reviews->render() !!}
+@endif
         </div>
       </div>
     </div>

@@ -21,22 +21,22 @@
       <div class="panel-body">
   <div class="btn-group btn-group-justified">
 
-  <a class="btn btn-primary">
+  <a class="btn btn-primary" href="{{ route('tutoring.info') }}">
     <i class="fa fa-info fa-2x"></i><br>
     Update Info
   </a>
 
-  <a class="btn btn-primary">
+  <a class="btn btn-primary" href="{{ route('tutoring.classes') }}">
     <i class="fa fa-graduation-cap fa-2x"></i><br>
     Update Classes
   </a>
 
-  <a class="btn btn-primary">
+  <a class="btn btn-primary" href="">
     <i class="fa fa-music fa-2x"></i><br>
     Update Music
   </a>
 
-  <a class="btn btn-primary">
+  <a class="btn btn-primary" href="{{ route('tutoring.myprofile') }}">
     <i class="fa fa-user fa-2x"></i><br>
     View Profile
   </a>
@@ -326,7 +326,7 @@
     </div>
 
     <script>
-    new Morris.Line({
+    new Morris.Area({
       yLabelFormat: function(y){return y != Math.round(y)?'':y;},
   // ID of the element in which to draw the chart.
   element: 'myfirstchart',

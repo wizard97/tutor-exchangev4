@@ -44,9 +44,14 @@
   <div class="row">
     <div class="col-md-6">
       <h3>{{ $subject }}</h3>
-
+      <hr>
+      <div class="form-group">
+        {!! Form::label('highest_'.strtolower(str_replace(' ', '', $subject)), 'Highest level I completed in '.strtolower($subject)).':' !!}
+        {!! Form::text('highest_'.strtolower(str_replace(' ', '', $subject)), $tutor->{'highest_'.strtolower(str_replace(' ', '', $subject))}, ['class' => 'form-control', 'placeholder' => 'Calculus (Honors)']) !!}
+        <p class="help-block">Include both class name and level or degree and university.</p>
+      </div>
+      <hr>
       <label>Which of these classes can you tutor?</label>
-
       @foreach ($classes->get($subject) as $class)
       <?php unset($level_array); foreach($class->class_levels as $level) $level_array[$level->level_num] = $level->level_name; ?>
 

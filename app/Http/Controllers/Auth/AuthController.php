@@ -21,10 +21,10 @@ class AuthController extends Controller {
     }
 
 
-    public function store()
+    public function store(Request $request)
     {
 
-        $validator = \Validator::make(\Input::all(), [
+        $validator = \Validator::make($request->all(), [
                     'fname' => 'required|max:30|alpha',
                     'lname' => 'required|max:30|alpha',
                     'address' => 'required',
@@ -37,32 +37,33 @@ class AuthController extends Controller {
 
         if($validator->fails())
         {
-            return \Redirect::back()->withErrors($validator)->withInput(\Input::except('password', 'password_confirmation', 'terms_conditions'));
+            return \Redirect::back()->withErrors($validator)->withInput($request->except('password', 'password_confirmation', 'terms_conditions'));
         }
 
         $confirmation_code = str_random(30);
 
         $new_user = User::create([
-          'fname' => \Input::get('fname'),
-          'lname' => \Input::get('lname'),
-          'address' => \Input::get('address'),
-          'zip' => \Input::get('zip'),
-            'email' => \Input::get('email'),
-            'password' => bcrypt(\Input::get('password')),
-            'account_type' => \Input::get('account_type'),
+          'fname' => $request->input('fname'),
+          'lname' => $request->input('lname'),
+          'address' => $request->input('address'),
+          'zip' => $request->input('zip'),
+            'email' => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
+            'account_type' => $request->input('account_type'),
             'activation_hash' => $confirmation_code,
             'user_active' => 0
         ]);
 
         //if a tutor, create their profile
-        if(\Input::get('account_type') > 1)
+        if($request->input('account_type') > 1)
         {
           $new_user->tutor()->firstOrCreate([]);
         }
-        \Mail::send('emails.verify', array('confirmation_code' => $confirmation_code, 'name' => \Input::get('fname').' '.\Input::get('lname')), function($message) {
-            $message->to(\Input::get('email'), \Input::get('fname').' '.\Input::get('lname'))->subject('Activate your account')->from('no-reply@lextutorexchange.com','Lexington Tutor Exchange');
+        $inputs = $request->all();
+        \Mail::queue('emails.verify', array('confirmation_code' => $confirmation_code, 'name' => $request->input('fname').' '.$request->input('lname')), function($message) use ($inputs) {
+            $message->to($inputs['email'], $inputs['fname'].' '.$inputs['lname'])->subject('Activate your account')->from('no-reply@lextutorexchange.com','Lexington Tutor Exchange');
         });
-        \Session::flash('feedback_positive', 'Thanks for signing up! Please check your email.');
+        \Session::flash('feedback_positive', 'Thanks for signing up! Please check your email for an activation link to activate your account.');
 
         return redirect('home');
     }

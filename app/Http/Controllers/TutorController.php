@@ -50,9 +50,11 @@ class TutorController extends Controller
     if ($request->has('classes') && is_array($request->input('classes')))
     {
       $classes = $request->input('classes');
+
       //clear existing levels
       \App\TutorLevel::where('user_id', $this->id)->delete();
 
+      //insert new classes and levels
       foreach($classes as $class_id)
       {
         if($request->has('class_'.$class_id))
@@ -63,10 +65,24 @@ class TutorController extends Controller
           \App\Tutor::where('user_id', $this->id)->firstOrFail()->classes()->firstOrCreate(['level_id' => $new_level->id]);
         }
       }
+
+      //count the classes
       $count = \App\Tutor::where('user_id', $this->id)->firstOrFail()->classes()->count();
       $request->session()->flash('feedback_positive', 'You have successfully updated you classes. You currently tutor '.$count.' classes.');
     }
     else \App\TutorLevel::where('user_id', $this->id)->delete();
+
+    //insert highest level
+    $subjects = \App\SchoolClass::groupBy('class_type')->get()->pluck('class_type');
+    $tutor = \App\Tutor::where('user_id', $this->id)->firstOrFail();
+    foreach($subjects as $sub_name)
+    {
+      $html_id = 'highest_'.strtolower(str_replace(' ', '', $sub_name));
+      if ($request->has($html_id)) $tutor->{$html_id} = $request->input($html_id);
+      else $tutor->{$html_id} = '';
+    }
+    $tutor->save();
+
     return redirect('/account/tutoring/classes');
   }
 
