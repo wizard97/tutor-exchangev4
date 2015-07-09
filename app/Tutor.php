@@ -50,7 +50,7 @@ class Tutor extends Model
         //add reviews
         $user_reviews = \App\Tutor::where('user_id', $id)->firstOrFail()->reviews()->orderBy('reviews.created_at', 'desc');
         $tutor->num_reviews = $user_reviews->count();
-        $tutor->all_reviews = $user_reviews->get();
+        $tutor->all_reviews = $user_reviews->paginate(15);
         //round rating to 1 decimal place
         if ($tutor->num_reviews != 0) $tutor->rating = round($user_reviews->avg('rating'), 1);
         else $tutor->rating = 0;

@@ -96,7 +96,10 @@ class SettingsController extends Controller
     //if downgrading from tutor
     if ($request->input('account_type') == 1)
     {
+      //delete tutors classes
       \App\TutorLevel::where('user_id', $user->id)->delete();
+      //delete any refrence to SavedTutor
+      \App\SavedTutor::where('tutor_id'. $user->id)->delete();
       $user->tutor()->delete();
       $user->account_type = $request->input('account_type');
       $user->save();

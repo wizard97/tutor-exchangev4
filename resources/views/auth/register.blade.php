@@ -13,19 +13,19 @@
         {!! Form::open(['url' => '/auth/register']) !!}
         {!! csrf_field() !!}
 
-        <div class="row">
-          <div class="form-group col-xs-6">
-            {!! Form::label('fname', 'First name') !!}
-            {!! Form::text('fname', null, ['class' => 'form-control']) !!}
-          </div>
+
+        <div class="form-group">
+          {!! Form::label('fname', 'First name') !!}
+          {!! Form::text('fname', null, ['class' => 'form-control']) !!}
         </div>
 
-        <div class="row">
-          <div class="form-group col-xs-6">
-            {!! Form::label('lname', 'Last name') !!}
-            {!! Form::text('lname', null, ['class' => 'form-control']) !!}
-          </div>
+
+
+        <div class="form-group">
+          {!! Form::label('lname', 'Last name') !!}
+          {!! Form::text('lname', null, ['class' => 'form-control']) !!}
         </div>
+
 
         <div class="form-group">
           {!! Form::label('email', 'Email') !!}
@@ -39,12 +39,12 @@
           <p class="help-block">This will be kept private, we only use it for our tutor search algorithm.</p>
         </div>
 
-        <div class="row">
-          <div class="form-group col-xs-4">
-            {!! Form::label('zip', 'Zip Code') !!}
-            {!! Form::text('zip', null, ['class' => 'form-control']) !!}
-          </div>
+
+        <div class="form-group">
+          {!! Form::label('zip', 'Zip Code') !!}
+          {!! Form::text('zip', null, ['class' => 'form-control']) !!}
         </div>
+
 
 
 

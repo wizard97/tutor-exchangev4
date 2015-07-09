@@ -39,6 +39,16 @@ $factory->define(App\Tutor::class, function ($faker) {
         'tutor_active' => 1,
         'contact_num' => rand(0, 20),
         'profile_expiration' => $faker->dateTimeBetween($startDate = '-6 months', $endDate = '+6 months'),
+        //classes
+        'highest_math' => $faker->text($maxNbChars = 50),
+        'highest_science' => $faker->text($maxNbChars = 50),
+        'highest_socialstudies' => $faker->text($maxNbChars = 50),
+        'highest_english' => $faker->text($maxNbChars = 50),
+        'highest_french' => $faker->text($maxNbChars = 50),
+        'highest_spanish' => $faker->text($maxNbChars = 50),
+        'highest_german' => $faker->text($maxNbChars = 50),
+        'highest_italian' => $faker->text($maxNbChars = 50),
+        'highest_mandarin' => $faker->text($maxNbChars = 50),
 
 
     ];

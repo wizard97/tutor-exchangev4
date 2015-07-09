@@ -23,6 +23,15 @@ class CreateTutorsTable extends Migration
             $table->integer('grade')->nullable();
             $table->integer('rate')->nullable();
             $table->text('about_me');
+            $table->string('highest_math', 50);
+            $table->string('highest_science', 50);
+            $table->string('highest_socialstudies', 50);
+            $table->string('highest_english', 50);
+            $table->string('highest_french', 50);
+            $table->string('highest_spanish', 50);
+            $table->string('highest_german', 50);
+            $table->string('highest_italian', 50);
+            $table->string('highest_mandarin', 50);
             $table->timestamps();
         });
     }

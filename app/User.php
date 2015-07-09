@@ -38,4 +38,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
       return $this->hasOne('App\Tutor', 'user_id', 'id');
     }
+
+    public function saved_tutors()
+    {
+      return $this->hasMany('App\SavedTutor', 'user_id', 'id')
+      ->join('users', 'tutor_id', '=', 'users.id');
+    }
 }

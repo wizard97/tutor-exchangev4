@@ -38,11 +38,17 @@ Route::get('search/showtutorprofile/{id}', [
 Route::get('account/tutoring/index', [
     'as' => 'tutorDashboard', 'uses' => 'TutorController@getindex'
 ]);
-Route::get('account/tutoring/info', 'TutorController@geteditinfo');
+Route::get('account/tutoring/info', [
+    'as' => 'tutoring.info', 'uses' => 'TutorController@geteditinfo'
+]);
 Route::post('account/tutoring/info', 'TutorController@posteditinfo');
-Route::get('account/tutoring/classes', 'TutorController@geteditclasses');
+Route::get('account/tutoring/classes', [
+    'as' => 'tutoring.classes', 'uses' => 'TutorController@geteditclasses'
+]);
 Route::post('account/tutoring/classes', 'TutorController@posteditclasses');
-Route::get('account/tutoring/myprofile', 'TutorController@getmyprofile');
+Route::get('account/tutoring/myprofile', [
+    'as' => 'tutoring.myprofile', 'uses' => 'TutorController@getmyprofile'
+]);
 
 //settings
 Route::get('account/settings/index', [
