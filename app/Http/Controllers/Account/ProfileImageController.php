@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Account;
 
 use Illuminate\Http\Request;
 
@@ -51,15 +51,18 @@ class ProfileImageController extends Controller
   {
     $user = \App\User::findOrFail($id);
     $directory = storage_path().'/app/images/'.$id.'/';
-    if (\Auth::check() && $user->has_picture == 1 && \File::exists($directory.'profile_full.png'))
+    if (\Auth::check() && $user->has_picture == 1 && \File::exists($directory.'profile_thumb.jpg'))
     {
-      $image = \File::get($directory.'profile_full.png');
+      $image = \File::get($directory.'profile_thumb.jpg');
       $response = \Response::make($image);
     }
     else
     {
-      $image = \File::get(storage_path().'/app/images/default.jpg');
+      //return redirect('/img/default_thumb.jpg');
+
+      $image = \File::get(storage_path().'/app/images/default_thumb.jpg');
       $response = \Response::make($image);
+
     }
     // set content-type
     $response->header('Content-Type', 'image/png');

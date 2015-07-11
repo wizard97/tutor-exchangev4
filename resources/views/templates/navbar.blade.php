@@ -18,13 +18,13 @@
 
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li class="{{ isActiveRoute('home') }}"><a href="{{ url('home') }}">Home</a></li>
+        <li class="{{ isActiveRoute('home') }}"><a href="{{ route('home') }}">Home</a></li>
 
-        <li class="{{ isActiveRoute('search') }}"><a href="{{ url('search/index') }}">Search For Tutors</a></li>
+        <li class="{{ isActiveRoute('search') }}"><a href="{{ route('search.index') }}">Search For Tutors</a></li>
 
-        <li class="{{ isExactRoute('about') }}"><a href="{{ url('about') }}">About Us</a></li>
+        <li class="{{ isExactRoute('about') }}"><a href="{{ route('about.index') }}">About Us</a></li>
 
-        <li class="{{ isExactRoute('contact') }}"><a href="{{ url('contact') }}">Contact Us</a></li>
+        <li class="{{ isExactRoute('contact') }}"><a href="{{ route('contact.index') }}">Contact Us</a></li>
 
       </ul>
 

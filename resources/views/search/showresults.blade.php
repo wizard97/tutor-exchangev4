@@ -42,11 +42,13 @@
     @endif
 
     <td class="vert-align">
-      <a target="_blank" href="{{ route('profileimage.showfull', ['id' => $tutor->user_id]) }}"><img src="{{ route('profileimage.showsmall', ['id' => $tutor->user_id]) }}" class="img-rounded" height="50" width="50" /></a>
+      <a target="_blank" href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}"><img src="{{ route('profileimage.showsmall', ['id' => $tutor->user_id]) }}" class="img-rounded" height="50" width="50" /></a>
     </td>
 
     <td class="vert-align">
+      <a href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}">
       {{ $tutor->fname.' '.$tutor->lname}}
+    </a>
     </td>
 
     <td class="vert-align">
@@ -74,7 +76,9 @@
         @elseif($tutor->percent_match > 30) progress-bar-warning
         @else progress-bar-danger
         @endif
-        " role="progressbar" aria-valuenow="{{ $tutor->percent_match }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $tutor->percent_match }}%">{{ $tutor->percent_match }}%</div>
+        " role="progressbar" aria-valuenow="{{ $tutor->percent_match }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $tutor->percent_match }}%">{{ $tutor->percent_match }}%
+      </div>
+    </div>
     </td>
 
     <td class="vert-align">
@@ -84,20 +88,20 @@
 @if($tutor->half_star)<i style="color: #FEC601" class="fa fa-star-half-o"></i>@endif
 @for($i = 0; $i < $tutor->empty_stars; $i++)<i style="color: #FEC601" class="fa fa-star-o"></i>@endfor
         </span>
-       (<span class="text-primary"><a href="/search/showtutorprofile/{{ $tutor->user_id }}#reviews">{{ $tutor->num_reviews }}</a></span>)
+       (<span class="text-primary"><a href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}">{{ $tutor->num_reviews }}</a></span>)
      </span>
     </td>
 
     <td class="vert-align">
-      <a class="btn btn-success btn-sm" target="_blank" href="/search/showtutorprofile/{{ $tutor->user_id }}" role="button">
+      <a class="btn btn-success btn-sm" target="_blank" href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}" role="button">
         <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Profile
       </a>
 
-      <a class="btn btn-primary btn-sm" target="_blank" href="" role="button">
+      <button class="btn btn-primary btn-sm contact-button" data-toggle="modal" data-target="#contactModal" data-userid="{{ $tutor->user_id }}">
         <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Contact
-      </a>
+      </button>
 
-      <button type="button" name="saved_tutors_id[]" value="" class="btn btn-warning btn-sm not_saved_btn" aria-expanded="false">
+      <button type="button" name="saved_tutors_id[]" value="" class="btn btn-warning btn-sm not_saved_btn" data-userid="{{ $tutor->user_id }}" aria-expanded="false">
         <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save
       </button>
     </td>
@@ -106,9 +110,13 @@
     @endforeach
   </tbody>
 </table>
+</div>
 
 @if(!empty($results))
 {!! $results->render() !!}
 @endif
+
+@include('/search/contactmodal')
+
 </div>
 @stop

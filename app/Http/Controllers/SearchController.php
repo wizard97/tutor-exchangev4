@@ -135,15 +135,21 @@ class SearchController extends Controller
       return view('search/showtutorprofile')->with('tutor', $tutor)->with('subjects', $subjects);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function update($id)
+
+
+    public function ajaxcontactjson(Request $request)
     {
-        //
+      $this->validate($request, [
+        'userid' => 'required|exists:tutors,user_id'
+        ]);
+
+      $tutor = \App\Tutor::get_tutor_profile($request->input('userid'));
+
+      $data['name'] = $tutor->fname.' '.$tutor->lname;
+      $data['tutor_profile'] = route('search.showtutorprofile', ['id' => $request->input('userid')]);
+      $data['post_url'] = route('search.sendmessage');
+
+      return response()->json($data);
     }
 
     /**
@@ -152,8 +158,13 @@ class SearchController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function destroy($id)
+    public function sendmessage(Request $request)
     {
-        //
+      $this->validate($request, [
+        'user_id' => 'required|exists:tutors,user_id',
+        'subject' => 'required|string',
+        'message' => 'required|string',
+        ]);
+        return response()->json("success!");
     }
 }

@@ -4,6 +4,7 @@
       <meta name="google-site-verification" content="x91WvPNaAdw3bjXe9VZONNcImZP-iuspmgaPee1oqpM" />
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="csrf-token" content="{{ csrf_token() }}">
       <title>Lexington Tutor Exchange, Exclusively For Lexington MA Tutoring</title>
       <meta name="description" content="">
       <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -60,6 +61,44 @@
 
 //runs when page is loaded
 $(document).ready(function() {
+  $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+});
+
+//save button
+/*
+$("#tutor-save-btn").on("click", function(){
+    var $button = $(event.relatedTarget);
+    var id = button.data('userid'); // Extract info from data-* attributes
+    var url = $("#url").val();
+    var $html = "";
+    ajaxindicatorstart();
+    $.post(url, {
+        'saved_tutors_id[]': [id]
+    },
+    function (data) {
+        var json = $.parseJSON(data);
+        if(json[id] === true)
+        {
+            $html = $('<button type="button" id="save_btn" name="saved_tutors_id[]" value="" class="btn btn-info btn-sm" aria-expanded="false"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> Saved!</button>');
+            $button.replaceWith($html);
+            $html.val(id);
+        }
+        else
+        {
+            $html = $('<button type="button" id="save_btn" name="saved_tutors_id[]" value="" class="btn btn-warning btn-sm" aria-expanded="false"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save</button>');
+            $button.replaceWith($html);
+            $html.val(id);
+        }
+
+        updateFeedbackMessages();
+
+    });
+});
+*/
+
     //expand and collapse large texts
     $('.about_me').readmore({
         collapsedHeight: 200,
@@ -118,7 +157,7 @@ $(document).ready(function() {
 <script>
 $(document).ready(function(){
   $(".integers").counterUp({delay: 10,time: 1000});
-    $('#resultsTable').dataTable();
+
 
 });
 </script>

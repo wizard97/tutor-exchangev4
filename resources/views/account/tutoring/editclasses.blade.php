@@ -33,7 +33,7 @@
 </ul>
 
 
-{!! Form::open(['url' => '/account/tutoring/classes']) !!}
+{!! Form::open(['url' => route('tutoring.editclasses')]) !!}
 {!! csrf_field() !!}
 
 <div class="tab-content">
