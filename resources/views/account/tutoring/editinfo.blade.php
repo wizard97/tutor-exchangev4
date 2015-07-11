@@ -15,7 +15,7 @@
 
 <p class="alert alert-info"><i class="fa fa-info-circle"></i>  This is where you update your tutoring info. Make sure to fill it out as completely as possible and keep it updated.</p>
 
-{!! Form::open(['url' => '/account/tutoring/info']) !!}
+{!! Form::open(['url' => route('tutoring.editinfo')]) !!}
 {!! csrf_field() !!}
 <div class="col-md-6">
 <div class="panel panel-primary">

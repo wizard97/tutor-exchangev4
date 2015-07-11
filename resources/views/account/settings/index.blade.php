@@ -105,7 +105,7 @@
   <div class="modal fade" id="name" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        {!! Form::open(['url' => route('editName')]) !!}
+        {!! Form::open(['url' => route('accountsettings.editname')]) !!}
         {!! csrf_field() !!}
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -141,7 +141,7 @@
   <div class="modal fade" id="email" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        {!! Form::open(['url' => route('editEmail')]) !!}
+        {!! Form::open(['url' => route('accountsettings.editemail')]) !!}
         {!! csrf_field() !!}
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -166,7 +166,7 @@
   <div class="modal fade" id="address" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        {!! Form::open(['url' => route('editAddress')]) !!}
+        {!! Form::open(['url' => route('accountsettings.editaddress')]) !!}
         {!! csrf_field() !!}
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -193,7 +193,7 @@
   <div class="modal fade" id="zip" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        {!! Form::open(['url' => route('editZip')]) !!}
+        {!! Form::open(['url' => route('accountsettings.editzip')]) !!}
         {!! csrf_field() !!}
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -220,7 +220,7 @@
   <div class="modal fade" id="account_type" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        {!! Form::open(['url' => route('editAccountType')]) !!}
+        {!! Form::open(['url' => route('accountsettings.editaccounttype')]) !!}
         {!! csrf_field() !!}
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -260,7 +260,7 @@
   <div class="modal fade" id="password" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        {!! Form::open(['url' => route('editPassword')]) !!}
+        {!! Form::open(['url' => route('accountsettings.editpassword')]) !!}
         {!! csrf_field() !!}
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

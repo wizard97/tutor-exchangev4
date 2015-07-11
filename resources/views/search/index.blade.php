@@ -32,7 +32,7 @@
 </ul>
 
 
-<form method="POST" action="/search/index">
+<form method="POST" action="{{ route('search.search') }}">
 {!! csrf_field() !!}
 <div class="tab-content">
   <div id="Criteria" class="tab-pane fade in active">

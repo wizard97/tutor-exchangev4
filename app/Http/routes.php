@@ -15,66 +15,84 @@ Route::get('/', function () {
 return redirect('home');
 });
 
-Route::get('home', 'HomeController@index');
-Route::get('about', function() { return View::make('about'); });
-Route::get('contact', function() { return View::make('contact'); });
+Route::get('home', [
+    'as' => 'home', 'uses' => 'HomeController@index'
+]);
+Route::get('about', ['as' => 'about.index', function() { return View::make('about'); }]);
+Route::get('contact', ['as' => 'contact.index', function() { return View::make('contact'); }]);
+
 
 //search
 Route::get('search/index', [
-    'as' => 'searchPage', 'uses' => 'SearchController@index'
+    'as' => 'search.index', 'uses' => 'SearchController@index'
 ]);
-Route::post('search/index', [
-    'as' => 'searchResultsPost', 'uses' => 'SearchController@search'
+Route::post('search/search', [
+    'as' => 'search.search', 'uses' => 'SearchController@search'
 ]);
 Route::get('search/showresults', [
-    'as' => 'searchResultsGet', 'uses' => 'SearchController@showresults'
+    'as' => 'search.showresults', 'uses' => 'SearchController@showresults'
 ]);
 Route::get('search/showtutorprofile/{id}', [
-    'as' => 'searchTutorProfile', 'uses' => 'SearchController@showtutorprofile'
+    'as' => 'search.showtutorprofile',
+    'middleware' => 'auth',
+    'uses' => 'SearchController@showtutorprofile'
 ]);
-
+Route::post('search/contacttutor', [
+    'as' => 'search.ajaxcontacttutor',
+     'middleware' => 'auth',
+     'uses' => 'SearchController@ajaxcontactjson'
+]);
+Route::post('search/sendmessage', [
+    'as' => 'search.sendmessage',
+     'middleware' => 'auth',
+     'uses' => 'SearchController@sendmessage'
+]);
 
 //tutor
 Route::get('account/tutoring/index', [
-    'as' => 'tutorDashboard', 'uses' => 'TutorController@getindex'
+    'as' => 'tutoring.dashboard', 'uses' => 'Account\TutorController@getindex'
 ]);
 Route::get('account/tutoring/info', [
-    'as' => 'tutoring.info', 'uses' => 'TutorController@geteditinfo'
+    'as' => 'tutoring.info', 'uses' => 'Account\TutorController@geteditinfo'
 ]);
-Route::post('account/tutoring/info', 'TutorController@posteditinfo');
+Route::post('account/tutoring/editinfo', [
+    'as' => 'tutoring.editinfo', 'uses' => 'Account\TutorController@posteditinfo'
+]);
 Route::get('account/tutoring/classes', [
-    'as' => 'tutoring.classes', 'uses' => 'TutorController@geteditclasses'
+    'as' => 'tutoring.classes', 'uses' => 'Account\TutorController@geteditclasses'
 ]);
-Route::post('account/tutoring/classes', 'TutorController@posteditclasses');
+Route::post('account/tutoring/classes', [
+    'as' => 'tutoring.editclasses', 'uses' => 'Account\TutorController@posteditclasses'
+]);
 Route::get('account/tutoring/myprofile', [
-    'as' => 'tutoring.myprofile', 'uses' => 'TutorController@getmyprofile'
+    'as' => 'tutoring.myprofile', 'uses' => 'Account\TutorController@getmyprofile'
 ]);
 
 //settings
 Route::get('account/settings/index', [
-    'as' => 'accountSettings', 'uses' => 'SettingsController@index'
+    'as' => 'accountsettings.index', 'uses' => 'Account\SettingsController@index'
 ]);
 Route::post('account/settings/editname', [
-    'as' => 'editName', 'uses' => 'SettingsController@editname'
+    'as' => 'accountsettings.editname', 'uses' => 'Account\SettingsController@editname'
 ]);
 Route::post('account/settings/editemail', [
-    'as' => 'editEmail', 'uses' => 'SettingsController@editemail'
+    'as' => 'accountsettings.editemail', 'uses' => 'Account\SettingsController@editemail'
 ]);
 Route::post('account/settings/editaddress', [
-    'as' => 'editAddress', 'uses' => 'SettingsController@editaddress'
+    'as' => 'accountsettings.editaddress', 'uses' => 'Account\SettingsController@editaddress'
 ]);
 Route::post('account/settings/editzip', [
-    'as' => 'editZip', 'uses' => 'SettingsController@editzip'
+    'as' => 'accountsettings.editzip', 'uses' => 'Account\SettingsController@editzip'
 ]);
 Route::post('account/settings/editaccounttype', [
-    'as' => 'editAccountType', 'uses' => 'SettingsController@editaccounttype'
+    'as' => 'accountsettings.editaccounttype', 'uses' => 'Account\SettingsController@editaccounttype'
 ]);
 Route::post('account/settings/editpassword', [
-    'as' => 'editPassword', 'uses' => 'SettingsController@editpassword'
+    'as' => 'accountsettings.editpassword', 'uses' => 'Account\SettingsController@editpassword'
 ]);
 
 //images
-Route::controller('profileimage', 'ProfileImageController', [
+Route::controller('profileimage', 'Account\ProfileImageController', [
     'getShowFull' => 'profileimage.showfull',
     'getShowSmall' => 'profileimage.showsmall',
     'postStore' => 'profileimage.store',
@@ -84,10 +102,6 @@ Route::controller('profileimage', 'ProfileImageController', [
 Route::get('auth/verify/{confirmationCode}', [
     'as' => 'confirmation_path',
     'uses' => 'Auth\AuthController@confirm'
-]);
-Route::get('profile', [
-    'middleware' => 'auth',
-    'uses' => 'ProfileController@show'
 ]);
 
 // Authentication routes...
