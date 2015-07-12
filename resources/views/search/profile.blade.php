@@ -9,7 +9,7 @@
     <div class="text-center">
       <button type="button" id="save_btn" name="saved_tutors_id[]" value="{{$tutor->user_id}}" class="btn btn-info" aria-expanded="false"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> Saved!</button>
       <button type="button" id="save_btn" name="saved_tutors_id[]" value="{{$tutor->user_id}}" class="btn btn-warning" aria-expanded="false"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save me!</button>
-      <a class="btn btn-primary" href="" role="button"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Contact Me</a>
+      <a class="btn btn-primary" data-toggle="modal" data-target="#contactModal" data-userid="{{ $tutor->user_id }}"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Contact Me</a>
     </div>
     <br>
   </div>
@@ -191,3 +191,4 @@
         </div>
       </div>
     </div>
+@include('/search/contactmodal')

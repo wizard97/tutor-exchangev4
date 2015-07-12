@@ -92,36 +92,42 @@ $(document).ready(function() {
 });
 
 //save button
-/*
-$("#tutor-save-btn").on("click", function(){
-    var $button = $(event.relatedTarget);
+$(".tutor-save-btn").on("click", function(){
+    var button = $(this);
     var id = button.data('userid'); // Extract info from data-* attributes
-    var url = $("#url").val();
-    var $html = "";
-    ajaxindicatorstart();
-    $.post(url, {
-        'saved_tutors_id[]': [id]
-    },
-    function (data) {
-        var json = $.parseJSON(data);
-        if(json[id] === true)
+    var url = "{{ route('search.ajaxsavetutor') }}";
+//save
+    $.ajax({
+      type: "POST",
+      url : url,
+      data : {user_id: id},
+      success : function(data){
+
+        if(data[id] === true)
         {
-            $html = $('<button type="button" id="save_btn" name="saved_tutors_id[]" value="" class="btn btn-info btn-sm" aria-expanded="false"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> Saved!</button>');
-            $button.replaceWith($html);
-            $html.val(id);
+            button.toggleClass('btn-warning', false).toggleClass('btn-info', true);
+            button.html('<span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> Saved!')
         }
         else
         {
-            $html = $('<button type="button" id="save_btn" name="saved_tutors_id[]" value="" class="btn btn-warning btn-sm" aria-expanded="false"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save</button>');
-            $button.replaceWith($html);
-            $html.val(id);
+          button.toggleClass('btn-warning', true).toggleClass('btn-info', false);
+          button.html('<span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save me!')
         }
+//get feedback messages
+        $.ajax({
+          type: "GET",
+          url : "{{ route('feedback') }}",
+          success: function (data){
+            $("#feedback").replaceWith(data);
+          }
+        });
 
-        updateFeedbackMessages();
+      }
 
     });
-});
-*/
+  });
+
+
 
     //expand and collapse large texts
     $('.about_me').readmore({

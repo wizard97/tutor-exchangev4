@@ -22,6 +22,10 @@ Route::get('about', ['as' => 'about.index', function() { return View::make('abou
 Route::get('contact', ['as' => 'contact.index', function() { return View::make('contact'); }]);
 
 
+Route::get('user/feedback', [
+    'as' => 'feedback', function() { return View::make('/templates/feedback'); }]);
+
+
 //search
 Route::get('search/index', [
     'as' => 'search.index', 'uses' => 'SearchController@index'
@@ -46,6 +50,11 @@ Route::post('search/sendmessage', [
     'as' => 'search.sendmessage',
      'middleware' => 'auth',
      'uses' => 'SearchController@sendmessage'
+]);
+Route::post('search/savetutor', [
+    'as' => 'search.ajaxsavetutor',
+     'middleware' => 'auth',
+     'uses' => 'SearchController@ajaxsavetutor'
 ]);
 
 //tutor

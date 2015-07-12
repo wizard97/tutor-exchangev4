@@ -19,7 +19,7 @@
         Sincerely,<br>
         Lexington Tutor Exchange
         </p>
-          <br>
+        
         <h4>Begin Forwarded Message</h4>
         <hr>
         <p>
