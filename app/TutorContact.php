@@ -6,6 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class TutorContact extends Model
 {
-  protected $guarded = ['id'];
+
 
 }

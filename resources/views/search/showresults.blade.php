@@ -101,9 +101,16 @@
         <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Contact
       </button>
 
-      <button type="button" name="saved_tutors_id[]" value="" class="btn btn-warning btn-sm not_saved_btn" data-userid="{{ $tutor->user_id }}" aria-expanded="false">
-        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save
+      @if(in_array($tutor->user_id, $saved_tutors))
+      <button type="button" name="saved_tutor_id" data-userid="{{ $tutor->user_id }}" class="btn btn-info btn-sm tutor-save-btn" aria-expanded="false"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>
+        Saved!
       </button>
+      @else
+      <button type="button" name="saved_tutor_id" data-userid="{{ $tutor->user_id }}" class="btn btn-warning btn-sm tutor-save-btn" aria-expanded="false"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+         Save me!
+      </button>
+      @endif
+
     </td>
 
   </tr>

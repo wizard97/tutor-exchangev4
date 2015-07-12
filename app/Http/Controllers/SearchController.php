@@ -115,7 +115,10 @@ class SearchController extends Controller
       else $results = array();
 
       $num_results = count($id_count);
-      return view('search/showresults', ['results' => $results, 'num_results' => $num_results]);
+
+      //get users saved tutors, stupid Laravel contins doesnt work
+      $saved_tutors = \Auth::user()->saved_tutors()->get()->pluck('tutor_id')->toArray();
+      return view('search/showresults', ['results' => $results, 'num_results' => $num_results, 'saved_tutors' => $saved_tutors]);
      }
 
 
@@ -192,4 +195,35 @@ class SearchController extends Controller
 
         return view('templates/feedback');
     }
+
+    public function ajaxsavetutor(Request $request)
+    {
+      $this->validate($request, [
+        'user_id' => 'required|exists:tutors,user_id',
+        ]);
+      $id = $request->input('user_id');
+      $tutor = \App\Tutor::get_tutor_profile($id);
+
+
+      $search = \Auth::user()->saved_tutors()->where('tutor_id', $id)->first();
+
+      if (is_null($search))
+      {
+        $saved_model = new \App\SavedTutor;
+        $saved_model->user_id = \Auth::user()->id;
+        $saved_model->tutor_id = $id;
+        $saved_model->save();
+        \Session::flash('feedback_positive', 'You have successfully added '.$tutor->fname.' '.$tutor->lname.' to your saved tutors.');
+        return response()->json([$id => true]);
+      }
+
+      else
+      {
+        \App\SavedTutor::where('user_id', \Auth::user()->id)->where('tutor_id', $id)->delete();
+        \Session::flash('feedback_positive', 'You have successfully removed '.$tutor->fname.' '.$tutor->lname.' from your saved tutors.');
+        return response()->json([$id => false]);
+      }
+
+    }
+
 }
