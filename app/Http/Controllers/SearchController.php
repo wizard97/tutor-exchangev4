@@ -165,6 +165,31 @@ class SearchController extends Controller
         'subject' => 'required|string',
         'message' => 'required|string',
         ]);
-        return response()->json("success!");
+
+        $tutor = \App\Tutor::get_tutor_profile($request->input('user_id'));
+        $user = \Auth::user();
+        //queue only works with arrays
+        $inputs = $request->all();
+        $data['inputs'] = $inputs;
+        $data['tutor'] = $tutor->toArray();
+        $data['user'] = $user->toArray();
+
+        \Mail::queue('emails.tutorcontact', $data, function ($message) use($inputs, $tutor, $user){
+          $message->from($user->email, "Lexington Tutor Exchange Forwarder");
+          $message->to($tutor->email, $tutor->fname.' '.$tutor->lname);
+          $message->replyTo($user->email, $user->fname.' '.$user->lname);
+          $message->subject($inputs['subject']);
+        });
+
+        \Session::flash('feedback_positive', 'Your email to '.$tutor->fname.' '.$tutor->lname.' has been successfully sent!');
+
+        $contact = new \App\TutorContact;
+        $contact->user_id = $user->id;
+        $contact->tutor_id = $request->input('user_id');
+        $contact->message = $request->input('message');
+        $contact->subject = $request->input('subject');
+        $contact->save();
+
+        return view('templates/feedback');
     }
 }
