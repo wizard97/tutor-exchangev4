@@ -109,8 +109,9 @@ class SearchController extends Controller
        ->select('users.id', 'users.fname', 'users.lname', 'users.account_type', 'users.last_login', 'users.last_login', 'users.created_at','tutors.*', 'grades.*')
        ->paginate(15);
 
-       //results passed by reference, function adds tutor match%, classes and reviews
+       // function adds tutor match%, classes and reviews
        $results = \App\Tutor::add_classes_reviews($basic_info, $selected, $id_count);
+
       }
       else $results = array();
 
