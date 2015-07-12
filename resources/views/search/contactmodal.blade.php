@@ -1,5 +1,6 @@
 <script>
 $( document ).ready(function() {
+  //clickable contact button
   $('#contactModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget); // Button that triggered the modal
     var id = button.data('userid'); // Extract info from data-* attributes
@@ -24,6 +25,7 @@ $( document ).ready(function() {
     }
   });
 
+  //ajax submit message
   $('#contact-form').submit(function(event) {
 
     var formData = {
@@ -39,7 +41,13 @@ $( document ).ready(function() {
         data        : formData, // our data object
         //callback
         success : function(data){
-          alert(data);
+          $('#feedback').html(data);
+          $('#contactModal').modal('hide');
+        },
+        error: function(data)
+        {
+          //print validation errors
+          validation_errors(data, '#error-messages');
         }
     });
     // stop the form from submitting the normal way and refreshing the page
@@ -59,7 +67,7 @@ $( document ).ready(function() {
         <h4 class="modal-title" id="exampleModalLabel">Loading...</h4>
       </div>
       <div class="modal-body">
-
+        <div id="error-messages"></div>
           <input type="hidden" value id="contact-userid" class="clearout">
 
           <div class="form-group">

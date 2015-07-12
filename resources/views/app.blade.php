@@ -59,6 +59,30 @@
 
 <script>
 
+//for spitting out validation errors
+function validation_errors(response, selector)
+{
+  if( response.status === 401 ) //redirect if not authenticated user.
+  {
+            $( location ).prop( 'pathname', 'auth/login' );
+  }
+        else if( response.status === 422 ) {
+        //process validation errors here.
+        $errors = response.responseJSON; //this will get the errors response data.
+        //show them somewhere in the markup
+        //e.g
+        errorsHtml = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4><i class="fa fa-info-circle"></i> Watch out! </h4><ul>';
+
+        $.each( $errors, function( key, value ) {
+            errorsHtml += '<li>' + value[0] + '</li>'; //showing only the first error.
+        });
+        errorsHtml += '</ul></di>';
+
+        $( selector ).html( errorsHtml ); //appending to a <div id="form-errors"></div> inside form
+        } else {
+            alert('There was an unexspected error, please let us know if this problem persists.');
+        }
+}
 //runs when page is loaded
 $(document).ready(function() {
   $.ajaxSetup({

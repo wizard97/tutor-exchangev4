@@ -134,7 +134,7 @@ class AuthController extends Controller {
       $model->save();
 
       \Session::flash('feedback_positive', 'Welcome back '.$user->fname.' '.$user->lname.'!');
-      if ($user->account_type > 1) return redirect()->intended(route('tutorDashboard'));
+      if ($user->account_type > 1) return redirect()->intended(route('tutoring.dashboard'));
       else return redirect()->intended('home');
   }
 
