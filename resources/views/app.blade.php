@@ -111,7 +111,7 @@ $(".tutor-save-btn").on("click", function(){
         else
         {
           button.toggleClass('btn-warning', true).toggleClass('btn-info', false);
-          button.html('<span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save me!')
+          button.html('<span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save')
         }
 //get feedback messages
         $.ajax({
@@ -145,40 +145,7 @@ $(".tutor-save-btn").on("click", function(){
         startOpen: false
     });
 
-    //to save tutors
-    $(".text-center").on("click", "button.btn, #save_btn", function() {
-        var $button = $(this);
-        var id = $button.val();
-        var url = $("#url").val();
-        var $html = "";
-        $.post(url, {
-            'saved_tutors_id[]': [id]
-        }, function(data) {
-            var json = $.parseJSON(data);
-            if (json[id] === true) {
-                $html = $(
-                    '<button type="button" id="save_btn" name="saved_tutors_id[]" value="" class="btn btn-info" aria-expanded="false"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> Saved!</button>'
-                );
-                $button.replaceWith($html);
-                $html.val(id);
-            } else {
-                $html = $(
-                    '<button type="button" id="save_btn" name="saved_tutors_id[]" value="" class="btn btn-warning" aria-expanded="false"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save me!</button>'
-                );
-                $button.replaceWith($html);
-                $html.val(id);
-            }
-            var url_feed = $("#url_feedback").val();
-            $.ajax(url_feed, {
-                success: function(data) {
-                    //remove old feedback messages
-                    $(".alert").remove();
-                    $(".page-header").after(
-                        data);
-                }
-            });
-        });
-    });
+
 });
 
 </script>
