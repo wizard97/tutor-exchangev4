@@ -14,8 +14,10 @@ class CreateSavedTutorsTable extends Migration
     {
         Schema::create('saved_tutors', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned()->references('id')->on('users')->onDelete('cascade');
-            $table->integer('tutor_id')->unsigned()->references('user_id')->on('tutors')->onDelete('cascade');
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('tutor_id')->unsigned();
+            $table->foreign('tutor_id')->references('user_id')->on('tutors')->onDelete('cascade');
             $table->timestamps();
         });
     }

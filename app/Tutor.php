@@ -22,9 +22,13 @@ class Tutor extends Model
 
     public function reviews()
     {
-      return $this->hasMany('App\Review', 'tutor_id', 'user_id')
-      ->join('users', 'users.id', '=', 'reviews.reviewer_id');
+      return $this->hasMany('App\Review', 'tutor_id', 'user_id');
 
+    }
+
+    public function contacts()
+    {
+      return $this->hasMany('App\TutorContact', 'tutor_id', 'user_id');
     }
 
     public function scopeTutorInfo($query, $user_ids)
