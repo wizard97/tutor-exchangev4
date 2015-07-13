@@ -60,7 +60,7 @@ $factory->define(App\Review::class, function ($faker) {
     if ($stud_or_par) $reviewer = 'Student';
     else $reviewer = 'Parent';
     return [
-        'reviewer_id' => rand(0, 50),
+        'reviewer_id' => rand(1, 50),
         'rating' => rand(1, 5),
         'title' => $faker->text($maxNbChars = 100),
         'message' => $faker->paragraph($nbSentences = 7) ,

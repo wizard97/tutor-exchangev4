@@ -23,7 +23,13 @@ class TutorController extends Controller
 
   public function getindex()
   {
-    return view('/account/tutoring/index');
+    $tutor = \App\Tutor::get_tutor_profile($this->id);
+    $tutor_model = \App\Tutor::find($this->id);
+    $contacts = $tutor_model->contacts()->join('users', 'users.id', '=', 'tutor_contacts.user_id')->select('users.fname', 'users.lname', 'tutor_contacts.*')->get();
+
+
+
+    return view('/account/tutoring/index')->with('contacts', $contacts)->with('tutor', $tutor);
   }
 
   public function geteditclasses()
