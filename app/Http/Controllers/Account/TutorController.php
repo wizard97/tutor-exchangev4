@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use \stdClass;
 
 class TutorController extends Controller
 {
@@ -25,11 +26,21 @@ class TutorController extends Controller
   {
     $tutor = \App\Tutor::get_tutor_profile($this->id);
     $tutor_model = \App\Tutor::find($this->id);
-    $contacts = $tutor_model->contacts()->join('users', 'users.id', '=', 'tutor_contacts.user_id')->select('users.fname', 'users.lname', 'tutor_contacts.*')->get();
+    $contacts = $tutor_model->contacts()->join('users', 'users.id', '=', 'tutor_contacts.user_id')->select('users.fname', 'users.lname', 'tutor_contacts.*')->orderBy('created_at', 'desc')->get();
 
+    //calculate chart
+    $total_contacts = 0;
+    $contacts_asc = $contacts->reverse();
+    foreach($contacts_asc as $contact)
+    {
+      $total_contacts++;
+      $time_object = new stdClass();
+      $time_object->date = strtotime($contact->created_at)*1000;
+      $time_object->total_contacts = $total_contacts;
+      $contacts_array[] =  $time_object;
+    }
 
-
-    return view('/account/tutoring/index')->with('contacts', $contacts)->with('tutor', $tutor);
+    return view('/account/tutoring/index')->with('contacts', $contacts)->with('tutor', $tutor)->with('contacts_array', $contacts_array);
   }
 
   public function geteditclasses()

@@ -116,6 +116,7 @@
       </div>
 
       <div class="panel-body">
+        <h3 style="text-align: center; margin-bottom: 0px;">Total Tutoring Inquiries</h3>
         <div id="myfirstchart"></div>
 
       </div>
@@ -159,40 +160,43 @@
 
 </div>
 
+<div class="col-md-7">
 
+  <div class="panel panel-default">
+      <div class="panel-heading">
+          <i class="fa fa-user fa-fw"></i> Tutoring Inquiries
+      </div>
+      <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-striped site-datatable">
+            <thead>
+              <tr>
+                <th>From</th>
+                <th>Subject</th>
+                <th>Message</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach($contacts as $contact)
+              <tr>
+                <td>{{ $contact->fname.' '.$contact->lname }}</td>
+                <td>{{ $contact->subject }}</td>
+                <td> <div class="contact-message">{!! nl2br($contact->message) !!}</div></td>
+                <td>{{ date ("m/d/Y", strtotime($contact->created_at)) }}</td>
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+  </div>
+</div>
 
 
 </div>
 
-
-          <h2 class="sub-header">Tutoring Inquiries</h2>
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Contact id#</th>
-                  <th>From</th>
-                  <th>Subject</th>
-                  <th>Message</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php $contact_num = 0; ?>
-                @foreach($contacts as $contact)
-                <?php $contact_num++; ?>
-                <tr>
-                  <td>{{ $contact_num}}</td>
-                  <td>{{ $contact->fname.' '.$contact->lname }}</td>
-                  <td>{{ $contact->subject }}</td>
-                  <td>{{ $contact->message }}</td>
-                  <td>{{ $contact->created_at }}</td>
-                  <td>sit</td>
-                </tr>
-                @endforeach
-              </tbody>
-            </table>
-          </div>
 
         </div>
       </div>
@@ -227,23 +231,30 @@
     </div>
 
     <script>
-    new Morris.Area({
+    $( document ).ready(function() {
+        $('.contact-message').readmore({
+          collapsedHeight: 100,
+          moreLink: '<a href="#">Expand »</a>',
+          lessLink: '<a href="#">Close</a>',
+        });
+    });
+
+
+    new Morris.Line({
       yLabelFormat: function(y){return y != Math.round(y)?'':y;},
   // ID of the element in which to draw the chart.
   element: 'myfirstchart',
   // Chart data records -- each entry in this array corresponds to a point on
   // the chart.
-  data: [
-    { year: '2012-02-24', value: 0 },
-    { year: '2012-05-16', value: 2 },
-    { year: '2012-12-24', value: 5 },
-    { year: '2013-03-5', value: 10 },
-    { year: '2013-11-10', value: 27 }
-  ],
+  data: {!! json_encode($contacts_array) !!},
+  dateFormat: function (x) {
+     return new Date(x).toLocaleString();
+   },
+
   // The name of the data record attribute that contains x-values.
-  xkey: 'year',
+  xkey: 'date',
   // A list of names of data record attributes that contain y-values.
-  ykeys: ['value'],
+  ykeys: ['total_contacts'],
   // Labels for the ykeys -- will be displayed when you hover over the
   // chart.
   labels: ['Total Tutoring Inquiries'],
