@@ -13,7 +13,7 @@
     <p>This site was designed by Lexington students for Lexington students. We will find the best tutor for you based on pricing, subject, and tutor level. This site welcomes both student and professional tutor signups.</p>
     <p>
     <a class="btn btn-success btn-lg" href="/search/index" role="button"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Find a Tutor</a>
-    <a class="btn btn-primary btn-lg" href="auth/register" role="button"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Start Tutoring</a>
+    <a class="btn btn-primary btn-lg" href="@if(\Auth::check()) {{ route('tutoring.dashboard', ['id' => \Auth::user()->id]) }} @else {{ route('auth.login') }} @endif" role="button"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Start Tutoring</a>
     </px>
   </div>
 

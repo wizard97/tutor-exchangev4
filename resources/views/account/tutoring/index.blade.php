@@ -36,6 +36,11 @@
     Update Music
   </a>
 
+  <a class="btn btn-primary" href="">
+    <i class="fa fa-calendar fa-2x"></i><br>
+    Update Schedule
+  </a>
+
   <a class="btn btn-primary" href="{{ route('tutoring.myprofile') }}">
     <i class="fa fa-user fa-2x"></i><br>
     View Profile
@@ -55,38 +60,52 @@
         <!-- /.panel-heading -->
         <div class="panel-body">
             <div class="list-group">
-                <a href="#" class="list-group-item">
+                <a href="{{ route('tutoring.info') }}" class="list-group-item">
                     <i class="fa fa-info fa-fw"></i> Your Info
-                    <span class="pull-right"><i class="fa fa-check" style="color:green; font-size:20px"></i>
+                    <span class="pull-right">
+                      @if($checklist['info']) <i class="fa fa-check" style="color:green; font-size:20px" data-toggle="tooltip" data-placement="right" title="Complete!"></i>
+                      @else <i class="fa fa-exclamation-triangle" style="color:orange; font-size:20px" data-toggle="tooltip" data-placement="right" title="Incomplete!"></i>
+                      @endif
                     </span>
                 </a>
-                <a href="#" class="list-group-item">
+                <a href="{{ route('tutoring.classes') }}" class="list-group-item">
                     <i class="fa fa-graduation-cap fa-fw"></i> Your Classes
-                    <span class="pull-right"><i class="fa fa-exclamation-triangle" style="color:orange; font-size:20px"></i>
+                    <span class="pull-right">
+                      @if($checklist['classes']) <i class="fa fa-check" style="color:green; font-size:20px" data-toggle="tooltip" data-placement="right" title="Complete!"></i>
+                      @else <i class="fa fa-exclamation-triangle" style="color:orange; font-size:20px" data-toggle="tooltip" data-placement="right" title="Incomplete!"></i>
+                      @endif
                     </span>
                 </a>
-                <a href="#" class="list-group-item">
+                <a href="#" class="list-group-item disabled">
                     <i class="fa fa-music fa-fw"></i> Your Music
-                    <span class="pull-right"><i class="fa fa-check" style="color:green; font-size:20px"></i>
+                    <span class="pull-right">
+
                     </span>
                 </a>
-                <a href="#" class="list-group-item">
+                <a href="#" class="list-group-item disabled">
                     <i class="fa fa-calendar fa-fw"></i> Your Schedule
-                  <span class="pull-right"><i class="fa fa-check" style="color:green; font-size:20px"></i>
-                    </span>
+                  <span class="pull-right">
+
+                  </span>
                 </a>
 
                 <a href="#" class="list-group-item list-group-item-info">
                     <i class="fa fa-bolt fa-fw"></i> Listing Active
-                    <span class="pull-right"><i class="fa fa-check" style="color:green; font-size:20px"></i>
+                    <span class="pull-right">
+                      @if($checklist['active']) <i class="fa fa-check" style="color:green; font-size:20px" data-toggle="tooltip" data-placement="right" title="Yes!"></i>
+                      @else <i class="fa fa-exclamation-triangle" style="color:orange; font-size:20px" data-toggle="tooltip" data-placement="right" title="No!"></i>
+                      @endif
                     </span>
                 </a>
 
             </div>
 
             <!-- /.list-group -->
+            @if(!$tutor->is_active)
             <a href="#" class="btn btn-success btn-block"><i class="fa fa-play"></i> Start Tutoring</a>
+            @else
             <a href="#" class="btn btn-warning btn-block"><i class="fa fa-pause"></i> Pause Tutoring</a>
+            @endif
         </div>
         <!-- /.panel-body -->
     </div>
@@ -102,7 +121,7 @@
           <img src="{{ route('profileimage.showfull', ['id' => Auth::user()->id]) }}" class="img-responsive img-rounded" alt="Profle Picture">
           <br>
           <button class="btn btn-info btn-block" data-toggle="modal" data-target="#image"><i class="fa fa-upload"></i> Upload Picutre</button>
-          <a href="{{ route('profileimage.destroy') }}" class="btn btn-danger btn-block"><i class="fa fa-trash"></i> Delete Picture</a>
+          @if(Auth::user()->has_picture)<a href="{{ route('profileimage.destroy') }}" class="btn btn-danger btn-block"><i class="fa fa-trash"></i> Delete Picture</a>@endif
         </div>
         <!-- /.panel-body -->
     </div>
@@ -138,8 +157,14 @@
       </div>
       <!-- /.panel-heading -->
       <div class="panel-body">
+        @if($tutor->tutor_active && strtotime($tutor->profile_expiration) > time())
         <p class="alert alert-success"><i class="fa fa-info-circle"></i> Your listing is currently active!</p>
+        @else
+        <p class="alert alert-danger"><i class="fa fa-info-circle"></i> Your listing is not currently active!</p>
+        @endif
+        @if(strtotime($tutor->profile_expiration) < strtotime('1 week'))
         <p class="alert alert-warning"><i class="fa fa-info-circle"></i> Your listing expires in less than a week!</p>
+        @endif
       </div>
       <!-- /.panel-body -->
   </div>
@@ -151,9 +176,10 @@
       <div class="panel-body">
       <br>
       <ul class="list-group">
-          <li class="list-group-item"><i class="fa fa-clock-o fa-fw"></i> Listing Expiration:<span class="pull-right text-muted"></span></li>
-          <li class="list-group-item"><i class="fa fa-eye fa-fw"></i> Profile Views:<span class="pull-right text-muted"></span></li>
-          <li class="list-group-item"><i class="fa fa-envelope fa-fw"></i> Contacted:<span class="pull-right text-muted"> time(s)</span></li>
+          <?php $expiration = new DateTime($tutor->profile_expiration); $now = new DateTime(date("Y-m-d H:i:s")); $interval = $expiration->diff($now); ?>
+          <li class="list-group-item"><i class="fa fa-clock-o fa-fw"></i> Listing Expiration:<span class="pull-right text-muted">{{ $interval->days }} days ({{ date('m/d/Y', strtotime($tutor->profile_expiration)) }})</span></li>
+          <li class="list-group-item"><i class="fa fa-eye fa-fw"></i> Profile Views:<span class="pull-right text-muted">{{ $tutor->profile_views }} view(s)</span></li>
+          <li class="list-group-item"><i class="fa fa-envelope fa-fw"></i> Contacted:<span class="pull-right text-muted">{{ $contacts->count() }} time(s)</span></li>
       </ul>
   </div>
   </div>
@@ -214,7 +240,7 @@
             </div>
             <div class="modal-body">
               <div class="form-group">
-                <label>Image Input</label>
+                <label>Image</label>
                 {!! Form::file('image') !!}
                 <p class="help-block">Only registered user's will be able to view your profile image.</p>
               </div>
@@ -239,6 +265,9 @@
         });
     });
 
+    $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
 
     new Morris.Line({
       yLabelFormat: function(y){return y != Math.round(y)?'':y;},

@@ -76,6 +76,9 @@ Route::post('account/tutoring/classes', [
 Route::get('account/tutoring/myprofile', [
     'as' => 'tutoring.myprofile', 'uses' => 'Account\TutorController@getmyprofile'
 ]);
+Route::get('account/tutoring/runlisting', [
+    'as' => 'tutoring.runlisting', 'uses' => 'Account\TutorController@runlisting'
+]);
 
 //settings
 Route::get('account/settings/index', [
@@ -107,16 +110,21 @@ Route::controller('profileimage', 'Account\ProfileImageController', [
     'postStore' => 'profileimage.store',
     'getDestroy' => 'profileimage.destroy',
 ]);
-
 Route::get('auth/verify/{confirmationCode}', [
     'as' => 'confirmation_path',
     'uses' => 'Auth\AuthController@confirm'
 ]);
 
 // Authentication routes...
-Route::get('auth/login', 'Auth\AuthController@getLogin');
-Route::post('auth/login', 'Auth\AuthController@postLogin');
-Route::get('auth/logout', 'Auth\AuthController@getLogout');
+Route::get('auth/login', [
+    'as' => 'auth.login', 'uses' => 'Auth\AuthController@getLogin'
+]);
+Route::post('auth/login', [
+    'as' => 'auth.postlogin', 'uses' => 'Auth\AuthController@postLogin'
+]);
+Route::get('auth/logout', [
+    'as' => 'auth.logout', 'uses' => 'Auth\AuthController@getLogout'
+]);
 
 // Registration routes...
 Route::get('auth/register', 'Auth\AuthController@getRegister');
