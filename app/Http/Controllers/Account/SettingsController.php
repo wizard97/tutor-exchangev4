@@ -99,7 +99,7 @@ class SettingsController extends Controller
       //delete tutors classes
       \App\TutorLevel::where('user_id', $user->id)->delete();
       //delete any refrence to SavedTutor
-      \App\SavedTutor::where('tutor_id'. $user->id)->delete();
+      \App\SavedTutor::where('tutor_id', $user->id)->delete();
       $user->tutor()->delete();
       $user->account_type = $request->input('account_type');
       $user->save();

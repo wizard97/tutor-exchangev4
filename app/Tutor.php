@@ -15,9 +15,7 @@ class Tutor extends Model
 
     public function classes()
     {
-      return $this->hasMany('App\TutorLevel', 'user_id', 'user_id')
-      ->join('levels', 'tutor_levels.level_id', '=', 'levels.id')
-      ->join('classes', 'levels.class_id', '=', 'classes.id');
+      return $this->hasMany('App\TutorLevel', 'user_id', 'user_id');
     }
 
     public function reviews()
@@ -74,7 +72,8 @@ class Tutor extends Model
         if ($tutor->half_star) $tutor->empty_stars--;
 
         //get classes
-        $classes = \App\Tutor::where('user_id', $id)->firstOrFail()->classes()->orderBy('class_order', 'asc')->get()->groupBy('class_type');
+        $classes = \App\Tutor::findOrFail($id)->classes()->join('levels', 'tutor_levels.level_id', '=', 'levels.id')
+            ->join('classes', 'levels.class_id', '=', 'classes.id')->orderBy('class_order', 'asc')->get()->groupBy('class_type');
 
         //collections suck, key it by class_id
         $tutor_classes = array();

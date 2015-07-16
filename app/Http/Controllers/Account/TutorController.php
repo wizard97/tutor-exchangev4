@@ -31,6 +31,12 @@ class TutorController extends Controller
     //calculate chart
     $total_contacts = 0;
     $contacts_asc = $contacts->reverse();
+
+    //sign up
+    $time_object = new stdClass();
+    $time_object->date = strtotime($tutor->created_at)*1000;
+    $time_object->total_contacts = 0;
+    $contacts_array[] =  $time_object;
     foreach($contacts_asc as $contact)
     {
       $total_contacts++;
@@ -40,7 +46,12 @@ class TutorController extends Controller
       $contacts_array[] =  $time_object;
     }
 
-    return view('/account/tutoring/index')->with('contacts', $contacts)->with('tutor', $tutor)->with('contacts_array', $contacts_array);
+    //tutor checklist
+    isset($tutor->grade) && isset($tutor->rate) && isset($tutor->about_me) ? $checklist['info'] = true : $checklist['info'] = false;
+    !$tutor_model->classes->isEmpty() ? $checklist['classes'] = true : $checklist['classes'] = false;
+    $tutor->tutor_active ? $checklist['active'] = true : $checklist['active'] = false;
+
+    return view('/account/tutoring/index')->with('contacts', $contacts)->with('tutor', $tutor)->with('contacts_array', $contacts_array)->with('checklist', $checklist);
   }
 
   public function geteditclasses()
