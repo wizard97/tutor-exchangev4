@@ -27,6 +27,19 @@ $factory->define(App\User::class, function ($faker) {
     ];
 });
 
+$factory->define(App\School::class, function ($faker) {
+  //make some random zips
+  $zip = null;
+  do
+  {
+  $zip = \App\Zip::where('zip_code', '<=', $faker->postcode)->orderBy(\DB::raw('RAND()'))->first();
+} while(is_null($zip));
+    return [
+        'zip_code' => $zip->zip_code,
+        'school_name' => $faker->company.' High School',
+    ];
+});
+
 
 
 

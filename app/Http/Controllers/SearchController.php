@@ -118,8 +118,14 @@ class SearchController extends Controller
       $num_results = count($id_count);
 
       //get users saved tutors, stupid Laravel contins doesnt work
-      $saved_tutors = \Auth::user()->saved_tutors()->get()->pluck('tutor_id')->toArray();
-      return view('search/showresults', ['results' => $results, 'num_results' => $num_results, 'saved_tutors' => $saved_tutors]);
+      if (\Auth::check())
+      {
+        $saved_tutors = \Auth::user()->saved_tutors()->join('users', 'tutor_id', '=', 'users.id')->get()->pluck('tutor_id')->toArray();
+        return view('search/showresults', ['results' => $results, 'num_results' => $num_results, 'saved_tutors' => $saved_tutors]);
+      }
+      else $saved_tutors = array();
+        \Session::flash('feedback_warning', "For the protection of our site's tutors, we are blocking most of the site's functionality including the ability to view their profile, see reviews, and contact them. Please <a href=\"".route('auth.login')."\">login/register</a>.");
+      return view('search/showresultsplain', ['results' => $results, 'num_results' => $num_results, 'saved_tutors' => $saved_tutors]);
      }
 
 
@@ -136,7 +142,8 @@ class SearchController extends Controller
       $subjects = \App\SchoolClass::groupBy('class_type')->get()->pluck('class_type');
       //get basic tutor info
       $tutor = \App\Tutor::get_tutor_profile($id);
-      return view('search/showtutorprofile')->with('tutor', $tutor)->with('subjects', $subjects);
+      $saved_tutors = \Auth::user()->saved_tutors()->join('users', 'tutor_id', '=', 'users.id')->get()->pluck('tutor_id')->toArray();
+      return view('search/showtutorprofile')->with('tutor', $tutor)->with('subjects', $subjects)->with('saved_tutors', $saved_tutors);
     }
 
 
@@ -206,7 +213,7 @@ class SearchController extends Controller
       $tutor = \App\Tutor::get_tutor_profile($id);
 
 
-      $search = \Auth::user()->saved_tutors()->where('tutor_id', $id)->first();
+      $search = \Auth::user()->saved_tutors()->join('users', 'tutor_id', '=', 'users.id')->where('tutor_id', $id)->first();
 
       if (is_null($search))
       {

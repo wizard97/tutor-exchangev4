@@ -12,6 +12,15 @@ class InsertClasses extends Migration
     public function up()
     {
 
+//create LHs listing
+DB::table('schools')->insert(
+array(
+    'id' => '1',
+    'zip_code' => '02421',
+    'school_name' => 'Lexington High School',
+)
+);
+
         $subjects = array('math' => 'Math', 'english' => 'English', 'science' => 'Science', 'social' => 'Social Studies', 'french' => 'French', 'spanish' => 'Spanish', 'german' => 'German', 'italian' => 'Italian', 'mandarin' => 'Mandarin');
 
 
@@ -289,28 +298,24 @@ $spanish_classes["spanish_AP"]->levels[4] = "AP";
 //german
 $german_classes["german_1"] = new stdClass;
 $german_classes["german_1"]->name = "German 1";
-$german_classes["german_1"]->levels[4] = "AP";
 $german_classes["german_1"]->levels[3] = "Honors";
 $german_classes["german_1"]->levels[2] = "Level 1";
 $german_classes["german_1"]->levels[1] = "Level 2";
 
 $german_classes["german_2"] = new stdClass;
 $german_classes["german_2"]->name = "German 2";
-$german_classes["german_2"]->levels[4] = "AP";
 $german_classes["german_2"]->levels[3] = "Honors";
 $german_classes["german_2"]->levels[2] = "Level 1";
 $german_classes["german_2"]->levels[1] = "Level 2";
 
 $german_classes["german_3"] = new stdClass;
 $german_classes["german_3"]->name = "German 3";
-$german_classes["german_3"]->levels[4] = "AP";
 $german_classes["german_3"]->levels[3] = "Honors";
 $german_classes["german_3"]->levels[2] = "Level 1";
 $german_classes["german_3"]->levels[1] = "Level 2";
 
 $german_classes["german_4"] = new stdClass;
 $german_classes["german_4"]->name = "German 4";
-$german_classes["german_4"]->levels[4] = "AP";
 $german_classes["german_4"]->levels[3] = "Honors";
 $german_classes["german_4"]->levels[2] = "Level 1";
 $german_classes["german_4"]->levels[1] = "Level 2";
@@ -318,28 +323,24 @@ $german_classes["german_4"]->levels[1] = "Level 2";
 //italian
 $italian_classes["italian_1"] = new stdClass;
 $italian_classes["italian_1"]->name = "Italian 1";
-$italian_classes["italian_1"]->levels[4] = "AP";
 $italian_classes["italian_1"]->levels[3] = "Honors";
 $italian_classes["italian_1"]->levels[2] = "Level 1";
 $italian_classes["italian_1"]->levels[1] = "Level 2";
 
 $italian_classes["italian_2"] = new stdClass;
 $italian_classes["italian_2"]->name = "Italian 2";
-$italian_classes["italian_2"]->levels[4] = "AP";
 $italian_classes["italian_2"]->levels[3] = "Honors";
 $italian_classes["italian_2"]->levels[2] = "Level 1";
 $italian_classes["italian_2"]->levels[1] = "Level 2";
 
 $italian_classes["italian_3"] = new stdClass;
 $italian_classes["italian_3"]->name = "Italian 3";
-$italian_classes["italian_3"]->levels[4] = "AP";
 $italian_classes["italian_3"]->levels[3] = "Honors";
 $italian_classes["italian_3"]->levels[2] = "Level 1";
 $italian_classes["italian_3"]->levels[1] = "Level 2";
 
 $italian_classes["italian_4"] = new stdClass;
 $italian_classes["italian_4"]->name = "Italian 4";
-$italian_classes["italian_4"]->levels[4] = "AP";
 $italian_classes["italian_4"]->levels[3] = "Honors";
 $italian_classes["italian_4"]->levels[2] = "Level 1";
 $italian_classes["italian_4"]->levels[1] = "Level 2";
@@ -347,42 +348,35 @@ $italian_classes["italian_4"]->levels[1] = "Level 2";
 $italian_classes["italian_AP"] = new stdClass;
 $italian_classes["italian_AP"]->name = "AP Italian";
 $italian_classes["italian_AP"]->levels[4] = "AP";
-$italian_classes["italian_AP"]->levels[3] = "Honors";
-$italian_classes["italian_AP"]->levels[2] = "Level 1";
-$italian_classes["italian_AP"]->levels[1] = "Level 2";
+
 
 //mandarin
 $mandarin_classes["mandarin_1"] = new stdClass;
 $mandarin_classes["mandarin_1"]->name = "Mandarin 1";
-$mandarin_classes["mandarin_1"]->levels[4] = "AP";
 $mandarin_classes["mandarin_1"]->levels[3] = "Honors";
 $mandarin_classes["mandarin_1"]->levels[2] = "Level 1";
 $mandarin_classes["mandarin_1"]->levels[1] = "Level 2";
 
 $mandarin_classes["mandarin_2"] = new stdClass;
 $mandarin_classes["mandarin_2"]->name = "Mandarin 2";
-$mandarin_classes["mandarin_2"]->levels[4] = "AP";
 $mandarin_classes["mandarin_2"]->levels[3] = "Honors";
 $mandarin_classes["mandarin_2"]->levels[2] = "Level 1";
 $mandarin_classes["mandarin_2"]->levels[1] = "Level 2";
 
 $mandarin_classes["mandarin_3"] = new stdClass;
 $mandarin_classes["mandarin_3"]->name = "Mandarin 3";
-$mandarin_classes["mandarin_3"]->levels[4] = "AP";
 $mandarin_classes["mandarin_3"]->levels[3] = "Honors";
 $mandarin_classes["mandarin_3"]->levels[2] = "Level 1";
 $mandarin_classes["mandarin_3"]->levels[1] = "Level 2";
 
 $mandarin_classes["mandarin_4"] = new stdClass;
 $mandarin_classes["mandarin_4"]->name = "Mandarin 4";
-$mandarin_classes["mandarin_4"]->levels[4] = "AP";
 $mandarin_classes["mandarin_4"]->levels[3] = "Honors";
 $mandarin_classes["mandarin_4"]->levels[2] = "Level 1";
 $mandarin_classes["mandarin_4"]->levels[1] = "Level 2";
 
 $mandarin_classes["mandarin_5"] = new stdClass;
 $mandarin_classes["mandarin_5"]->name = "Mandarin 5";
-$mandarin_classes["mandarin_5"]->levels[4] = "AP";
 $mandarin_classes["mandarin_5"]->levels[3] = "Honors";
 $mandarin_classes["mandarin_5"]->levels[2] = "Level 1";
 $mandarin_classes["mandarin_5"]->levels[1] = "Level 2";
@@ -390,9 +384,7 @@ $mandarin_classes["mandarin_5"]->levels[1] = "Level 2";
 $mandarin_classes["mandarin_AP"] = new stdClass;
 $mandarin_classes["mandarin_AP"]->name = "AP Mandarin";
 $mandarin_classes["mandarin_AP"]->levels[4] = "AP";
-$mandarin_classes["mandarin_AP"]->levels[3] = "Honors";
-$mandarin_classes["mandarin_AP"]->levels[2] = "Level 1";
-$mandarin_classes["mandarin_AP"]->levels[1] = "Level 2";
+
 
 
 
@@ -408,6 +400,7 @@ $mandarin_classes["mandarin_AP"]->levels[1] = "Level 2";
         {
           DB::table('classes')->insert(
           array(
+              'school_id' => 1,
               'class_order' => $class_order,
               'class_type' => $sub_name,
               'class_name' => $class->name,

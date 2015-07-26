@@ -7,9 +7,12 @@
 
   <div class="row">
     <div class="text-center">
-      <button type="button" id="save_btn" name="saved_tutors_id[]" value="{{$tutor->user_id}}" class="btn btn-info" aria-expanded="false"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> Saved!</button>
-      <button type="button" id="save_btn" name="saved_tutors_id[]" value="{{$tutor->user_id}}" class="btn btn-warning" aria-expanded="false"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save me!</button>
-      <a class="btn btn-primary" data-toggle="modal" data-target="#contactModal" data-userid="{{ $tutor->user_id }}"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Contact Me</a>
+      @if(in_array($tutor->user_id, $saved_tutors))
+      <button type="button" name="saved_tutor_id" data-userid="{{ $tutor->user_id }}" class="btn btn-info btn-sm tutor-save-btn" aria-expanded="false"><i class="fa fa-minus" aria-hidden="true"></i> Remove</button>
+      @else
+      <button type="button" name="saved_tutor_id" data-userid="{{ $tutor->user_id }}" class="btn btn-warning btn-sm tutor-save-btn" aria-expanded="false"><i class="fa fa-plus" aria-hidden="true"></i> Save</button>
+      @endif
+      <a class="btn btn-primary" data-toggle="modal" data-target="#contactModal" data-userid="{{ $tutor->user_id }}"><span class="fa fa-envelope" aria-hidden="true"></i> Contact</a>
     </div>
     <br>
   </div>
