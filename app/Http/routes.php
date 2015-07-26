@@ -15,15 +15,25 @@ Route::get('/', function () {
 return redirect('home');
 });
 
+//some static pages
 Route::get('home', [
     'as' => 'home', 'uses' => 'HomeController@index'
 ]);
 Route::get('about', ['as' => 'about.index', function() { return View::make('about'); }]);
 Route::get('contact', ['as' => 'contact.index', function() { return View::make('contact'); }]);
-
-
 Route::get('user/feedback', [
     'as' => 'feedback', function() { return View::make('/templates/feedback'); }]);
+
+//aarons new beta class search
+Route::get('search/school/index', [
+    'as' => 'school.index', 'uses' => 'SchoolSearchController@index'
+]);
+Route::get('search/school/find/{query}', [
+    'as' => 'school.query', 'uses' => 'SchoolSearchController@query'
+]);
+Route::get('search/school/classes', [
+    'as' => 'school.classes', 'uses' => 'SchoolSearchController@classes'
+]);
 
 
 //search
@@ -79,6 +89,12 @@ Route::get('account/tutoring/myprofile', [
 Route::get('account/tutoring/runlisting', [
     'as' => 'tutoring.runlisting', 'uses' => 'Account\TutorController@runlisting'
 ]);
+Route::post('account/tutoring/runlisting', [
+    'as' => 'tutoring.submitlisting', 'uses' => 'Account\TutorController@submitlisting'
+]);
+Route::get('account/tutoring/pauselisting', [
+    'as' => 'tutoring.pauselisting', 'uses' => 'Account\TutorController@pauselisting'
+]);
 
 //settings
 Route::get('account/settings/index', [
@@ -102,6 +118,12 @@ Route::post('account/settings/editaccounttype', [
 Route::post('account/settings/editpassword', [
     'as' => 'accountsettings.editpassword', 'uses' => 'Account\SettingsController@editpassword'
 ]);
+
+//user dashboard
+Route::get('account/myaccount/index', [
+    'as' => 'myaccount.dashboard', 'uses' => 'Account\MyAccountController@index'
+]);
+
 
 //images
 Route::controller('profileimage', 'Account\ProfileImageController', [

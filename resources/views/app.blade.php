@@ -19,19 +19,29 @@
 
       <!-- Dashboard CSS -->
       <link rel="stylesheet" href="/css/dashboard.css">
-
       <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+
+      <!-- Typeahead CSS -->
+      <link rel="stylesheet" href="/css/typeahead.css">
 
       <!-- jquery -->
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
       <!-- Latest compiled and minified JavaScript -->
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-      
+
+      <!-- Bootstrap Tables-->
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css">
+      <!-- Latest compiled and minified JavaScript -->
+      <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.js"></script>
+
       <!-- DataTables -->
       <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.js"></script>
       <!-- Needer for Bootstrap Datatables-->
       <script src="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 
+      <!-- Typeahead -->
+      <script src="/js/typeahead.bundle.min.js"></script>
 
       <!-- Needer for Coutnerup -->
       <script src="//cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
@@ -44,7 +54,7 @@
 
       <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 
-     <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 
       <style type="text/css">
       .table tbody>tr>td.vert-align{
@@ -86,7 +96,7 @@ function validation_errors(response, selector)
         });
         errorsHtml += '</ul></di>';
 
-        $( selector ).html( errorsHtml ); //appending to a <div id="form-errors"></div> inside form
+        $( selector ).hide().html( errorsHtml ).fadeIn('slow'); //appending to a <div id="form-errors"></div> inside form
         } else {
             alert('There was an unexspected error, please let us know if this problem persists.');
         }
@@ -115,22 +125,24 @@ $(".tutor-save-btn").on("click", function(){
         if(data[id] === true)
         {
             button.toggleClass('btn-warning', false).toggleClass('btn-info', true);
-            button.html('<span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> Saved!')
+            button.hide().html('<i class="fa fa-minus" aria-hidden="true"></i> Remove').fadeIn('slow');
         }
         else
         {
           button.toggleClass('btn-warning', true).toggleClass('btn-info', false);
-          button.html('<span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save')
+          button.hide().html('<i class="fa fa-plus" aria-hidden="true"></i> Save').fadeIn('slow');
         }
 //get feedback messages
         $.ajax({
           type: "GET",
           url : "{{ route('feedback') }}",
           success: function (data){
-            $("#feedback").replaceWith(data);
+            $("#feedback").replaceWith(function() {
+              return $(data).hide().fadeIn('slow');
+            });
+
           }
         });
-
       }
 
     });

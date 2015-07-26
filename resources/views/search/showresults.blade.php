@@ -15,15 +15,17 @@
 <script>
 $(document).ready(function(){
 jQuery('.readmore').readmore({
-  collapsedHeight:10,
-  moreLink: '<a href="#">More</a>',
-  lessLink: '<a href="#">Less</a>'});
+  collapsedHeight: 83,
+  moreLink: '<a href="#">Read more</a>',
+  lessLink: '<a href="#">Read less</a>'
+});
   $(function () {
     $('[data-toggle="tooltip"]').tooltip()
   })
+})
 
 </script>
-@include('templates/feedback')
+
 
 
 
@@ -33,7 +35,7 @@ jQuery('.readmore').readmore({
   <div class="page-header">
     <h1>Search Results</h1>
   </div>
-
+@include('templates/feedback')
 
   <!-- echo out the system feedback (error and success messages) -->
   @if(empty($results))
@@ -65,7 +67,7 @@ jQuery('.readmore').readmore({
         </div>
         <div class="col-xs-12 col-sm-3 col-md-4">
           <div class="row" style="margin-bottom: 10px;">
-            <h3 style="margin-top: 0px; display:inline;" data-toggle="tooltip" data-placement="top" title="{{ $tutor->grade_name }}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>{{ ' '.$tutor->fname.' '.$tutor->lname }}
+            <h3 style="margin-top: 0px; display:inline;" data-toggle="tooltip" data-placement="top" title="{{ $tutor->grade_name }}"><i class="fa fa-user" aria-hidden="true"></i>{{ ' '.$tutor->fname.' '.$tutor->lname }}
             </h3>
             <span class="text-muted"><i class="fa fa-map-marker"></i> Lexington, MA</span>
           </div>
@@ -85,8 +87,8 @@ jQuery('.readmore').readmore({
             </div>
             <div class="col-xs-6 col-xs-offset-0 col-sm-6 col-sm-offset-1">
               <div class="progress">
-                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%; min-width: 3em;">
-                  40%
+                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ $tutor->percent_match }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $tutor->percent_match }}%; min-width: 3em;">
+                  {{ $tutor->percent_match }}%
                 </div>
               </div>
             </div>
@@ -119,18 +121,18 @@ jQuery('.readmore').readmore({
         <div class="col-xs-12 col-sm-4 col-md-3">
           <div class="row">
             <div class="text-center">
-              <strong><span class="glyphicon glyphicon-usd text-success" style="font-size:34px;"></span><p class="text-success" style="font-size:46px; display: inline-block; margin-bottom:0px">{{ $tutor->rate }}</p><span class="text-muted" style="font-size: 28px;">/hour</span></strong>
+              <strong><i class="fa fa-usd text-success" style="font-size: 46px;"></i><p class="text-success" style="font-size:46px; display: inline-block; margin-bottom:0px">{{ $tutor->rate }}</p><span class="text-muted" style="font-size: 28px;">/hour</span></strong>
             </div>
           </div>
           <div class="row">
             <div class="text-center">
               <div class="btn-group-sm" role="group" aria-label="..." style="white-space: nowrap;">
-                <a class="btn btn-success btn-sm" target="_blank" href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}" role="button"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>Profile</a>
-                <button class="btn btn-primary btn-sm contact-button" data-toggle="modal" data-target="#contactModal" data-userid="{{ $tutor->user_id }}"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>Contact</button>
+                <a class="btn btn-success btn-sm" target="_blank" href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}" role="button"><i class="fa fa-user" aria-hidden="true"></i> Profile</a>
+                <button class="btn btn-primary btn-sm contact-button" data-toggle="modal" data-target="#contactModal" data-userid="{{ $tutor->user_id }}"><i class="fa fa-envelope" aria-hidden="true"></i> Contact</button>
                 @if(in_array($tutor->user_id, $saved_tutors))
-                <button type="button" name="saved_tutor_id" data-userid="{{ $tutor->user_id }}" class="btn btn-info btn-sm tutor-save-btn" aria-expanded="false"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span>Saved!</button>
+                <button type="button" name="saved_tutor_id" data-userid="{{ $tutor->user_id }}" class="btn btn-info btn-sm tutor-save-btn" aria-expanded="false"><i class="fa fa-minus" aria-hidden="true"></i> Remove</button>
                 @else
-                <button type="button" name="saved_tutor_id" data-userid="{{ $tutor->user_id }}" class="btn btn-warning btn-sm tutor-save-btn" aria-expanded="false"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>Save</button>
+                <button type="button" name="saved_tutor_id" data-userid="{{ $tutor->user_id }}" class="btn btn-warning btn-sm tutor-save-btn" aria-expanded="false"><i class="fa fa-plus" aria-hidden="true"></i> Save</button>
                 @endif
               </div>
             </div>

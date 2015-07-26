@@ -41,8 +41,8 @@
         <li class="dropdown {{ isActiveRoute('account') }}"><a class="dropdown-toggle" data-toggle="dropdown" href="{{ url('account/showprofile') }}"><i class="fa fa-user fa-fw"></i> {{ Auth::user()->fname.' '.Auth::user()->lname }}
           <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            @if(Auth::user()->account_type > 1)<li class="{{ isActiveRoute('account/tutoring/index') }}"><a href="{{ url('account/tutoring/index') }}"><i class="fa fa-graduation-cap fa-fw"></i> My Tutoring</a></li>@endif
-            <li class="{{ isActiveRoute('') }}"><a href="{{ url('tutoring/index') }}"><i class="fa fa-users fa-fw"></i> My Tutors</a></li>
+            @if(Auth::user()->account_type > 1)<li class="{{ isActiveRoute('account/tutoring') }}"><a href="{{ url('account/tutoring/index') }}"><i class="fa fa-graduation-cap fa-fw"></i> My Tutoring</a></li>@endif
+            <li class="{{ isActiveRoute('account/myaccount') }}"><a href="{{ route('myaccount.dashboard') }}"><i class="fa fa-users fa-fw"></i> Dashboard</a></li>
             <li role="separator" class="divider"></li>
             <li class="{{ isActiveRoute('account/settings') }}"><a href="{{ url('account/settings/index') }}"><i class="fa fa-cog fa-fw"></i> Settings</a></li>
             <li><a href="{{ url('auth/logout') }}"><i class="fa fa-power-off fa-fw"></i> Logout</a></li>

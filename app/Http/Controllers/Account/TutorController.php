@@ -12,8 +12,6 @@ class TutorController extends Controller
 {
   private $id;
 
-  protected $fillable = ['age', 'grade', 'rate', 'about_me'];
-
   public function __construct()
   {
     $this->middleware('\App\Http\Middleware\AuthenticateTutors');
@@ -25,7 +23,7 @@ class TutorController extends Controller
   public function getindex()
   {
     $tutor = \App\Tutor::get_tutor_profile($this->id);
-    $tutor_model = \App\Tutor::find($this->id);
+    $tutor_model = \App\Tutor::findOrFail($this->id);
     $contacts = $tutor_model->contacts()->join('users', 'users.id', '=', 'tutor_contacts.user_id')->select('users.fname', 'users.lname', 'tutor_contacts.*')->orderBy('created_at', 'desc')->get();
 
     //calculate chart
@@ -47,9 +45,7 @@ class TutorController extends Controller
     }
 
     //tutor checklist
-    isset($tutor->grade) && isset($tutor->rate) && isset($tutor->about_me) ? $checklist['info'] = true : $checklist['info'] = false;
-    !$tutor_model->classes->isEmpty() ? $checklist['classes'] = true : $checklist['classes'] = false;
-    $tutor->tutor_active ? $checklist['active'] = true : $checklist['active'] = false;
+    $checklist = $this->makechecklist($this->id);
 
     return view('/account/tutoring/index')->with('contacts', $contacts)->with('tutor', $tutor)->with('contacts_array', $contacts_array)->with('checklist', $checklist);
   }
@@ -150,6 +146,67 @@ class TutorController extends Controller
     $subjects = \App\SchoolClass::groupBy('class_type')->get()->pluck('class_type');
     //get basic tutor info
     $tutor = \App\Tutor::get_tutor_profile($this->id);
-    return view('/account/tutoring/myprofile')->with('tutor', $tutor)->with('subjects', $subjects);
+    $saved_tutors = \Auth::user()->saved_tutors()->join('users', 'tutor_id', '=', 'users.id')->get()->pluck('tutor_id')->toArray();
+    return view('/account/tutoring/myprofile')->with('tutor', $tutor)->with('subjects', $subjects)->with('saved_tutors', $saved_tutors);
   }
+
+  public function pauselisting(Request $request)
+  {
+    $tutor = \App\Tutor::get_tutor_profile($this->id);
+    $tutor_model = \App\Tutor::findOrFail($this->id);
+    $tutor_model->tutor_active = false;
+    $tutor_model->profile_expiration = date('Y-m-d h:i:s');
+    $tutor_model->save();
+
+    $request->session()->flash('feedback_positive', 'Your tutoring listing has been paused, you will no longer show up in tutor searches.');
+    return redirect(route('tutoring.dashboard'));
+  }
+
+  public function runlisting()
+  {
+    $tutor = \App\Tutor::get_tutor_profile($this->id);
+    return view('/account/tutoring/runlisting')->with('tutor', $tutor);
+  }
+
+  public function submitlisting(Request $request)
+  {
+     $validator = \Validator::make($request->all(), [
+    'days' => 'numeric|min:1|max:60',
+    ]);
+    $tutor = \App\Tutor::get_tutor_profile($this->id);
+    $tutor_model = \App\Tutor::findOrFail($this->id);
+
+    $checklist = $this->makechecklist($this->id);
+
+    $validator->after(function($validator) use($checklist)
+    {
+      if ($checklist['info'] != true) $validator->errors()->add('Info', 'Your tutoring info section is incomplete.');
+      if ($checklist['classes'] != true) $validator->errors()->add('Classes', 'Your tutoring classes section is incomplete.');
+
+    });
+
+    if ($validator->fails())
+    {
+    return redirect(route('tutoring.runlisting'))->withErrors($validator)->withInput();
+    }
+    $tutor_model->tutor_active = true;
+    $tutor_model->profile_expiration = date('Y-m-d h:i:s', time() + 24*60*60*$request->input('days'));
+    $tutor_model->save();
+    $request->session()->flash('feedback_positive', 'You have successfully started your tutoring listing!');
+
+    return redirect(route('tutoring.dashboard'));
+  }
+
+  //used to make checklist for tutor
+  private function makechecklist($tutor_id)
+  {
+    $tutor = \App\Tutor::get_tutor_profile($tutor_id);
+    $tutor_model = \App\Tutor::findOrFail($this->id);
+
+    isset($tutor->grade) && isset($tutor->rate) && isset($tutor->about_me) ? $checklist['info'] = true : $checklist['info'] = false;
+    !$tutor_model->classes->isEmpty() ? $checklist['classes'] = true : $checklist['classes'] = false;
+    $tutor->tutor_active ? $checklist['active'] = true : $checklist['active'] = false;
+    return $checklist;
+  }
+
 }
