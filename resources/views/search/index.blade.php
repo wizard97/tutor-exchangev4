@@ -84,7 +84,7 @@
         <div class="col-xs-5">
           <div class="form-group">
             <select class="form-control" name="class_{{ $class->id }}" id="class_{{ $class->id }}">
-              @foreach($class->class_levels as $level)
+              @foreach($class->levels as $level)
               <option value="{{ $level->level_num }}">{{ $level->level_name }}</option>
               @endforeach
             </select>

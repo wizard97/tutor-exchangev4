@@ -43,4 +43,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
       return $this->hasMany('App\SavedTutor', 'user_id', 'id');
     }
+
+    public function zip()
+    {
+      return $this->belongsTo('App\Zip', 'zip', 'zip_code');
+    }
 }

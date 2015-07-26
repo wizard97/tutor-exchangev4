@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->boolean('user_active')->default(0);
             $table->string('address', 64);
             $table->char('zip', 5);
+            $table->foreign('zip')->references('zip_code')->on('zips')->onDelete('cascade');
             $table->boolean('has_picture')->default(0);
             $table->string('password', 255);
             $table->string('remember_token')->nullable();

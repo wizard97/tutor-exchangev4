@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Level extends Model
 {
-  public function class_info()
+  public function school_class()
   {
     return $this->belongsTo('App\SchoolClass', 'class_id', 'id');
   }
 
-  public function tutors_with_levels()
+  public function tutors_levels()
   {
     return $this->hasMany('App\TutorLevel', 'level_id', 'id');
   }

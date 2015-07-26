@@ -28,8 +28,11 @@ Route::get('user/feedback', [
 Route::get('search/school/index', [
     'as' => 'school.index', 'uses' => 'SchoolSearchController@index'
 ]);
-Route::get('search/school/find/{query}', [
+Route::get('search/school/find/remote/{query}', [
     'as' => 'school.query', 'uses' => 'SchoolSearchController@query'
+]);
+Route::get('search/school/find/prefetch', [
+    'as' => 'school.prefetch', 'uses' => 'SchoolSearchController@prefetch'
 ]);
 Route::get('search/school/classes', [
     'as' => 'school.classes', 'uses' => 'SchoolSearchController@classes'

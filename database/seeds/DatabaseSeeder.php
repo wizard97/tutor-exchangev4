@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call('TutorLevelsTableSeeder');
         $this->call('ReviewsTableSeeder');
         $this->call('SchoolsTableSeeder');
+        $this->call('TutorSchoolsTableSeeder');
         Model::reguard();
     }
 }
