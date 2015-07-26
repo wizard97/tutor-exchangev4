@@ -52,7 +52,7 @@ class TutorController extends Controller
 
   public function geteditclasses()
   {
-    $classes = \App\SchoolClass::with('class_levels')->orderBy('class_order', 'asc')
+    $classes = \App\SchoolClass::with('levels')->orderBy('class_order', 'asc')
     ->get()
     ->groupBy('class_type');
 

@@ -53,7 +53,7 @@
       <hr>
       <label>Which of these classes can you tutor?</label>
       @foreach ($classes->get($subject) as $class)
-      <?php unset($level_array); foreach($class->class_levels as $level) $level_array[$level->level_num] = $level->level_name; ?>
+      <?php unset($level_array); foreach($class->levels as $level) $level_array[$level->level_num] = $level->level_name; ?>
 
         <div class="row">
 

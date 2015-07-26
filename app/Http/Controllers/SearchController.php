@@ -22,7 +22,7 @@ class SearchController extends Controller
      */
     public function index()
     {
-      $classes = \App\SchoolClass::with('class_levels')->orderBy('class_order', 'asc')
+      $classes = \App\SchoolClass::with('levels')->orderBy('class_order', 'asc')
       ->get()
       ->groupBy('class_type');
       $subjects = \App\SchoolClass::groupBy('class_type')->get()->pluck('class_type');

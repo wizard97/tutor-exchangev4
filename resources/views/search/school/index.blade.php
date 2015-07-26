@@ -33,6 +33,7 @@ $( document ).ready(function() {
         tokens.push(datum.state_prefix);
         return tokens;
       },
+    prefetch: "{{route('school.prefetch')}}",
     remote: {
       url: '{{ route('school.query', ['query' => '%QUERY']) }}',
       wildcard: '%QUERY'
@@ -46,7 +47,7 @@ $( document ).ready(function() {
   {
   source: schools.ttAdapter(),
   display: 'response',
-  limit: 15,
+  limit: 5,
   templates: {
     notFound: [
       '<p class="empty-message tt-suggestion">',

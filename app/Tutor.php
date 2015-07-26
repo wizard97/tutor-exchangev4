@@ -24,6 +24,11 @@ class Tutor extends Model
 
     }
 
+    public function schools()
+    {
+        return $this->belongsToMany('App\School', 'tutor_schools', 'tutor_id', 'school_id');
+    }
+
     public function contacts()
     {
       return $this->hasMany('App\TutorContact', 'tutor_id', 'user_id');

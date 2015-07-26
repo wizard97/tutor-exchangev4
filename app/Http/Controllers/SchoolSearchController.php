@@ -17,9 +17,8 @@ class SchoolSearchController extends Controller
 
   public function query($query)
   {
-    $keys = preg_split("/[\s,]+/", trim(urldecode($query)));
+    $keys = preg_split("/[\s,.]+/", trim(urldecode($query)));
     $num_keys = count($keys);
-    $results_count = array();
 
     $search = \App\School::join('zips', 'schools.zip_code', '=', 'zips.zip_code');
     //make queries more complex until we stop getting results, then back up one
@@ -39,18 +38,24 @@ class SchoolSearchController extends Controller
     $matches = $previous->select('*', \DB::raw("CONCAT_WS(', ', school_name, CONCAT(UCASE(LEFT(city, 1)),LCASE(SUBSTRING(city, 2))), CONCAT_WS(' ',state_prefix, schools.zip_code)) as response"))
     ->take(10)
     ->get();
-/*
-    $matches = \App\School::join('zips', 'schools.zip_code', '=', 'zips.zip_code')
-    ->orWhere('school_name', 'LIKE', '%'.$decoded.'%')
-    ->orWhere('schools.zip_code', 'LIKE', '%'.$decoded.'%')
-    ->orWhere('zips.city', 'LIKE', '%'.$decoded.'%')
-    ->select('*', \DB::raw("CONCAT_WS(', ', school_name, CONCAT(UCASE(LEFT(city, 1)),LCASE(SUBSTRING(city, 2))), CONCAT_WS(' ',state_prefix, schools.zip_code)) as response"))
-    ->take(10)
-    ->get();
-    */
+
     return $matches->toJson();
   }
 
+  public function prefetch()
+  {
+    //get most popular schools, choose based on most tutors
+    $prefetch = \App\School::join('zips', 'schools.zip_code', '=', 'zips.zip_code')
+    ->join('tutor_schools', 'schools.id', '=', 'tutor_schools.school_id')
+    ->select('zips.*', 'schools.*', \DB::raw("COUNT(*) as count"), \DB::raw("CONCAT_WS(', ', school_name, CONCAT(UCASE(LEFT(city, 1)),LCASE(SUBSTRING(city, 2))), CONCAT_WS(' ',state_prefix, schools.zip_code)) as response"))
+    ->groupBy('schools.id')
+    ->orderBy('count', 'desc')
+    ->take(20)
+    ->get();
+
+
+    return $prefetch->toJson();
+  }
 
   public function classes()
   {
