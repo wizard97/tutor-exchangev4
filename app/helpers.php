@@ -2,11 +2,10 @@
 // My common functions
 function isActiveRoute($route)
 {
-    if(Request::is($route . '/*') OR Request::is($route))
+    if(Request::is($route . '/*') OR Request::is($route) OR Route::is($route) OR Route::is($route))
     {
         $active = "active";
     }
-
     else
     {
         $active = '';

@@ -12,12 +12,16 @@
 */
 
 $factory->define(App\User::class, function ($faker) {
+  do
+  {
+  $zip = \App\Zip::where('zip_code', '<=', substr($faker->postcode, 0, 5))->orderBy(\DB::raw('RAND()'))->first();
+} while(is_null($zip));
     return [
         'fname' => $faker->firstName,
         'lname' => $faker->lastName,
         'email' => $faker->email,
         'address' => $faker->streetAddress,
-        'zip' => $faker->postcode,
+        'zip_id' => $zip->id,
         'password' => str_random(10),
         'remember_token' => str_random(10),
         'user_active' => 1,
@@ -32,19 +36,18 @@ $factory->define(App\School::class, function ($faker) {
   $zip = null;
   do
   {
-  $zip = \App\Zip::where('zip_code', '<=', $faker->postcode)->orderBy(\DB::raw('RAND()'))->first();
+  $zip = \App\Zip::where('zip_code', '<=', substr($faker->postcode, 0, 5))->orderBy(\DB::raw('RAND()'))->first();
 } while(is_null($zip));
     return [
-        'zip_code' => $zip->zip_code,
+        'zip_id' => $zip->id,
         'school_name' => $faker->company.' High School',
     ];
 });
 
 
 
-
 $factory->define(App\Tutor::class, function ($faker) {
-    return [
+    $rands = [
         'age' => rand(13, 50),
         'grade' => rand(9, 15),
         'rate' => rand(10, 80),
@@ -62,11 +65,30 @@ $factory->define(App\Tutor::class, function ($faker) {
         'highest_german' => $faker->text($maxNbChars = 50),
         'highest_italian' => $faker->text($maxNbChars = 50),
         'highest_mandarin' => $faker->text($maxNbChars = 50),
-
-
     ];
+    $days = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun'];
+    foreach ($days as $day)
+    {
+      for($i = 0; $i < 4; $i++)
+      {
+        $times[$i] = $faker->time($format = 'H:i');
+      }
+      //sort high to low
+      usort($times, 'time_sort');
+
+      $rands[$day.'2_end'] = $times[0];
+      $rands[$day.'2_start'] = $times[1];
+      $rands[$day.'1_end'] = $times[2];
+      $rands[$day.'1_start'] = $times[3];
+    }
+    return $rands;
 });
 
+function time_sort($a, $b)
+{
+  if(strtotime($a) > strtotime($b)) return -1;
+  else return 1;
+}
 
 $factory->define(App\Review::class, function ($faker) {
     $stud_or_par = rand(0, 1);
@@ -79,5 +101,25 @@ $factory->define(App\Review::class, function ($faker) {
         'message' => $faker->paragraph($nbSentences = 7) ,
         'anonymous' => rand(0, 1),
         'reviewer' => $reviewer,
+    ];
+});
+
+$factory->define(App\SchoolClass::class, function ($faker) {
+  //some random subjects
+  $subjects = ['Math', 'Science', 'English', 'History', 'Social Studies', 'French', 'Spanish', 'Physics', 'German', 'Mandarin', 'Computer Science', 'Engineering'];
+  $rand_subject = $subjects[rand(0, count($subjects)-1)];
+    return [
+        'class_name' => $faker->catchPhrase,
+        'class_type' => $rand_subject,
+    ];
+});
+
+$factory->define(App\Level::class, function ($faker) {
+  //some random subjects
+  $levels = ['Level 2', 'Level 1', 'Honors', 'AP', 'AP II', 'B Level', 'A Level', 'Accelerated', 'IB', 'IB II'];
+
+  $rand_level = $levels[rand(0, count($levels)-1)];
+    return [
+        'level_name' => ucfirst($faker->word)
     ];
 });

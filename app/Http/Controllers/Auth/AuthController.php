@@ -28,7 +28,7 @@ class AuthController extends Controller {
                     'fname' => 'required|max:30|alpha',
                     'lname' => 'required|max:30|alpha',
                     'address' => 'required',
-                    'zip'   => 'required|digits:5|numeric',
+                    'zip'   => 'required|digits:5|numeric|exists:zips,zip_code',
                     'email' => 'required|email|max:255|unique:users',
                     'password' => 'required|confirmed|min:6',
                     'account_type' => 'required|integer|min:1|max:3',
@@ -42,11 +42,12 @@ class AuthController extends Controller {
 
         $confirmation_code = str_random(30);
 
-        $new_user = User::create([
+        $zip_model = \App\Zip::where('zip_code', '=', $request->input('zip'))->firstOrFail();
+
+        $zip_model->users()->create([
           'fname' => $request->input('fname'),
           'lname' => $request->input('lname'),
           'address' => $request->input('address'),
-          'zip' => $request->input('zip'),
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
             'account_type' => $request->input('account_type'),

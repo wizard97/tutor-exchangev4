@@ -16,10 +16,12 @@ class DatabaseSeeder extends Seeder
 
         $this->call('UsersTableSeeder');
         $this->call('TutorsTableSeeder');
-        $this->call('TutorLevelsTableSeeder');
         $this->call('ReviewsTableSeeder');
         $this->call('SchoolsTableSeeder');
         $this->call('TutorSchoolsTableSeeder');
+        $this->call('ClassesTableSeeder');
+        $this->call('LevelsTableSeeder');
+        $this->call('TutorLevelsTableSeeder');
         Model::reguard();
     }
 }

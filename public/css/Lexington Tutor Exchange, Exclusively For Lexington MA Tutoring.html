@@ -1,0 +1,694 @@
+<!doctype html>
+<html>
+  <head>
+      <meta name="google-site-verification" content="x91WvPNaAdw3bjXe9VZONNcImZP-iuspmgaPee1oqpM" />
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="csrf-token" content="a7vuWdPbjdJCAoV2JPRRs32pS1Jo6Z3zZRVUFGjE">
+      <title>Lexington Tutor Exchange, Exclusively For Lexington MA Tutoring</title>
+      <meta name="description" content="">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+      <!-- Include font Awesome -->
+      <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+      <!-- Optional theme -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+      <!-- Data Tables -->
+      <link rel="stylesheet" href="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+
+      <!-- Dashboard CSS -->
+      <link rel="stylesheet" href="/css/dashboard.css">
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+
+      <!-- Typeahead CSS -->
+      <link rel="stylesheet" href="/css/typeahead.css">
+
+      <!-- bootstrap Slider CSS -->
+      <link rel="stylesheet" href="/css/bootstrap-slider.css">
+
+      <!-- Clockpicker CSS -->
+      <link rel="stylesheet" href="/css/clockpicker.css">
+
+      <!-- jquery -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+      <!-- Latest compiled and minified JavaScript -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+      <!-- Bootstrap Tables-->
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css">
+      <!-- Latest compiled and minified JavaScript -->
+      <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.js"></script>
+
+      <!-- DataTables -->
+      <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.js"></script>
+      <!-- Needer for Bootstrap Datatables-->
+      <script src="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+
+      <!-- Typeahead -->
+      <script src="/js/typeahead.bundle.min.js"></script>
+
+      <!-- Bootstrap Wizard -->
+      <script src="/js/bootstrap.wizard.min.js"></script>
+
+      <!-- Bootstrap Slider -->
+      <script src="/js/bootstrap-slider.js"></script>
+
+      <!-- Clockpicker -->
+      <script src="/js/clockpicker.js"></script>
+
+      <!-- Needer for Coutnerup -->
+      <script src="//cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+      <!-- Review box JS -->
+      <script src="/js/reviewbox.js"></script>
+      <!-- Readmore JS -->
+      <script src="/js/readmore.js"></script>
+      <!-- counterupJS -->
+      <script src="/js/counterup.js"></script>
+
+      <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+
+      <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+
+      <style type="text/css">
+      .table tbody>tr>td.vert-align{
+          vertical-align: middle;
+      }
+      body { padding-bottom: 100px;}
+
+      .btn { white-space: normal; }
+
+      .social-title {text-transform: uppercase; letter-spacing: 1px; }
+      .count { font-size: 37px;margin-top: 10px;margin-bottom: 10px; }
+      .fa-stat { font-size: 100px;text-align: right;position: absolute;top: 7px;right: 27px;outline: none; }
+      .social .panel { color:#fff;text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); }
+      .social a { text-decoration:none; }
+      .box-a { background-color:#00acee; }
+      .box-b { background-color:#dd4b39; }
+      .box-c { background-color:#3b5998; }
+      .box-d { background-color:#eb6d20; }
+      </style>
+
+<script>
+
+//for spitting out validation errors
+function validation_errors(response, selector)
+{
+  if( response.status === 401 ) //redirect if not authenticated user.
+  {
+            $( location ).prop( 'pathname', 'auth/login' );
+  }
+        else if( response.status === 422 ) {
+        //process validation errors here.
+        $errors = response.responseJSON; //this will get the errors response data.
+        //show them somewhere in the markup
+        //e.g
+        errorsHtml = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4><i class="fa fa-info-circle"></i> Watch out! </h4><ul>';
+
+        $.each( $errors, function( key, value ) {
+            errorsHtml += '<li>' + value[0] + '</li>'; //showing only the first error.
+        });
+        errorsHtml += '</ul></di>';
+
+        $( selector ).hide().html( errorsHtml ).fadeIn('slow'); //appending to a <div id="form-errors"></div> inside form
+        } else {
+            alert('There was an unexspected error, please let us know if this problem persists.');
+        }
+}
+//runs when page is loaded
+$(document).ready(function() {
+  $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+  $('.site-datatable').dataTable();
+
+//save button
+$(".tutor-save-btn").on("click", function(){
+    var button = $(this);
+    var id = button.data('userid'); // Extract info from data-* attributes
+    var url = "http://homestead.app/search/savetutor";
+//save
+    $.ajax({
+      type: "POST",
+      url : url,
+      data : {user_id: id},
+      success : function(data){
+
+        if(data[id] === true)
+        {
+            button.toggleClass('btn-warning', false).toggleClass('btn-info', true);
+            button.hide().html('<i class="fa fa-minus" aria-hidden="true"></i> Remove').fadeIn('slow');
+        }
+        else
+        {
+          button.toggleClass('btn-warning', true).toggleClass('btn-info', false);
+          button.hide().html('<i class="fa fa-plus" aria-hidden="true"></i> Save').fadeIn('slow');
+        }
+//get feedback messages
+        $.ajax({
+          type: "GET",
+          url : "http://homestead.app/user/feedback",
+          success: function (data){
+            $("#feedback").replaceWith(function() {
+              return $(data).hide().fadeIn('slow');
+            });
+
+          }
+        });
+      }
+
+    });
+  });
+
+
+
+    //expand and collapse large texts
+    $('.about_me').readmore({
+        collapsedHeight: 200,
+        moreLink: '<a href="#">Read more</a>',
+        lessLink: '<a href="#">Read less</a>',
+        embedCSS: true,
+        startOpen: false
+    });
+    $('.review').readmore({
+        collapsedHeight: 200,
+        moreLink: '<a href="#">Read more</a>',
+        lessLink: '<a href="#">Read less</a>',
+        embedCSS: true,
+        startOpen: false
+    });
+
+
+});
+
+</script>
+
+
+<script>
+$(document).ready(function(){
+  $(".integers").counterUp({delay: 10,time: 1000});
+
+
+});
+</script>
+
+
+  </head>
+
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+<div class="container-fluid">
+    <div class="navbar-header">
+
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+  <!--    <a class="navbar-brand" href="http://homestead.app/home"><i class="fa fa-exchange"></i> Lexington Tutor Exchange</a> -->
+
+      <a class="navbar-brand" rel="home" href="/home" title="Lexington Tutor Exchange">
+        <img style="max-width:130px; margin-top: -8px;" src="/img/logo.png">
+      </a>
+
+    </div>
+
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class=""><a href="http://homestead.app/home">Home</a></li>
+
+        <li class="active"><a href="http://homestead.app/search/index">Search For Tutors</a></li>
+
+        <li class=""><a href="http://homestead.app/about">About Us</a></li>
+
+        <li class=""><a href="http://homestead.app/contact">Contact Us</a></li>
+
+      </ul>
+
+
+
+            <ul class="nav navbar-nav navbar-right">
+	       <li class=""><a href="http://homestead.app/auth/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        <li class=""><a href="http://homestead.app/auth/register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+      </ul>
+
+
+    </div>
+  </div>
+
+</nav>
+        
+<div class="container">
+<style>
+#price-slider .slider-selection {
+   background: #BABABA;
+ }
+</style>
+  <div class="page-header">
+    <h1>School Tutoring <small>First we need some info...</small></h1>
+  </div>
+  <!--
+  <div class="alert alert-info" role="alert">
+  <p>Before we can show you relevant tutors, we first need some more info about what you need hlep in.</p>
+  </div>
+-->
+<div id="feedback">
+
+
+
+</div>
+
+<br>
+<br>
+
+
+<div class="col-lg-offset-2 col-lg-8">
+  <form id="search-form" action="#">
+    <div id="rootwizard">
+      	<ul style="font-size: 20px; margin-bottom: 10px;">
+      	  	<li><a href="#tab1" data-toggle="tab"><i class="fa fa-location-arrow fa-fw no-red"></i> Location</a></li>
+      		<li><a href="#tab2" data-toggle="tab"><i class="fa fa-university fa-fw no-red"></i> Grade</a></li>
+      		<li><a href="#tab3" data-toggle="tab"><i class="fa fa-graduation-cap fa-fw no-red"></i> Tutor</a></li>
+      		<li><a href="#tab4" data-toggle="tab"><i class="fa fa-money fa-fw no-red"></i> Pricing</a></li>
+      		<li><a href="#tab5" data-toggle="tab"><i class="fa fa-calendar fa-fw no-red"></i> Schedule</a></li>
+      	</ul>
+
+        <div class="progress">
+          <div id="bar" class="progress-bar progress-bar-striped active" role="progressbar">
+          </div>
+        </div>
+
+    	<div class="tab-content well">
+
+    	    <div class="tab-pane" id="tab1">
+            <div class="form-horizontal" >
+              <h3 class="text-center">Zip Code</h3>
+              <br>
+              <div class="form-group">
+                <div class="row">
+                  <label class="control-label col-sm-2" for="email"></label>
+                  <div class="col-sm-8">
+                                        <input type="zip" class="form-control" id="zip" placeholder="Enter your zip code">
+                                      </div>
+                </div>
+              </div>
+            </div>
+    	    </div>
+
+    	    <div class="tab-pane" id="tab2">
+            <h3 class="text-center">Student Grade</h3>
+            <br>
+            <div class="row">
+      	      <div class="col-md-offset-2 col-md-8">
+                <button class="btn btn-primary btn-lg btn-block school-selection">Student <span style="font-size: 20px;">&le;</span> Middle School</button>
+                <button class="btn btn-warning btn-lg btn-block school-selection" id="high-school">Student <span style="font-size: 20px;">&ge;</span> High School</button>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+    	    </div>
+
+    		<div class="tab-pane" id="tab3">
+          <h3 class="text-center">Professional or Standard Tutor?</h3>
+          <br>
+          <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+              <button class="btn btn-default btn-lg btn-block tutor-selection"><i class="fa fa-user fa-fw"></i> Standard</button>
+              <button class="btn btn-success btn-lg btn-block tutor-selection"><i class="fa fa-user-plus fa-fw"></i> Professional</button>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+    	  </div>
+
+    		<div class="tab-pane" id="tab4">
+          <h3 class="text-center">Price Range</h3>
+          <br>
+          <div class="row">
+            <div class="col-md-offset-2 col-md-8 text-center">
+              <b>$0 /hour</b> <input id="slider" type="text" class="span2" value="" data-slider-id='price-slider' data-slider-min="0" data-slider-max="200" data-slider-step="5" data-slider-value="[10,100]"/> <b>$200 /hour</b>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+    	  </div>
+
+    		<div class="tab-pane" id="tab5">
+          <h3 class="text-center">Your Availability</h3>
+
+          <div class="col-lg-offset-2 col-lg-8">
+              <table class="table table-condensed">
+                <thead>
+                  <tr>
+                    <th class="text-center text-primary">Day</th>
+                    <th class="text-center text-primary">Start</th>
+                    <th class="text-center text-primary">End</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                                    <tr class="time-row">
+                    <td>
+                      <div class="checkbox row-checkbox">
+                        <label>
+                          <input type="checkbox" value="1" name="mon"> Monday
+                        </label>
+                      </div>
+                    </td>
+
+                    <td>
+                      <div class="input-group clockpicker">
+                        <input type="text" class="form-control" value="03:00PM" name="mon_start">
+                        <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                      </div>
+                    </td>
+
+
+                    <td>
+                      <div class="input-group clockpicker">
+                        <input type="text" class="form-control" value="06:00PM" name="mon_end">
+                        <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                      </div>
+                    </td>
+
+                  </tr>
+                                    <tr class="time-row">
+                    <td>
+                      <div class="checkbox row-checkbox">
+                        <label>
+                          <input type="checkbox" value="1" name="tues"> Tuesday
+                        </label>
+                      </div>
+                    </td>
+
+                    <td>
+                      <div class="input-group clockpicker">
+                        <input type="text" class="form-control" value="03:00PM" name="tues_start">
+                        <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                      </div>
+                    </td>
+
+
+                    <td>
+                      <div class="input-group clockpicker">
+                        <input type="text" class="form-control" value="06:00PM" name="tues_end">
+                        <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                      </div>
+                    </td>
+
+                  </tr>
+                                    <tr class="time-row">
+                    <td>
+                      <div class="checkbox row-checkbox">
+                        <label>
+                          <input type="checkbox" value="1" name="wed"> Wednesday
+                        </label>
+                      </div>
+                    </td>
+
+                    <td>
+                      <div class="input-group clockpicker">
+                        <input type="text" class="form-control" value="03:00PM" name="wed_start">
+                        <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                      </div>
+                    </td>
+
+
+                    <td>
+                      <div class="input-group clockpicker">
+                        <input type="text" class="form-control" value="06:00PM" name="wed_end">
+                        <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                      </div>
+                    </td>
+
+                  </tr>
+                                    <tr class="time-row">
+                    <td>
+                      <div class="checkbox row-checkbox">
+                        <label>
+                          <input type="checkbox" value="1" name="thurs"> Thursday
+                        </label>
+                      </div>
+                    </td>
+
+                    <td>
+                      <div class="input-group clockpicker">
+                        <input type="text" class="form-control" value="03:00PM" name="thurs_start">
+                        <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                      </div>
+                    </td>
+
+
+                    <td>
+                      <div class="input-group clockpicker">
+                        <input type="text" class="form-control" value="06:00PM" name="thurs_end">
+                        <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                      </div>
+                    </td>
+
+                  </tr>
+                                    <tr class="time-row">
+                    <td>
+                      <div class="checkbox row-checkbox">
+                        <label>
+                          <input type="checkbox" value="1" name="fri"> Friday
+                        </label>
+                      </div>
+                    </td>
+
+                    <td>
+                      <div class="input-group clockpicker">
+                        <input type="text" class="form-control" value="03:00PM" name="fri_start">
+                        <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                      </div>
+                    </td>
+
+
+                    <td>
+                      <div class="input-group clockpicker">
+                        <input type="text" class="form-control" value="06:00PM" name="fri_end">
+                        <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                      </div>
+                    </td>
+
+                  </tr>
+                                    <tr class="time-row">
+                    <td>
+                      <div class="checkbox row-checkbox">
+                        <label>
+                          <input type="checkbox" value="1" name="sat"> Saturday
+                        </label>
+                      </div>
+                    </td>
+
+                    <td>
+                      <div class="input-group clockpicker">
+                        <input type="text" class="form-control" value="03:00PM" name="sat_start">
+                        <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                      </div>
+                    </td>
+
+
+                    <td>
+                      <div class="input-group clockpicker">
+                        <input type="text" class="form-control" value="06:00PM" name="sat_end">
+                        <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                      </div>
+                    </td>
+
+                  </tr>
+                                    <tr class="time-row">
+                    <td>
+                      <div class="checkbox row-checkbox">
+                        <label>
+                          <input type="checkbox" value="1" name="sun"> Sunday
+                        </label>
+                      </div>
+                    </td>
+
+                    <td>
+                      <div class="input-group clockpicker">
+                        <input type="text" class="form-control" value="03:00PM" name="sun_start">
+                        <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                      </div>
+                    </td>
+
+
+                    <td>
+                      <div class="input-group clockpicker">
+                        <input type="text" class="form-control" value="06:00PM" name="sun_end">
+                        <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                      </div>
+                    </td>
+
+                  </tr>
+                                  </tbody>
+              </table>
+          </div>
+          <div class="clearfix"></div>
+    	  </div>
+
+    		<ul class="pager wizard">
+    			<li class="previous no-red"><a href="#">Previous</a></li>
+    		  <li class="next no-red"><a href="#">Next</a></li>
+          <li class="next finish no-red" style="display:none;"><a href="#">Finish!</a></li>
+    		</ul>
+    	</div>
+    </div>
+  </form>
+</div>
+
+<script>
+$(document).ready(function() {
+
+  	$('#rootwizard').bootstrapWizard({
+      tabClass: 'nav nav-pills',
+      onTabShow: function(tab, navigation, index) {
+		      var $total = navigation.find('li').length;
+		      var $current = index+1;
+		      var $percent = ($current/$total) * 100;
+		      $('#rootwizard').find('#bar').css({width:$percent+'%'}).text($percent+'%');
+
+      		// If it's the last tab then hide the last button and show the finish instead
+      		if($current >= $total) {
+      			$('#rootwizard').find('.pager .next').hide();
+      			$('#rootwizard').find('.pager .finish').show();
+      			$('#rootwizard').find('.pager .finish').removeClass('disabled');
+      		} else {
+      			$('#rootwizard').find('.pager .next').show();
+      			$('#rootwizard').find('.pager .finish').hide();
+      		}
+      	},
+        /*
+      onNext: function(tab, navigation, index) {
+			    if(index==2) {
+  				  // Make sure we entered the name
+  				  if(!$('#zip').val()) {
+    					alert('You must enter your name');
+    					$('#name').focus();
+    					return false;
+  				  }
+			    }
+      }
+      */
+
+      });
+
+
+    $('.no-red').click(function(e) {
+      e.preventDefault();
+        });
+
+    $('#slider').slider({
+	formatter: function(value) {
+		return '$' + value[0] + ' - $' + value[1] + ' /hour';
+	}
+});
+
+$('.clockpicker').clockpicker({
+  align: 'top',
+  donetext: 'Done',
+  twelvehour: true,
+  });
+
+$('.time-row .checkbox input').change(function(){
+  $(this).closest('.time-row').toggleClass('success');
+});
+
+$('.school-selection').click(function() {
+  $(this).addClass('active').siblings().removeClass('active');
+});
+
+$('.tutor-selection').click(function() {
+  $(this).addClass('active').siblings().removeClass('active');
+});
+
+$('#rootwizard .finish').click(function() {
+$("#search-form").submit();
+});
+
+});
+</script>
+</div>
+    <div class="nav navbar-default navbar-fixed-bottom">
+
+  <div class="container">
+
+    <p class="navbar-text text-muted pull-left">Copyright ©  2015. <a href="http://lextutorexchange.com">Lexington Tutor Exchange</a>. All rights reserved.
+      <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#Donate">
+        Help Support Us
+      </button></p>
+
+
+
+
+    </div>
+
+  </div>
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="Donate" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+          <h4 class="modal-title" id="myModalLabel">Help Keep Us Running</h4>
+        </div>
+        <div class="modal-body">
+          <h4>We pay all expenses out of pocket.</h4>
+          <p>We designed this site for free to help the community. Currently, we also are paying all our operating costs out of our pockets. As highschoolers, we don't exactly have tons of money to spend. Our domain and server costs total close to $100 a year. If you found this site helpful, we would be grateful if you could help us out in return.
+
+            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+              <input type="hidden" name="cmd" value="_s-xclick">
+              <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
+              ">
+              <div class="row">
+                <input type="image" class="img-responsive center-block" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+              </div>
+
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </body>
+  </html>
+  </body>
+
+</html>

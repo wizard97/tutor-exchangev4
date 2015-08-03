@@ -25,20 +25,55 @@ Route::get('user/feedback', [
     'as' => 'feedback', function() { return View::make('/templates/feedback'); }]);
 
 //aarons new beta class search
+
+//search home
+Route::get('search/index', [
+    'as' => 'search.index', 'uses' => 'Search\SearchHomeController@index'
+]);
+Route::post('search/sendmessage', [
+    'as' => 'search.sendmessage',
+     'middleware' => 'auth',
+     'uses' => 'Search\SearchHomeController@sendmessage'
+]);
+Route::post('search/savetutor', [
+    'as' => 'search.ajaxsavetutor',
+     'middleware' => 'auth',
+     'uses' => 'Search\SearchHomeController@ajaxsavetutor'
+]);
+Route::post('search/contacttutor', [
+    'as' => 'search.ajaxcontacttutor',
+     'middleware' => 'auth',
+     'uses' => 'Search\SearchHomeController@ajaxcontactjson'
+]);
+
+//school tutoring
 Route::get('search/school/index', [
-    'as' => 'school.index', 'uses' => 'SchoolSearchController@index'
+    'as' => 'school.index', 'uses' => 'Search\School\SchoolSearchHomeController@searchform'
 ]);
-Route::get('search/school/find/remote/{query}', [
-    'as' => 'school.query', 'uses' => 'SchoolSearchController@query'
+Route::post('search/school/submitsearch', [
+    'as' => 'school.submitsearch', 'uses' => 'Search\School\SchoolSearchHomeController@searchformsubmit'
 ]);
-Route::get('search/school/find/prefetch', [
-    'as' => 'school.prefetch', 'uses' => 'SchoolSearchController@prefetch'
+
+//hs tutoring
+Route::get('search/school/hsorabove/classes', [
+    'as' => 'hs.classes', 'uses' => 'Search\School\HsSearchController@classes'
 ]);
-Route::get('search/school/classes', [
-    'as' => 'school.classes', 'uses' => 'SchoolSearchController@classes'
+//school search related routes
+Route::get('search/school/hsorabove/myschool', [
+    'as' => 'hs.index', 'uses' => 'Search\School\HsSearchController@index'
+]);
+Route::post('search/school/hsorabove/submitschool', [
+    'as' => 'hs.submitschool', 'uses' => 'Search\School\HsSearchController@submit_school'
+]);
+Route::get('search/school/hsorabove/find/remote/{query}', [
+    'as' => 'hs.query', 'uses' => 'Search\School\HsSearchController@query'
+]);
+Route::get('search/school/hsorabove/find/prefetch', [
+    'as' => 'hs.prefetch', 'uses' => 'Search\School\HsSearchController@prefetch'
 ]);
 
 
+/*
 //search
 Route::get('search/index', [
     'as' => 'search.index', 'uses' => 'SearchController@index'
@@ -54,21 +89,8 @@ Route::get('search/showtutorprofile/{id}', [
     'middleware' => 'auth',
     'uses' => 'SearchController@showtutorprofile'
 ]);
-Route::post('search/contacttutor', [
-    'as' => 'search.ajaxcontacttutor',
-     'middleware' => 'auth',
-     'uses' => 'SearchController@ajaxcontactjson'
-]);
-Route::post('search/sendmessage', [
-    'as' => 'search.sendmessage',
-     'middleware' => 'auth',
-     'uses' => 'SearchController@sendmessage'
-]);
-Route::post('search/savetutor', [
-    'as' => 'search.ajaxsavetutor',
-     'middleware' => 'auth',
-     'uses' => 'SearchController@ajaxsavetutor'
-]);
+*/
+
 
 //tutor
 Route::get('account/tutoring/index', [
