@@ -16,9 +16,9 @@ class CreateClassesTable extends Migration
             $table->increments('id')->unsigned();
             $table->integer('school_id')->unsigned();
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
-            $table->integer('class_order');
             $table->string('class_type', 50)->index();
             $table->string('class_name', 50);
+            $table->timestamps();
         });
     }
 

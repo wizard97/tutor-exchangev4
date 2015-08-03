@@ -9,10 +9,15 @@
   </div>
 @include('templates/feedback')
 <div class="col-md-6">
-<div class="form-group">
-  <label for="school-input">School Name</label>
-  <input type="text" class="typeahead form-control" id="school-input">
-</div>
+<form action="{{ route('hs.submitschool') }}" method="POST">
+  {!! csrf_field() !!}
+  <div class="form-group">
+    <label for="school-input">School Name</label>
+    <input type="text" class="typeahead form-control" id="school-input" name="school_name">
+  </div>
+  <br>
+  <button class="btn btn-success" type="submit">Submit</button>
+</form>
 </div>
 
 <script>
@@ -31,11 +36,12 @@ $( document ).ready(function() {
         tokens.push(datum.city);
         tokens.push(datum.zip_code);
         tokens.push(datum.state_prefix);
+        tokens.push(datum.school_id);
         return tokens;
       },
-    prefetch: "{{route('school.prefetch')}}",
+    prefetch: "{{route('hs.prefetch')}}",
     remote: {
-      url: '{{ route('school.query', ['query' => '%QUERY']) }}',
+      url: '{{ route('hs.query', ['query' => '%QUERY']) }}',
       wildcard: '%QUERY'
     },
   });

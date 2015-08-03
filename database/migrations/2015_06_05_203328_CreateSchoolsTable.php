@@ -14,9 +14,9 @@ class CreateSchoolsTable extends Migration
     {
         Schema::create('schools', function (Blueprint $table) {
             $table->increments('id');
-            $table->char('zip_code', 5);
-            $table->foreign('zip_code')->references('zip_code')->on('zips')->onDelete('cascade');
+            $table->integer('zip_id')->unsigned()->index();
             $table->string('school_name', 50);
+            $table->foreign('zip_id')->references('id')->on('zips')->onDelete('cascade');
             $table->timestamps();
         });
     }

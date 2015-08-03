@@ -14,6 +14,7 @@ class CreateZipsTable extends Migration {
 	{
 		Schema::create('zips', function(Blueprint $table)
 		{
+			$table->increments('id')->unsigned();
 			$table->char('zip_code', 5)->index('zip_code');
 			$table->float('lat', 10, 0);
 			$table->float('lon', 10, 0);

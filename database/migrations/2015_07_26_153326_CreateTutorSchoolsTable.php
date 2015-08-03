@@ -18,6 +18,7 @@ class CreateTutorSchoolsTable extends Migration
             $table->foreign('tutor_id')->references('user_id')->on('tutors')->onDelete('cascade');
             $table->integer('school_id')->unsigned();
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

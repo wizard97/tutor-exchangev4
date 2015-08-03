@@ -61,7 +61,7 @@ class SearchController extends Controller
      {
        //get the classes and levels, and join that on the tutor_levels table
       $search = new \App\Level;
-      $search = $search->findtutors();
+      //$search = $search->findtutors();
         //loop thorugh the form inputs
         $selected = 0;
 
@@ -71,31 +71,90 @@ class SearchController extends Controller
 
         //get array of selected classes
         if (!empty($form_inputs['classes'])) $classes = $form_inputs['classes'];
-              //create seach query, pass in $selected by refrence
-              $search = $search->where(function ($query) use($form_inputs, &$selected, $classes){
 
-              //handle rates
-              if (!empty($form_inputs['start_rate'])) $query->where('rate', '>=', $form_inputs['start_rate']);
-              if (!empty($form_inputs['end_rate'])) $query->where('rate', '<=', $form_inputs['end_rate']);
-              if (!empty($form_inputs['min_grade'])) $query->where('grade', '>=', $form_inputs['min_grade']);
+        //handle rates
+        if (!empty($form_inputs['start_rate'])) $search->where('rate', '>=', $form_inputs['start_rate']);
+        if (!empty($form_inputs['end_rate'])) $search->where('rate', '<=', $form_inputs['end_rate']);
+        if (!empty($form_inputs['min_grade'])) $search->where('grade', '>=', $form_inputs['min_grade']);
 
-              //build query for classes the user selects
-              $query->where(function ($query) use($form_inputs, &$selected, $classes){
-                foreach($classes as $class_id)
-                {
-                  if (!empty($form_inputs['class_'.$class_id]))
-                  {
-                    $query->orWhere(function ($query) use($class_id, $form_inputs, &$selected){
-                    $query->where('levels.class_id', $class_id);
-                    $query->where('levels.level_num', '>=', $form_inputs['class_'.$class_id]);
-                    $selected++;
-                    });
-                  }
-                }
-              });
-            });
-       //array with key user ids, containing an object of id and sqlcount
-       $id_count = $search->get()->keyBy('user_id')->toArray();
+        //handle user classes
+        $search = $search->where(function ($query) use($form_inputs, &$selected, $classes){
+          //build query for classes the user selects
+          $query->where(function ($query) use($form_inputs, &$selected, $classes){
+            foreach($classes as $class_id)
+            {
+              if (!empty($form_inputs['class_'.$class_id]))
+              {
+                $query->orWhere(function ($query) use($class_id, $form_inputs, &$selected){
+                  $query->where('levels.class_id', $class_id);
+                  $query->where('levels.level_num', '>=', $form_inputs['class_'.$class_id]);
+                  $selected++;
+                });
+              }
+            }
+          });
+
+          //handle times
+          $query->where(function ($query) use($form_inputs){
+
+            $days = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun'];
+
+            foreach($days as $day)
+            {
+              if (!empty($form_inputs[$day]))
+              {
+                $ts = DateTime::createFromFormat( 'H:iA', $form_inputs[$day]);
+                $time = $ts->format( 'H:i:s');
+                $query->orWhereRaw('(:time BETWEEN {$day}1_start AND {$day}1_end) OR (:time BETWEEN {$day}2_start AND {$day}2_end)', array(':time' => $time));
+              }
+            }
+          });
+
+        });
+
+        //create raw sql query, DateTime should escape user input
+        //create seach query, pass in $selected by refrence
+        $days = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun'];
+        foreach ($days as $day)
+        {
+          if (!empty($form_inputs[$day]))
+          {
+            $ts = DateTime::createFromFormat( 'H:iA', $form_inputs[$day]);
+            $time = $ts->format( 'H:i:s');
+            $time_array[] = '(({$time} BETWEEN tutors.{$day}1_start AND tutors.{$day}1_end) OR ({$time} BETWEEN tutors.{$day}2_start AND tutors.{$day}2_end))';
+          }
+        }
+        //default to 100 if empty
+        if(!empty($time_array))
+        {
+          $time_select = 'ROUND ((({implode(" + ", $time_array)})/{count($time_array)})*100, 0) AS times_match';
+        } else {
+          $time_select = '100 AS times_match';
+        }
+        //default to 100 if empty
+        if($selected != 0)
+        {
+          $class_select = 'ROUND((COUNT(*)/{$selected})*100, 0) as classes_match';
+        } else {
+          $class_select = '100 AS classes_match';
+        }
+
+        $search = $search->join('tutor_levels', 'levels.id', '=', 'tutor_levels.level_id')
+        ->join('users', 'users.id', '=', 'tutor_levels.user_id')
+        ->join('tutors', 'tutors.user_id', '=', 'tutor_levels.user_id')
+        ->leftjoin('grades', 'tutors.grade', '=', 'grades.id')
+        ->where('account_type', '>=', '2')
+        ->where('tutors.tutor_active', '=', '1')
+        ->where('tutors.profile_expiration', '>=', date('Y-m-d H:i:s'))
+        ->select(\DB::raw($class_select), \DB::raw($time_select), 'users.account_type', 'tutor_levels.user_id', 'users.id',
+        'users.fname', 'users.lname', 'users.last_login', 'users.created_at','tutors.*', 'grades.*')
+        ->groupBy('tutor_levels.user_id')
+        ->orderBy('class_matches', 'desc')
+        ->orderBy('lname', 'asc');
+
+        /*
+        //array with key user ids, containing an object of id and sqlcount
+        $id_count = $search->get()->keyBy('user_id')->toArray();
 
        //user_id's who match criteria for array
        $tutors_id = array_keys($id_count);
@@ -108,14 +167,19 @@ class SearchController extends Controller
        ->orderByRaw(\DB::raw("FIELD(tutors.user_id, $ids)"))
        ->select('users.id', 'users.fname', 'users.lname', 'users.account_type', 'users.last_login', 'users.last_login', 'users.created_at','tutors.*', 'grades.*')
        ->paginate(15);
-
+       */
+       return $search->toSql();
+       $basic_info = $search->get();
+       return var_dump($basic_info->toArray());
+      if (!empty($basic_info))
+      {
        // function adds tutor match%, classes and reviews
-       $results = \App\Tutor::add_classes_reviews($basic_info, $selected, $id_count);
+       $results = \App\Tutor::insert_classes_reviews($basic_info);
 
       }
       else $results = array();
 
-      $num_results = count($id_count);
+      $num_results = count($search->count());
 
       //get users saved tutors, stupid Laravel contins doesnt work
       if (\Auth::check())

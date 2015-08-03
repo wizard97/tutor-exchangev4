@@ -24,6 +24,12 @@
       <!-- Typeahead CSS -->
       <link rel="stylesheet" href="/css/typeahead.css">
 
+      <!-- bootstrap Slider CSS -->
+      <link rel="stylesheet" href="/css/bootstrap-slider.css">
+
+      <!-- Clockpicker CSS -->
+      <link rel="stylesheet" href="/css/clockpicker.css">
+
       <!-- jquery -->
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
       <!-- Latest compiled and minified JavaScript -->
@@ -43,6 +49,15 @@
       <!-- Typeahead -->
       <script src="/js/typeahead.bundle.min.js"></script>
 
+      <!-- Bootstrap Wizard -->
+      <script src="/js/bootstrap.wizard.min.js"></script>
+
+      <!-- Bootstrap Slider -->
+      <script src="/js/bootstrap-slider.js"></script>
+
+      <!-- Clockpicker -->
+      <script src="/js/clockpicker.js"></script>
+
       <!-- Needer for Coutnerup -->
       <script src="//cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
       <!-- Review box JS -->
@@ -60,7 +75,7 @@
       .table tbody>tr>td.vert-align{
           vertical-align: middle;
       }
-      body { padding-bottom: 100px; }
+      body { padding-bottom: 100px;}
 
       .btn { white-space: normal; }
 
@@ -158,6 +173,7 @@ $(".tutor-save-btn").on("click", function(){
         embedCSS: true,
         startOpen: false
     });
+
     $('.review').readmore({
         collapsedHeight: 200,
         moreLink: '<a href="#">Read more</a>',

@@ -172,6 +172,11 @@ $(document).ready(function() {
 
 
   $('#search-button').click( function () {
+    $.each($selected.DataTable().rows().data(), function(key, value)
+  {
+    console.log(value.class_name);
+  });
+    console.log($selected.DataTable().rows().data());
     alert( $selected.DataTable().rows().data().length +' class(es) selected' );
   });
 

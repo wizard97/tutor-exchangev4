@@ -13,10 +13,12 @@ class InsertClasses extends Migration
     {
 
 //create LHs listing
+$zip_id = \App\Zip::where('city', '=', 'LEXINGTON')->where('zip_code', '=', '02421')->first()->id;
+
 DB::table('schools')->insert(
 array(
     'id' => '1',
-    'zip_code' => '02421',
+    'zip_id' => $zip_id,
     'school_name' => 'Lexington High School',
 )
 );
@@ -389,7 +391,6 @@ $mandarin_classes["mandarin_AP"]->levels[4] = "AP";
 
 
         $class_id = 1;
-        $class_order = 1;
 
 
         foreach ($subjects as $prefix => $sub_name)
@@ -401,7 +402,6 @@ $mandarin_classes["mandarin_AP"]->levels[4] = "AP";
           DB::table('classes')->insert(
           array(
               'school_id' => 1,
-              'class_order' => $class_order,
               'class_type' => $sub_name,
               'class_name' => $class->name,
           )
@@ -418,11 +418,9 @@ $mandarin_classes["mandarin_AP"]->levels[4] = "AP";
             );
           }
 
-        $class_order++;
         $class_id++;
         }
 
-        $class_order = 1;
 
       }
   }

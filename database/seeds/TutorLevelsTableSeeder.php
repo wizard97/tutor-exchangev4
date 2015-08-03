@@ -12,13 +12,17 @@ class TutorLevelsTableSeeder extends Seeder
     public function run()
     {
       App\Tutor::get()->each(function($u) {
-        for ($i =0; $i < 5; $i++) {
-        $class_id = rand(1, 54);
-      $class_levels = App\Level::where('class_id', '=', $class_id);
-      $possible_ids = $class_levels->lists('id');
-      $u->classes()->whereIn('level_id', $possible_ids)->delete();
-      $u->classes()->firstorCreate(['level_id' => $class_levels->get()->pluck('id')->random()]);
-    }
+
+        $u->schools->each(function ($school) use ($u)
+        {
+          for ($i=0; $i < 10; $i++)
+          {
+            $rand_class = $school->classes()->orderBy(\DB::raw('RAND()'))->first();
+            if (!$u->levels()->where('class_id', '=', $rand_class->id)->get()->isEmpty()) return;
+            $u->levels()->attach($rand_class->levels()->get()->random()->id);
+          }
+        });
+
     });
   }
 }

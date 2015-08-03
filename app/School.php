@@ -13,7 +13,7 @@ class School extends Model
 
   public function zip()
   {
-      return $this->belongsTo('App\Zip', 'zip_code', 'zip_code');
+      return $this->belongsTo('App\Zip', 'zip_id', 'id');
   }
 
   public function classes()
