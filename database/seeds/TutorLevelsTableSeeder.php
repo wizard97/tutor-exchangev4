@@ -15,10 +15,11 @@ class TutorLevelsTableSeeder extends Seeder
 
         $u->schools->each(function ($school) use ($u)
         {
-          for ($i=0; $i < 10; $i++)
+          $rand_num = rand(10, 50);
+          for ($i=0; $i < $rand_num; $i++)
           {
             $rand_class = $school->classes()->orderBy(\DB::raw('RAND()'))->first();
-            if (!$u->levels()->where('class_id', '=', $rand_class->id)->get()->isEmpty()) return;
+            if (!$u->levels()->where('class_id', '=', $rand_class->id)->get()->isEmpty()) continue;
             $u->levels()->attach($rand_class->levels()->get()->random()->id);
           }
         });

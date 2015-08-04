@@ -91,8 +91,8 @@
           <div class="row">
             <div class="col-md-offset-2 col-md-8 text-center">
               <b>$0 /hour</b> <input id="slider" type="text" class="span2" value="" data-slider-id='price-slider' data-slider-min="0" data-slider-max="200" data-slider-step="5" data-slider-value="[10,100]"/> <b>$200 /hour</b>
-            <input type="hidden" name="price_start" value="10">
-            <input type="hidden" name="price_end" value="100">
+            <input type="hidden" name="start_rate" value="10">
+            <input type="hidden" name="end_rate" value="100">
             </div>
           </div>
           <div class="clearfix"></div>
@@ -200,8 +200,6 @@ $("#slider").on("change", function(data) {
   $(this).siblings("input[name='price_start']").val(data.value.newValue[0]);
   $(this).siblings("input[name='price_end']").val(data.value.newValue[1]);
 
-	console.log('start:' + data.value.newValue[0]);
-  console.log('end:' + data.value.newValue[1]);
 });
 
 $('.clockpicker').clockpicker({

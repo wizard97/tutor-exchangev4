@@ -72,89 +72,112 @@ class HsSearchController extends Controller
 
     public function submit_classes(Request $request)
     {
+      if(!$request->session()->has('school_search_inputs'))
+      {
+        return response()->json(route('school.index'));
+      }
+      if(!$request->session()->has('hs_id') && !is_int($request->session()->get('hs_id')))
+      {
+        return response()->json(route('hs.index'));
+      }
 
+      $input = $request->all();
+      $request->session()->forget('school_search_classes');
+
+      //make sure user input isnt garbage
+      foreach($input as $class_id => $class)
+      {
+        \App\SchoolClass::findOrFail($class_id)->levels()->where('level_num', '=', $class['level_num']);
+      }
+
+      $request->session()->put('school_search_classes', $input);
+
+      //otherwise everything is good
+      return response()->json(route('hs.showresults'));
     }
 
-    public function run_hs_search()
+    public function run_hs_search(Request $request)
     {
       $search = new \App\Level;
 
-      $selected = 0;
       //get the search inputs from the session
-      $form_inputs = $request->session()->get('tutor_search_inputs');
-      $classes = array();
+      $form_inputs = $request->session()->get('school_search_inputs');
+      if(empty($form_inputs)) return redirect()->route('school.index');
+
+      $hs_id = $request->session()->get('hs_id');
+      if (empty($hs_id)) return redirect()->route('hs.index');
+
+      $classes = $request->session()->get('school_search_classes');
+      if (empty($hs_id)) return redirect()->route('hs.classes');
 
       //get array of selected classes
       if (!empty($form_inputs['classes'])) $classes = $form_inputs['classes'];
 
+      //alias times
+      $days = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun'];
+      foreach($days as $day)
+      {
+        if (!empty($form_inputs[$day]) && isset($form_inputs[$day.'_checked']))
+        {
+          $ts = new \DateTime;
+          $ts = $ts->createFromFormat( 'H:iA', $form_inputs[$day]);
+          $time = $ts->format( 'H:i:s');
+          $time_alias[$day] = "CAST('{$time}' AS TIME)";
+        }
+      }
+
+
     //handle rates
-    if (!empty($form_inputs['start_rate'])) $search->where('rate', '>=', $form_inputs['start_rate']);
-    if (!empty($form_inputs['end_rate'])) $search->where('rate', '<=', $form_inputs['end_rate']);
-    if (!empty($form_inputs['min_grade'])) $search->where('grade', '>=', $form_inputs['min_grade']);
+    if (!empty($form_inputs['start_rate'])) $search = $search->where('rate', '>=', $form_inputs['start_rate']);
+    if (!empty($form_inputs['end_rate'])) $search = $search->where('rate', '<=', $form_inputs['end_rate']);
+    if (!empty($form_inputs['min_grade'])) $search = $search->where('grade', '>=', $form_inputs['min_grade']);
+    //school_id
+    if (!empty($hs_id)) $search = $search->where('classes.school_id', '=', $hs_id);
 
     //handle user classes
-    $search = $search->where(function ($query) use($form_inputs, &$selected, $classes){
+    $search = $search->where(function ($query) use($form_inputs, $classes){
       //build query for classes the user selects
-      $query->where(function ($query) use($form_inputs, &$selected, $classes){
-        foreach($classes as $class_id)
-        {
-          if (!empty($form_inputs['class_'.$class_id]))
-          {
-            $query->orWhere(function ($query) use($class_id, $form_inputs, &$selected){
-              $query->where('levels.class_id', $class_id);
-              $query->where('levels.level_num', '>=', $form_inputs['class_'.$class_id]);
-              $selected++;
-            });
-          }
-        }
-      });
-
+      foreach($classes as $class_id => $class)
+      {
+        $query->orWhere(function ($query) use($class_id, $class, $form_inputs){
+          $query->where('levels.class_id', $class_id);
+          $query->where('levels.level_num', '>=', $class['level_num']);
+        });
+      }
+    });
       //handle times
-      $query->where(function ($query) use($form_inputs){
-
-        $days = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun'];
-
-        foreach($days as $day)
+    $time_array = array();
+    $search = $search->where(function ($query) use($form_inputs, $time_alias, &$time_array){
+      $days = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun'];
+      foreach($days as $day)
+      {
+        if (!empty($form_inputs[$day]) && isset($form_inputs[$day.'_checked']))
         {
-          if (!empty($form_inputs[$day]))
-          {
-            $ts = DateTime::createFromFormat( 'H:iA', $form_inputs[$day]);
-            $time = $ts->format( 'H:i:s');
-            $query->orWhereRaw("(:time BETWEEN {$day}1_start AND {$day}1_end) OR (:time BETWEEN {$day}2_start AND {$day}2_end)", array(':time' => $time));
-          }
+          $query->orWhereRaw("(({$time_alias[$day]} BETWEEN {$day}1_start AND {$day}1_end) OR ({$time_alias[$day]} BETWEEN {$day}2_start AND {$day}2_end))");
+          //create array of boolean mysql checks
+          $time_array[] = "(({$time_alias[$day]} BETWEEN tutors.{$day}1_start AND tutors.{$day}1_end) OR ({$time_alias[$day]} BETWEEN tutors.{$day}2_start AND tutors.{$day}2_end))";
         }
-      });
-
+      }
     });
 
-    //create raw sql query, DateTime should escape user input
-    //create seach query, pass in $selected by refrence
-    $days = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun'];
-    foreach ($days as $day)
-    {
-      if (!empty($form_inputs[$day]))
-      {
-        $ts = DateTime::createFromFormat( 'H:iA', $form_inputs[$day]);
-        $time = $ts->format( 'H:i:s');
-        $time_array[] = "(({$time} BETWEEN tutors.{$day}1_start AND tutors.{$day}1_end) OR ({$time} BETWEEN tutors.{$day}2_start AND tutors.{$day}2_end))";
-      }
-    }
-    //default to 100 if empty
     if(!empty($time_array))
     {
-      $time_select = "ROUND ((({implode(' + ', $time_array)})/{count($time_array)})*100, 0) AS times_match";
+      $time_select = "ROUND(((".implode(' + ', $time_array).")/".count($time_array).")*100, 0) AS times_match";
     } else {
       $time_select = '100 AS times_match';
     }
+
+    $num_classes = count($classes);
     //default to 100 if empty
-    if($selected != 0)
+    if($num_classes)
     {
-      $class_select = "ROUND((COUNT(*)/{$selected})*100, 0) as classes_match";
+      $class_select = "ROUND((COUNT(*)/{$num_classes})*100, 0) as classes_match";
     } else {
       $class_select = '100 AS classes_match';
     }
 
     $search = $search->join('tutor_levels', 'levels.id', '=', 'tutor_levels.level_id')
+    ->join('classes', 'classes.id', '=', 'levels.class_id')
     ->join('users', 'users.id', '=', 'tutor_levels.user_id')
     ->join('tutors', 'tutors.user_id', '=', 'tutor_levels.user_id')
     ->leftjoin('grades', 'tutors.grade', '=', 'grades.id')
@@ -164,10 +187,22 @@ class HsSearchController extends Controller
     ->select(\DB::raw($class_select), \DB::raw($time_select), 'users.account_type', 'tutor_levels.user_id', 'users.id',
     'users.fname', 'users.lname', 'users.last_login', 'users.created_at','tutors.*', 'grades.*')
     ->groupBy('tutor_levels.user_id')
-    ->orderBy('class_matches', 'desc')
+    ->orderBy('classes_match', 'desc')
     ->orderBy('lname', 'asc');
 
-    return $search->toSql();
+    echo $search->toSql();
+    echo '<br><br><br>';
+    \DB::listen(function($sql, $bindings, $time) {
+      $new_string = $sql;
+      foreach($bindings as $key => $value)
+      {
+        $new_string = preg_replace('/\?/', "'".$value."'", $new_string, 1);
+      }
+    echo str_replace("''","'",$new_string);
+    var_dump($bindings);
+    var_dump($time);
+  });
+    var_dump($search->get()->toArray());
   }
 
 
