@@ -58,6 +58,12 @@ Route::post('search/school/submitsearch', [
 Route::get('search/school/hsorabove/classes', [
     'as' => 'hs.classes', 'uses' => 'Search\School\HsSearchController@classes'
 ]);
+Route::post('search/school/hsorabove/submitclasses', [
+    'as' => 'hs.submitclasses', 'uses' => 'Search\School\HsSearchController@submit_classes'
+]);
+Route::get('search/school/hsorabove/showresults', [
+    'as' => 'hs.showresults', 'uses' => 'Search\School\HsSearchController@run_hs_search'
+]);
 //school search related routes
 Route::get('search/school/hsorabove/myschool', [
     'as' => 'hs.index', 'uses' => 'Search\School\HsSearchController@index'

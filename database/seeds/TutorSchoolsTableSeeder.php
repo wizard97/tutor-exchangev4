@@ -11,11 +11,10 @@ class TutorSchoolsTableSeeder extends Seeder
      */
     public function run()
     {
-      for ($i=0; $i < 150; $i++)
-      {
-      $tutor = \App\Tutor::orderBy(\DB::raw('RAND()'))->first();
-      $school_id = \App\School::orderBy(\DB::raw('RAND()'))->take(3)->get()->pluck('id')->toArray();
-      $tutor->schools()->attach($school_id);
-      }
+      App\Tutor::get()->each(function($tutor) {
+        $school_id = \App\School::orderBy(\DB::raw('RAND()'))->take(3)->get()->pluck('id')->toArray();
+        if (!$tutor->schools()->whereIn('schools.id', $school_id)->get()->isEmpty()) return;
+        $tutor->schools()->attach($school_id);
+      });
     }
 }

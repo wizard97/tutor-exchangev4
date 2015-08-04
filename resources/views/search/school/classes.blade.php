@@ -38,7 +38,7 @@
           <div class="table-responsive">
             <table id="selected-classes" class="table table-condensed"></table>
           </div>
-          <button id="search-button" class="btn btn-success btn-block">Search For Tutors</button>
+          <button id="search-button" class="btn btn-success btn-block"><i id="search-spinner" class="fa fa-spinner fa-spin" style="display: none;"></i> Search For Tutors</button>
         </div>
       </div>
     </div>
@@ -152,7 +152,6 @@ $(document).ready(function() {
       var to_remove;
       var all_rows = $selected.DataTable().rows().every( function () {
         var rowdata = this.data();
-        console.log(rowdata.id)
         if (rowdata.id == data.id)
         {
           //exception thrown, if removed in loop
@@ -172,12 +171,29 @@ $(document).ready(function() {
 
 
   $('#search-button').click( function () {
+    //start the pretty spinner
+    var btn = $(this);
+    btn.find('#search-spinner').show();
+    var class_ids = {};
+    var url = "{{ route('hs.submitclasses') }}";
     $.each($selected.DataTable().rows().data(), function(key, value)
-  {
-    console.log(value.class_name);
-  });
-    console.log($selected.DataTable().rows().data());
-    alert( $selected.DataTable().rows().data().length +' class(es) selected' );
+    {
+      class_ids[value.id] = {level_num: value.level_num};
+    });
+
+    $.ajax({
+      type: "POST",
+      data: class_ids,
+      url: url,
+      success: function (data){
+        location.href= data;
+        btn.find('#search-spinner').hide();
+      },
+      error: function ()
+      {
+        btn.find('#search-spinner').hide();
+      }
+    });
   });
 
 });

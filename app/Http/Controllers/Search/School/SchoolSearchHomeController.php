@@ -21,8 +21,8 @@ class SchoolSearchHomeController extends Controller
     'zip' => 'required|digits:5|numeric|exists:zips,zip_code',
     'school_type' => 'required|in:middle,high',
     'tutor_type' => 'required|in:standard,professional',
-    'price_start' => 'required|numeric|between:0,200',
-    'price_end' => 'required|numeric|between:0,200',
+    'start_rate' => 'numeric|between:0,200',
+    'end_rate' => 'numeric|between:0,200',
     ]);
 
     $input = $request->all();
