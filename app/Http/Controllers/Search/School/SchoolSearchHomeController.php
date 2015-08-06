@@ -23,6 +23,7 @@ class SchoolSearchHomeController extends Controller
     'tutor_type' => 'required|in:standard,professional',
     'start_rate' => 'numeric|between:0,200',
     'end_rate' => 'numeric|between:0,200',
+    'max_dist' => 'numeric|between:1,200',
     ]);
 
     $input = $request->all();

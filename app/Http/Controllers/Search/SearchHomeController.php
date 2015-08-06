@@ -96,21 +96,18 @@ class SearchHomeController extends Controller
           $tutor = \App\Tutor::get_tutor_profile($id);
 
 
-          $search = \Auth::user()->saved_tutors()->join('users', 'tutor_id', '=', 'users.id')->where('tutor_id', $id)->first();
+          $search = \Auth::user()->saved_tutors()->find($id);
 
           if (is_null($search))
           {
-            $saved_model = new \App\SavedTutor;
-            $saved_model->user_id = \Auth::user()->id;
-            $saved_model->tutor_id = $id;
-            $saved_model->save();
+            \Auth::user()->saved_tutors()->attach($id);
             \Session::flash('feedback_positive', 'You have successfully added '.$tutor->fname.' '.$tutor->lname.' to your saved tutors.');
             return response()->json([$id => true]);
           }
 
           else
           {
-            \App\SavedTutor::where('user_id', \Auth::user()->id)->where('tutor_id', $id)->delete();
+            \Auth::user()->saved_tutors()->detach($id);
             \Session::flash('feedback_positive', 'You have successfully removed '.$tutor->fname.' '.$tutor->lname.' from your saved tutors.');
             return response()->json([$id => false]);
           }

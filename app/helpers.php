@@ -29,24 +29,42 @@ function isExactRoute($route)
     return $active;
 }
 
-/*
-function val($value, $default = null)
+function print_stars($rating)
 {
-    if (isset($value) && !empty($value))
-    {
-      return $value;
-    }
-    else return $default;
-}
+  $string = '';
+  $star_count = floor($rating);
+  for ($i = 0; $i < $star_count; $i++) $string .= '<i style="color: #FEC601" class="fa fa-star"></i>';
 
-function exists($var)
-{
-  if (isset($var) && !empty($var))
-  {
-    return true;
+  $delta = $rating - $star_count;
+  if ($delta >= 0.25) {
+    if ($delta < 0.75) $string .= '<i style="color: #FEC601" class="fa fa-star-half-o"></i>';
+    else $string .= '<i style="color: #FEC601" class="fa fa-star"></i>';
+    for ($i = 0; $i < 4 - $star_count; $i++) $string .= '<i style="color: #FEC601" class="fa fa-star-o"></i>';
   }
-  else return false;
+  else
+  {
+    for ($i = 0; $i < 5 - $star_count; $i++) $string .= '<i style="color: #FEC601" class="fa fa-star-o"></i>';
+  }
+  return $string;
 }
-*/
 
+function escape_sql($string)
+{
+  return \DB::connection()->getPdo()->quote($string);
+}
+
+function dump_sql()
+{
+  \DB::listen(function($sql, $bindings, $time) {
+    $new_string = $sql;
+    foreach($bindings as $key => $value)
+    {
+      $new_string = preg_replace('/\?/', "'".$value."'", $new_string, 1);
+    }
+  echo str_replace("''","'",$new_string);
+  echo "<br><br>Query length: ".strlen($new_string);
+  var_dump($bindings);
+  var_dump($time);
+  });
+  }
 ?>

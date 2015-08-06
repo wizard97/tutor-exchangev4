@@ -69,11 +69,11 @@ class SettingsController extends Controller
   public function editzip(Request $request)
   {
     $this->validate($request, [
-      'zip'   => 'required|digits:5|numeric',
+      'zip'   => 'required|digits:5|numeric|exists:zips,zip_code',
     ]);
 
     $user = \App\User::findOrFail($this->id);
-    $user->zip = $request->input('zip');
+    $user->zip_id = \App\Zip::where('zip_code', '=', $request->input('zip'))->firstOrFail()->id;
     $user->save();
 
     \Session::flash('feedback_positive', 'You have successfully updated your Zip code.');

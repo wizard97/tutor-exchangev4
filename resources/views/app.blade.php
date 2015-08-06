@@ -30,6 +30,9 @@
       <!-- Clockpicker CSS -->
       <link rel="stylesheet" href="/css/clockpicker.css">
 
+      <!-- Star Rating CSS -->
+      <link rel="stylesheet" href="/css/star-rating.min.css">
+
       <!-- jquery -->
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
       <!-- Latest compiled and minified JavaScript -->
@@ -57,6 +60,9 @@
 
       <!-- Clockpicker -->
       <script src="/js/clockpicker.js"></script>
+
+      <!-- Star Rating -->
+      <script src="/js/star-rating.min.js"></script>
 
       <!-- Needer for Coutnerup -->
       <script src="//cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
