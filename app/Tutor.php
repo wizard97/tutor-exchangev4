@@ -15,7 +15,7 @@ class Tutor extends Model
 
     public function levels()
     {
-      return $this->belongsToMany('App\Level', 'tutor_levels', 'user_id', 'level_id');
+      return $this->belongsToMany('App\Level', 'tutor_levels', 'user_id', 'level_id')->withTimestamps();
     }
 
     public function reviews()
@@ -26,7 +26,7 @@ class Tutor extends Model
 
     public function schools()
     {
-        return $this->belongsToMany('App\School', 'tutor_schools', 'tutor_id', 'school_id');
+        return $this->belongsToMany('App\School', 'tutor_schools', 'tutor_id', 'school_id')->withTimestamps();
     }
 
     public function contacts()
@@ -44,6 +44,8 @@ class Tutor extends Model
 
     static public function add_classes_reviews($tutor_info, $selected = 0, $id_counts = [])
     {
+      //this is deprecated, remove when possible
+      /*
       $tutor_full = $tutor_info;
 
       foreach($tutor_full as $tutor)
@@ -77,8 +79,8 @@ class Tutor extends Model
         if ($tutor->half_star) $tutor->empty_stars--;
 
         //get classes
-        $classes = \App\Tutor::findOrFail($id)->classes()->join('levels', 'tutor_levels.level_id', '=', 'levels.id')
-            ->join('classes', 'levels.class_id', '=', 'classes.id')->orderBy('class_order', 'asc')->get()->groupBy('class_type');
+        $classes = \App\Tutor::findOrFail($id)->levels()
+            ->join('classes', 'levels.class_id', '=', 'classes.id')->get()->groupBy('class_type');
 
         //collections suck, key it by class_id
         $tutor_classes = array();
@@ -93,10 +95,14 @@ class Tutor extends Model
         $tutor->tutor_classes = $tutor_classes;
       }
       return $tutor_full;
+      */
+      return;
     }
 
     static public function insert_classes_reviews($tutor_info)
     {
+      //deprecated remove when possible
+      /*
       $tutor_full = $tutor_info;
 
       foreach($tutor_full as $tutor)
@@ -142,12 +148,17 @@ class Tutor extends Model
         $tutor->tutor_classes = $tutor_classes;
       }
       return $tutor_full;
+      */
     }
 
     static public function get_tutor_profile($id)
     {
-      $tutor = array(\App\Tutor::where('user_id', $id)->TutorInfo([$id])->firstOrfail());
-      $tutor_profile = \app\Tutor::add_classes_reviews($tutor);
-      return $tutor_profile[0];
+      $tutor = \App\Tutor::join('users', 'users.id', '=', 'tutors.user_id')
+      ->leftjoin('grades', 'tutors.grade', '=', 'grades.id')
+      ->join('zips', 'users.zip_id', '=', 'zips.id')
+      ->findOrFail($id);
+
+      return $tutor;
     }
+
 }

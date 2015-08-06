@@ -55,13 +55,11 @@ jQuery('.readmore').readmore({
             <a target="_blank" href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}"><img src="{{ route('profileimage.showsmall', ['id' => $tutor->user_id]) }}" class="img-rounded center-block" height="120" width="120" /></a>
           </div>
           <div class="row">
-            <div class="text-center">
+            <div class="text-center" style="font-size: 20px">
               <span style="font-size: 20px" class="text-nowrap">
-                @for($i = 0; $i < $tutor->star_count; $i++)<i style="color: #FEC601" class="fa fa-star"></i>@endfor
-                @if($tutor->half_star)<i style="color: #FEC601" class="fa fa-star-half-o"></i>@endif
-                @for($i = 0; $i < $tutor->empty_stars; $i++)<i style="color: #FEC601" class="fa fa-star-o"></i>@endfor
+                {!! print_stars(\App\Tutor::findOrFail($tutor->user_id)->reviews()->avg('rating')) !!}
               </span>
-              (<span style="font-size: 16px"><a href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}">{{ $tutor->num_reviews }}</a></span>)
+              (<span style="font-size: 16px"><a href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}">{{ \App\Tutor::findOrFail($tutor->user_id)->reviews()->count() }}</a></span>)
             </div>
           </div>
         </div>
@@ -69,7 +67,7 @@ jQuery('.readmore').readmore({
           <div class="row" style="margin-bottom: 10px;">
             <h3 style="margin-top: 0px; display:inline;" data-toggle="tooltip" data-placement="top" title="{{ $tutor->grade_name }}"><i class="fa fa-user" aria-hidden="true"></i>{{ ' '.$tutor->fname.' '.$tutor->lname }}
             </h3>
-            <span class="text-muted"><i class="fa fa-map-marker"></i> Lexington, MA</span>
+            <span class="text-muted"><i class="fa fa-map-marker"></i> {{ ucfirst(strtolower($tutor->city)).','.$tutor->state }}</span>
           </div>
           <div class="row">
             <div class="readmore">
@@ -87,8 +85,8 @@ jQuery('.readmore').readmore({
             </div>
             <div class="col-xs-6 col-xs-offset-0 col-sm-6 col-sm-offset-1">
               <div class="progress">
-                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ $tutor->percent_match }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $tutor->percent_match }}%; min-width: 3em;">
-                  {{ $tutor->percent_match }}%
+                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ $tutor->classes_match }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $tutor->classes_match }}%; min-width: 3em;">
+                  {{ $tutor->classes_match }}%
                 </div>
               </div>
             </div>
@@ -99,8 +97,8 @@ jQuery('.readmore').readmore({
             </div>
             <div class="col-xs-6 col-xs-offset-0 col-sm-6 col-sm-offset-1">
               <div class="progress">
-                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%; min-width: 3em;">
-                  70%
+                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ $tutor->distance_match }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $tutor->distance_match }}%; min-width: 3em;">
+                  {{ $tutor->distance_match }}%
                 </div>
               </div>
             </div>
@@ -111,8 +109,8 @@ jQuery('.readmore').readmore({
             </div>
             <div class="col-xs-6 col-xs-offset-0 col-sm-6 col-sm-offset-1">
               <div class="progress">
-                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%; min-width: 3em;">
-                  20%
+                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ $tutor->times_match }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $tutor->times_match }}%; min-width: 3em;">
+                  {{ $tutor->times_match }}%
                 </div>
               </div>
             </div>
@@ -129,7 +127,7 @@ jQuery('.readmore').readmore({
               <div class="btn-group-sm" role="group" aria-label="..." style="white-space: nowrap;">
                 <a class="btn btn-success btn-sm" target="_blank" href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}" role="button"><i class="fa fa-user" aria-hidden="true"></i> Profile</a>
                 <button class="btn btn-primary btn-sm contact-button" data-toggle="modal" data-target="#contactModal" data-userid="{{ $tutor->user_id }}"><i class="fa fa-envelope" aria-hidden="true"></i> Contact</button>
-                @if(in_array($tutor->user_id, $saved_tutors))
+                @if(!is_null(Auth::user()->saved_tutors()->find($tutor->user_id)))
                 <button type="button" name="saved_tutor_id" data-userid="{{ $tutor->user_id }}" class="btn btn-info btn-sm tutor-save-btn" aria-expanded="false"><i class="fa fa-minus" aria-hidden="true"></i> Remove</button>
                 @else
                 <button type="button" name="saved_tutor_id" data-userid="{{ $tutor->user_id }}" class="btn btn-warning btn-sm tutor-save-btn" aria-expanded="false"><i class="fa fa-plus" aria-hidden="true"></i> Save</button>
@@ -149,7 +147,7 @@ jQuery('.readmore').readmore({
   @endforeach
 
   @if(!empty($results))
-  {!! $results->render() !!}
+  {!! $paginator->render() !!}
   @endif
 
   @include('/search/contactmodal')

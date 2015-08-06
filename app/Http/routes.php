@@ -30,6 +30,11 @@ Route::get('user/feedback', [
 Route::get('search/index', [
     'as' => 'search.index', 'uses' => 'Search\SearchHomeController@index'
 ]);
+Route::get('search/showtutorprofile/{id}', [
+    'as' => 'search.showtutorprofile',
+    'middleware' => 'auth',
+    'uses' => 'Search\SearchHomeController@showtutorprofile'
+]);
 Route::post('search/sendmessage', [
     'as' => 'search.sendmessage',
      'middleware' => 'auth',

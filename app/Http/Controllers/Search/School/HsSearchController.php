@@ -113,6 +113,11 @@ class HsSearchController extends Controller
       //get array of selected classes
       if (!empty($form_inputs['classes'])) $classes = $form_inputs['classes'];
 
+      //get long and lat
+      $zip_model = \App\Zip::where('zip_code', '=', $form_inputs['zip'])->first();
+      $u_lat = $zip_model->lat;
+      $u_lon = $zip_model->lon;
+
       //alias times
       $days = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun'];
       foreach($days as $day)
@@ -122,7 +127,8 @@ class HsSearchController extends Controller
           $ts = new \DateTime;
           $ts = $ts->createFromFormat( 'H:iA', $form_inputs[$day]);
           $time = $ts->format( 'H:i:s');
-          $time_alias[$day] = "CAST('{$time}' AS TIME)";
+          $time = escape_sql($time);
+          $time_alias[$day] = "CAST({$time} AS TIME)";
         }
       }
 
@@ -131,6 +137,7 @@ class HsSearchController extends Controller
     if (!empty($form_inputs['start_rate'])) $search = $search->where('rate', '>=', $form_inputs['start_rate']);
     if (!empty($form_inputs['end_rate'])) $search = $search->where('rate', '<=', $form_inputs['end_rate']);
     if (!empty($form_inputs['min_grade'])) $search = $search->where('grade', '>=', $form_inputs['min_grade']);
+    if (!empty($form_inputs['max_dist'])) $max_dist = $form_inputs['max_dist'];
     //school_id
     if (!empty($hs_id)) $search = $search->where('classes.school_id', '=', $hs_id);
 
@@ -162,49 +169,76 @@ class HsSearchController extends Controller
 
     if(!empty($time_array))
     {
-      $time_select = "ROUND(((".implode(' + ', $time_array).")/".count($time_array).")*100, 0) AS times_match";
+      $time_select = "ROUND(((".implode(' + ', $time_array).")/".count($time_array).")*100, 0) AS 'times_match'";
     } else {
-      $time_select = '100 AS times_match';
+      $time_select = "100 AS 'times_match'";
     }
 
     $num_classes = count($classes);
     //default to 100 if empty
     if($num_classes)
     {
-      $class_select = "ROUND((COUNT(*)/{$num_classes})*100, 0) as classes_match";
+      $class_select = "ROUND((COUNT(*)/{$num_classes})*100, 0) as 'classes_match'";
     } else {
-      $class_select = '100 AS classes_match';
+      $class_select = "100 AS 'classes_match'";
     }
+
+    $dist_select = sprintf("3959*ACOS(COS(RADIANS(zips.lat)) * COS(RADIANS('%s')) * COS(RADIANS(zips.lon) - RADIANS('%s')) + SIN(RADIANS(zips.lat)) * SIN(RADIANS('%s'))) AS '%s'", $u_lat, $u_lon, $u_lat, 'distance');
+
+
+    if(isset($max_dist))
+    {
+      $dist_select2 = sprintf("ROUND(((%s - 3959*ACOS(COS(RADIANS(zips.lat)) * COS(RADIANS('%s')) * COS(RADIANS(zips.lon) - RADIANS('%s')) + SIN(RADIANS(zips.lat)) * SIN(RADIANS('%s'))))/%s)*100, 0) as %s", escape_sql($max_dist), $u_lat, $u_lon, $u_lat, escape_sql($max_dist), 'distance_match');
+      $search = $search->whereRaw("zips.lat BETWEEN (? - (? / 69.0)) AND (? + (? / 69.0))", [$u_lat, $max_dist, $u_lat, $max_dist])
+      ->whereRaw("zips.lon BETWEEN (? - (? / (69.0 * COS(RADIANS(?))))) AND (? + (? / (69.0 * COS(RADIANS(?)))))", [$u_lon, $max_dist, $u_lon, $u_lon, $max_dist, $u_lon])
+      ->having('distance', '<=', $max_dist);
+    } else {
+      $dist_select2 = "100 AS 'distance_match'";
+    }
+    $per_page = 15;
 
     $search = $search->join('tutor_levels', 'levels.id', '=', 'tutor_levels.level_id')
     ->join('classes', 'classes.id', '=', 'levels.class_id')
     ->join('users', 'users.id', '=', 'tutor_levels.user_id')
     ->join('tutors', 'tutors.user_id', '=', 'tutor_levels.user_id')
     ->leftjoin('grades', 'tutors.grade', '=', 'grades.id')
+    ->join('zips', 'users.zip_id', '=', 'zips.id')
     ->where('account_type', '>=', '2')
     ->where('tutors.tutor_active', '=', '1')
     ->where('tutors.profile_expiration', '>=', date('Y-m-d H:i:s'))
-    ->select(\DB::raw($class_select), \DB::raw($time_select), 'users.account_type', 'tutor_levels.user_id', 'users.id',
-    'users.fname', 'users.lname', 'users.last_login', 'users.created_at','tutors.*', 'grades.*')
+    ->select(\DB::raw('SQL_CALC_FOUND_ROWS tutor_levels.user_id'), \DB::raw($dist_select), \DB::raw($dist_select2), \DB::raw($class_select), \DB::raw($time_select), 'users.account_type', 'tutor_levels.user_id', 'users.id',
+    'users.fname', 'users.lname', 'users.last_login', 'users.created_at','tutors.*', 'grades.*', 'zips.*')
     ->groupBy('tutor_levels.user_id')
     ->orderBy('classes_match', 'desc')
-    ->orderBy('lname', 'asc');
+    ->orderBy('times_match', 'desc')
+    ->orderBy('distance_match', 'desc')
+    ->orderBy('lname', 'asc')
+    ->take($per_page);
 
-    echo $search->toSql();
-    echo '<br><br><br>';
-    \DB::listen(function($sql, $bindings, $time) {
-      $new_string = $sql;
-      foreach($bindings as $key => $value)
-      {
-        $new_string = preg_replace('/\?/', "'".$value."'", $new_string, 1);
-      }
-    echo str_replace("''","'",$new_string);
-    var_dump($bindings);
-    var_dump($time);
-  });
-    var_dump($search->get()->toArray());
+
+  if ($request->get('page') > 1)
+  {
+    $search = $search->skip(($request->get('page')-1)*$per_page);
   }
+  $results = $search->get();
 
+  $num_rows = \DB::select('SELECT FOUND_ROWS() AS num_rows')[0]->num_rows;
+
+
+  $paginator = new \Illuminate\Pagination\LengthAwarePaginator($results, $num_rows, $per_page, $request->get('page'));
+  $paginator->setPath($request->url());
+  //return var_dump($paginator->toArray());
+
+  if (\Auth::check())
+  {
+    $saved_tutors = \Auth::user()->saved_tutors()->join('users', 'tutor_id', '=', 'users.id')->get()->pluck('tutor_id')->toArray();
+    return view('search/showresults', ['results' => $results, 'num_results' => $num_rows, 'paginator' => $paginator]);
+  }
+  else $saved_tutors = array();
+    \Session::flash('feedback_warning', "For the protection of our site's tutors, we are blocking most of the site's functionality including the ability to view their profile, see reviews, and contact them. Please <a href=\"".route('auth.login')."\">login/register</a>.");
+  return view('search/showresultsplain', ['results' => $results, 'num_results' => $num_rows, 'paginator' => $paginator]);
+
+  }
 
   public function query($query)
   {

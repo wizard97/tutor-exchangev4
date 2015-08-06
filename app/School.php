@@ -8,7 +8,7 @@ class School extends Model
 {
   public function tutors()
   {
-      return $this->belongsToMany('App\Tutor', 'tutor_schools', 'school_id', 'tutor_id');
+      return $this->belongsToMany('App\Tutor', 'tutor_schools', 'school_id', 'tutor_id')->withTimestamps();
   }
 
   public function zip()

@@ -52,9 +52,8 @@ class TutorController extends Controller
 
   public function geteditclasses()
   {
-    $classes = \App\SchoolClass::with('levels')->orderBy('class_order', 'asc')
-    ->get()
-    ->groupBy('class_type');
+    $classes = \App\SchoolClass::with('levels')
+    ->get();
 
     $subjects = \App\SchoolClass::groupBy('class_type')->get()->pluck('class_type');
 
@@ -201,10 +200,10 @@ class TutorController extends Controller
   private function makechecklist($tutor_id)
   {
     $tutor = \App\Tutor::get_tutor_profile($tutor_id);
-    $tutor_model = \App\Tutor::findOrFail($this->id);
+    //$tutor_model = \App\Tutor::findOrFail($this->id);
 
     isset($tutor->grade) && isset($tutor->rate) && isset($tutor->about_me) ? $checklist['info'] = true : $checklist['info'] = false;
-    !$tutor_model->classes->isEmpty() ? $checklist['classes'] = true : $checklist['classes'] = false;
+    !$tutor->levels()->get()->isEmpty() ? $checklist['classes'] = true : $checklist['classes'] = false;
     $tutor->tutor_active ? $checklist['active'] = true : $checklist['active'] = false;
     return $checklist;
   }

@@ -58,7 +58,7 @@
           <div class="col-xs-8">
             <h4 class="list-group-item-heading">Zip Code:</h4>
             <p class="list-group-item-text text-muted">
-              {{ Auth::user()->zip }}
+              {{ Auth::user()->zip->zip_code }}
             </p>
           </div>
           <div class="col-xs-4">

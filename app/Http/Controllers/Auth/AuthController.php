@@ -44,7 +44,7 @@ class AuthController extends Controller {
 
         $zip_model = \App\Zip::where('zip_code', '=', $request->input('zip'))->firstOrFail();
 
-        $zip_model->users()->create([
+        $new_user = $zip_model->users()->create([
           'fname' => $request->input('fname'),
           'lname' => $request->input('lname'),
           'address' => $request->input('address'),

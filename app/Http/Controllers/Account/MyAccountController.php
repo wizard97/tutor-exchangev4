@@ -22,12 +22,11 @@ class MyAccountController extends Controller
       $user = \App\User::findOrFail($this->id);
       //get saves tutors
       $saved_tutors = $user->saved_tutors()
-      ->join('users', 'saved_tutors.tutor_id', '=', 'users.id')
-      ->join('tutors', 'saved_tutors.tutor_id', '=', 'tutors.user_id')
-      ->leftJoin('reviews', 'saved_tutors.tutor_id', '=', 'reviews.tutor_id')
-      ->join('grades', 'tutors.grade', '=', 'grades.id')
-      ->select('saved_tutors.created_at AS saved_at', 'users.*', 'saved_tutors.*', 'tutors.*', 'grades.*', \DB::raw('COUNT(reviews.tutor_id) as num_reviews'), \DB::raw('AVG(reviews.rating) as rating'))
-      ->groupBy('saved_tutors.tutor_id')->orderBy('saved_at', 'desc')->get();      
+      ->join('users', 'tutors.user_id', '=', 'users.id')
+      ->leftJoin('reviews', 'tutors.user_id', '=', 'reviews.tutor_id')
+      ->leftJoin('grades', 'tutors.grade', '=', 'grades.id')
+      ->select('users.*', 'tutors.*', 'grades.*', \DB::raw('COUNT(reviews.tutor_id) as num_reviews'), \DB::raw('AVG(reviews.rating) as rating'))
+      ->groupBy('tutors.user_id')->orderBy('pivot_created_at', 'desc')->get();
       //get reviews you left
       $reviews = $user->reviews()->join('users', 'reviews.tutor_id', '=', 'users.id')->select('reviews.*', 'users.fname', 'users.lname')->get();
 

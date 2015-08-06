@@ -22,8 +22,9 @@
 
 
 <div class="col-lg-offset-2 col-lg-8">
-  <form id="search-form" method="POST" action="{{ route('school.submitsearch') }}">
+  <form class="form" id="search-form" method="POST" action="{{ route('school.submitsearch') }}">
     {!! csrf_field() !!}
+    <div class="row">
     <div id="rootwizard">
       	<ul style="font-size: 20px; margin-bottom: 10px;">
       	  	<li><a href="#tab1" data-toggle="tab"><i class="fa fa-location-arrow fa-fw no-red"></i> Location</a></li>
@@ -38,113 +39,123 @@
           </div>
         </div>
 
-    	<div class="tab-content well">
+      	<div class="tab-content well">
 
-    	    <div class="tab-pane" id="tab1">
-            <div class="form-horizontal" >
-              <h3 class="text-center">Zip Code</h3>
-              <br>
-              <div class="form-group">
-                <div class="row">
-                  <label class="control-label col-sm-2" for="email"></label>
-                  <div class="col-sm-8">
-                    @if(Auth::check())
-                    <input name="zip" class="form-control" id="zip" placeholder="Enter your zip code" value="{{Auth::user()->zip}}">
-                    @else
-                    <input name="zip" class="form-control" id="zip" placeholder="Enter your zip code">
-                    @endif
+      	    <div class="tab-pane" id="tab1">
+                <h3 class="text-center">Locations and Distances</h3>
+                <br>
+
+                  <div class="form-group">
+                    <div class="row">
+                      <div class="col-md-offset-2 col-md-8 text-center">
+                        <label>Max Tutor Distance</label><br>
+                        <b>1 Mile</b> <input name="max_dist" class="form-control" id="dist-slider" type="number" data-slider-scale="logarithmic" data-slider-value="10" data-slider-min="1" data-slider-max="200" data-slider-step="1"/> <b>200 Miles</b>
+                      </div>
+                      </div>
+                  </div>
+
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-md-offset-3 col-md-6 col-sm-offset-2 col-sm-8 col-xs-offset-0 col-xs-12">
+                      @if(Auth::check())
+                      <input name="zip" class="form-control" id="zip" placeholder="Enter your zip code" value="{{Auth::user()->zip->zip_code}}">
+                      @else
+                      <input name="zip" class="form-control" id="zip" placeholder="Enter your zip code">
+                      @endif
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-    	    </div>
+      	    </div>
 
-    	    <div class="tab-pane" id="tab2">
-            <h3 class="text-center">Student Grade</h3>
+      	    <div class="tab-pane" id="tab2">
+              <h3 class="text-center">Student Grade</h3>
+              <br>
+              <div class="row">
+        	      <div class="col-md-offset-2 col-md-8">
+                  <button class="btn btn-primary btn-lg btn-block school-selection" value="middle" type="button">Student <span style="font-size: 20px;">&le;</span> Middle School</button>
+                  <button class="btn btn-warning btn-lg btn-block school-selection" value="high" type="button">Student <span style="font-size: 20px;">&ge;</span> High School</button>
+                  <input type="hidden" name="school_type">
+                </div>
+              </div>
+              <div class="clearfix"></div>
+      	    </div>
+
+      		<div class="tab-pane" id="tab3">
+            <h3 class="text-center">Professional or Standard Tutor?</h3>
             <br>
             <div class="row">
-      	      <div class="col-md-offset-2 col-md-8">
-                <button class="btn btn-primary btn-lg btn-block school-selection" value="middle" type="button">Student <span style="font-size: 20px;">&le;</span> Middle School</button>
-                <button class="btn btn-warning btn-lg btn-block school-selection" value="high" type="button">Student <span style="font-size: 20px;">&ge;</span> High School</button>
-                <input type="hidden" name="school_type">
+              <div class="col-md-offset-2 col-md-8">
+                <button class="btn btn-default btn-lg btn-block tutor-selection" type="button" value="standard"><i class="fa fa-user fa-fw"></i> Standard</button>
+                <button class="btn btn-success btn-lg btn-block tutor-selection" type="button" value="professional"><i class="fa fa-user-plus fa-fw"></i> Professional</button>
+                <input type="hidden" name="tutor_type">
               </div>
             </div>
             <div class="clearfix"></div>
-    	    </div>
+      	  </div>
 
-    		<div class="tab-pane" id="tab3">
-          <h3 class="text-center">Professional or Standard Tutor?</h3>
-          <br>
-          <div class="row">
-            <div class="col-md-offset-2 col-md-8">
-              <button class="btn btn-default btn-lg btn-block tutor-selection" type="button" value="standard"><i class="fa fa-user fa-fw"></i> Standard</button>
-              <button class="btn btn-success btn-lg btn-block tutor-selection" type="button" value="professional"><i class="fa fa-user-plus fa-fw"></i> Professional</button>
-              <input type="hidden" name="tutor_type">
+      		<div class="tab-pane" id="tab4">
+            <h3 class="text-center">Price Range</h3>
+            <br>
+            <div class="row">
+              <div class="col-md-offset-2 col-md-8 text-center">
+                <b>$0 /hour</b> <input id="price-slider" type="text" class="form-control" value="" data-slider-id='price-slider' data-slider-min="0" data-slider-max="200" data-slider-step="5" data-slider-value="[10,100]"/> <b>$200 /hour</b>
+              <input type="hidden" name="start_rate" value="10">
+              <input type="hidden" name="end_rate" value="100">
+              </div>
             </div>
-          </div>
-          <div class="clearfix"></div>
-    	  </div>
+            <div class="clearfix"></div>
+      	  </div>
 
-    		<div class="tab-pane" id="tab4">
-          <h3 class="text-center">Price Range</h3>
-          <br>
-          <div class="row">
-            <div class="col-md-offset-2 col-md-8 text-center">
-              <b>$0 /hour</b> <input id="slider" type="text" class="span2" value="" data-slider-id='price-slider' data-slider-min="0" data-slider-max="200" data-slider-step="5" data-slider-value="[10,100]"/> <b>$200 /hour</b>
-            <input type="hidden" name="start_rate" value="10">
-            <input type="hidden" name="end_rate" value="100">
+      		<div class="tab-pane" id="tab5">
+            <h3 class="text-center">Your Availability</h3>
+
+            <div class="col-lg-offset-2 col-lg-8">
+                <table class="table table-condensed">
+                  <thead>
+                    <tr>
+                      <th class="text-center text-primary">Day</th>
+                      <th class="text-center text-primary">Ideal Time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php $days = ['mon' => 'Monday', 'tues' => 'Tuesday', 'wed' => 'Wednesday', 'thurs' => 'Thursday', 'fri' => 'Friday', 'sat' => 'Saturday', 'sun' => 'Sunday']; ?>
+
+                    @foreach($days as $key => $day)
+                    <tr class="time-row">
+                      <td>
+                        <div class="checkbox row-checkbox">
+                          <label>
+                            <input type="checkbox" value="1" name="{{$key}}_checked"> {{ $day }}
+                          </label>
+                        </div>
+                      </td>
+
+                      <td>
+                        <div class="input-group clockpicker">
+                          <input type="text" class="form-control" value="03:00PM" name="{{$key}}">
+                          <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-time"></span>
+                          </span>
+                        </div>
+                      </td>
+
+                    </tr>
+                    @endforeach
+                  </tbody>
+                </table>
             </div>
-          </div>
-          <div class="clearfix"></div>
-    	  </div>
+            <div class="clearfix"></div>
+      	  </div>
 
-    		<div class="tab-pane" id="tab5">
-          <h3 class="text-center">Your Availability</h3>
+      		<ul class="pager wizard">
+      			<li class="previous no-red"><a href="#">Previous</a></li>
+      		  <li class="next no-red"><a href="#">Next</a></li>
+            <li class="next finish no-red" style="display:none;"><a href="#" type="submit">Finish!</a></li>
+      		</ul>
 
-          <div class="col-lg-offset-2 col-lg-8">
-              <table class="table table-condensed">
-                <thead>
-                  <tr>
-                    <th class="text-center text-primary">Day</th>
-                    <th class="text-center text-primary">Ideal Time</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php $days = ['mon' => 'Monday', 'tues' => 'Tuesday', 'wed' => 'Wednesday', 'thurs' => 'Thursday', 'fri' => 'Friday', 'sat' => 'Saturday', 'sun' => 'Sunday']; ?>
+      	</div>
+      </div>
 
-                  @foreach($days as $key => $day)
-                  <tr class="time-row">
-                    <td>
-                      <div class="checkbox row-checkbox">
-                        <label>
-                          <input type="checkbox" value="1" name="{{$key}}_checked"> {{ $day }}
-                        </label>
-                      </div>
-                    </td>
-
-                    <td>
-                      <div class="input-group clockpicker">
-                        <input type="text" class="form-control" value="03:00PM" name="{{$key}}">
-                        <span class="input-group-addon">
-                          <span class="glyphicon glyphicon-time"></span>
-                        </span>
-                      </div>
-                    </td>
-
-                  </tr>
-                  @endforeach
-                </tbody>
-              </table>
-          </div>
-          <div class="clearfix"></div>
-    	  </div>
-
-    		<ul class="pager wizard">
-    			<li class="previous no-red"><a href="#">Previous</a></li>
-    		  <li class="next no-red"><a href="#">Next</a></li>
-          <li class="next finish no-red" style="display:none;"><a href="#" type="submit">Finish!</a></li>
-    		</ul>
-    	</div>
     </div>
   </form>
 </div>
@@ -185,18 +196,24 @@ $(document).ready(function() {
 
       });
 
+//prevent redirects
+  $('.no-red').click(function(e) {
+    e.preventDefault();
+      });
 
-    $('.no-red').click(function(e) {
-      e.preventDefault();
-        });
-
-$('#slider').slider({
+$('#price-slider').slider({
 	formatter: function(value) {
 		return '$' + value[0] + ' - $' + value[1] + ' /hour';
 	}
 });
 
-$("#slider").on("change", function(data) {
+$('#dist-slider').slider({
+	formatter: function(value) {
+		return value + ' Miles';
+	}
+});
+
+$("#price-slider").on("change", function(data) {
   $(this).siblings("input[name='price_start']").val(data.value.newValue[0]);
   $(this).siblings("input[name='price_end']").val(data.value.newValue[1]);
 

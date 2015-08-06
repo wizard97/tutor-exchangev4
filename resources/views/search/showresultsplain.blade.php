@@ -72,24 +72,22 @@
     <td class="vert-align">
       <div class="progress vert-align">
         <div class="progress-bar progress-bar-primary
-        @if($tutor->percent_match > 60) progress-bar-primary
-        @elseif($tutor->percent_match > 30) progress-bar-warning
+        @if($tutor->classes_match > 60) progress-bar-primary
+        @elseif($tutor->classes_match > 30) progress-bar-warning
         @else progress-bar-danger
         @endif
-        " role="progressbar" aria-valuenow="{{ $tutor->percent_match }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $tutor->percent_match }}%">{{ $tutor->percent_match }}%
+        " role="progressbar" aria-valuenow="{{ $tutor->classes_match }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $tutor->classes_match }}%">{{ $tutor->classes_match }}%
       </div>
     </div>
     </td>
 
     <td class="vert-align">
-      <span class="text-nowrap">
-        <span style="font-size: 18px">
-@for($i = 0; $i < $tutor->star_count; $i++)<i style="color: #FEC601" class="fa fa-star"></i>@endfor
-@if($tutor->half_star)<i style="color: #FEC601" class="fa fa-star-half-o"></i>@endif
-@for($i = 0; $i < $tutor->empty_stars; $i++)<i style="color: #FEC601" class="fa fa-star-o"></i>@endfor
-        </span>
-       (<span class="text-primary"><a href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}">{{ $tutor->num_reviews }}</a></span>)
+
+      <span class="text-nowrap" style="font-size: 18px;">
+        <span style="font-size: 18px">{!! print_stars(\App\Tutor::findOrFail($tutor->user_id)->reviews()->avg('rating')) !!}</span>
+       (<span class="text-primary"><a href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}">{{ \App\Tutor::findOrFail($tutor->user_id)->reviews()->count() }}</a></span>)
      </span>
+
     </td>
 
     <td class="vert-align">
@@ -112,7 +110,7 @@
 </div>
 
 @if(!empty($results))
-{!! $results->render() !!}
+{!! $paginator->render() !!}
 @endif
 
 
