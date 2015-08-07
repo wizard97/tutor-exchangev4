@@ -67,7 +67,7 @@ jQuery('.readmore').readmore({
           <div class="row" style="margin-bottom: 10px;">
             <h3 style="margin-top: 0px; display:inline;" data-toggle="tooltip" data-placement="top" title="{{ $tutor->grade_name }}"><i class="fa fa-user" aria-hidden="true"></i>{{ ' '.$tutor->fname.' '.$tutor->lname }}
             </h3>
-            <span class="text-muted"><i class="fa fa-map-marker"></i> {{ ucfirst(strtolower($tutor->city)).','.$tutor->state }}</span>
+            <span class="text-muted"><i class="fa fa-map-marker"></i> {{ ucwords(strtolower($tutor->city)).', '.$tutor->state_prefix }}</span>
           </div>
           <div class="row">
             <div class="readmore">

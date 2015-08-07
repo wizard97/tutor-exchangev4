@@ -42,7 +42,7 @@ class AuthController extends Controller {
 
         $confirmation_code = str_random(30);
 
-        $zip_model = \App\Zip::where('zip_code', '=', $request->input('zip'))->firstOrFail();
+        $zip_model = \App\Zip::where('zip_code', '=', (string)$request->input('zip'))->firstOrFail();
 
         $new_user = $zip_model->users()->create([
           'fname' => $request->input('fname'),

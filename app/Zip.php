@@ -16,7 +16,7 @@ class Zip extends Model
 
     public function users()
     {
-      return $this->hasMany('App\User', 'zip_id', 'zip_code');
+      return $this->hasMany('App\User', 'zip_id', 'id');
     }
 
     public function scopeHaversine($query, $lat, $long, $dist_var, $max_dist, $limit, &$selector)

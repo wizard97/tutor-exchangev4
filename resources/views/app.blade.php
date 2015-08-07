@@ -135,7 +135,7 @@ $(document).ready(function() {
 $(".tutor-save-btn").on("click", function(){
     var button = $(this);
     var id = button.data('userid'); // Extract info from data-* attributes
-    var url = "{{ route('search.ajaxsavetutor') }}";
+    var url = "{{ route('myaccount.ajaxsavetutor') }}";
 //save
     $.ajax({
       type: "POST",
