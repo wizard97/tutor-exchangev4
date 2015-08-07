@@ -36,7 +36,7 @@
         <li class="list-group-item text-right"><span class="pull-left"><i class="fa fa-birthday-cake"></i> <strong>Age:</strong></span>{{ $tutor->age or 'N/A' }}</li>
         <li class="list-group-item text-right"><span class="pull-left"><i class="fa fa-graduation-cap"></i> <strong>Grade:</strong></span> {{ $tutor->grade_name or 'N/A'}}</li>
         <li class="list-group-item text-right"><span class="pull-left"><i class="fa fa-money"></i> <strong>Rate:</strong></span> ${{ $tutor->rate or 'N/A'}}</li>
-        <li class="list-group-item text-right"><span class="pull-left"><i class="fa fa-map-marker"></i> <strong>Zip Code:</strong></span> {{ $tutor->zip or 'N/A'}}</li>
+        <li class="list-group-item text-right"><span class="pull-left"><i class="fa fa-map-marker"></i> <strong>Location:</strong></span> {{ ucwords(strtolower($tutor->city)).', '.$tutor->state_prefix }}</li>
         <li class="list-group-item text-right"><span class="pull-left"><i class="fa fa-clock-o"></i> <strong>Listing Expiration:</strong></span> {{ isset($tutor->profile_expiration) ? date('m/d/y', strtotime($tutor->profile_expiration)) : 'N/A' }}</li>
         <li class="list-group-item text-right"><span class="pull-left"><i class="fa fa-sign-in"></i> <strong>Last Login:</strong></span> {{ isset($tutor->last_login) ? date('m/d/y', strtotime($tutor->last_login)) : 'N/A' }}</li>
         <li class="list-group-item text-right"><span class="pull-left"><i class="fa fa-exchange"></i> <strong>Joined:</strong></span> {{ date('m/d/y', strtotime($tutor->created_at)) }}</li>
@@ -95,6 +95,7 @@
     </table>
 </div>
 @endforeach
+
         </div>
       </div>
     </div>
@@ -106,14 +107,12 @@
       <div class="well">
         <h2>Tutor Reviews <small>They now work!</small></h2>
         <span style="font-size: 24px" class="text-nowrap">
-@for($i = 0; $i < $tutor->star_count; $i++)<i style="color: #FEC601" class="fa fa-star"></i>@endfor
-@if($tutor->half_star)<i style="color: #FEC601" class="fa fa-star-half-o"></i>@endif
-@for($i = 0; $i < $tutor->empty_stars; $i++)<i style="color: #FEC601" class="fa fa-star-o"></i>@endfor
-          (<span class="text-primary">{{ $tutor->num_reviews }}</span>)
+          {!! print_stars($tutor->reviews()->avg('rating')) !!}
+          (<span class="text-primary">{{ $tutor->reviews()->count() }}</span>)
         </span>
 
-@if($tutor->num_reviews > 0)
-        <p class="text-muted">{{ $tutor->rating }} out of 5 stars</p>
+@if($tutor->reviews()->get()->count() > 0)
+        <p class="text-muted">{{ round($tutor->reviews()->avg('rating'), 1) }} out of 5 stars</p>
 @else
         <p class="text-muted">No Reviews</p>
 @endif
@@ -166,12 +165,11 @@
           </div>
           <hr style="height:1px;border:none;color:#333;background-color:#333;">
 
-@foreach($tutor->all_reviews as $review)
+@foreach($tutor->reviews()->join('users', 'users.id', '=', 'reviews.tutor_id')->get() as $review)
           <div class="row">
             <div class="col-md-12">
               <span style="font-size: 20px" class="text-nowrap">
-@for($i = 0; $i < $review->rating; $i++)<i style="color: #FEC601" class="fa fa-star"></i>@endfor
-@for($i = 0; $i < 5 - $review->rating; $i++)<i style="color: #FEC601" class="fa fa-star-o"></i>@endfor
+                {!! print_stars($review->rating) !!}
               </span>
 
               <strong>{{ $review->title }}</strong>

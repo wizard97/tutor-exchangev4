@@ -120,6 +120,7 @@ class HsSearchController extends Controller
 
       //alias times
       $days = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun'];
+      $time_alias = array();
       foreach($days as $day)
       {
         if (!empty($form_inputs[$day]) && isset($form_inputs[$day.'_checked']))
@@ -216,27 +217,27 @@ class HsSearchController extends Controller
     ->take($per_page);
 
 
-  if ($request->get('page') > 1)
-  {
-    $search = $search->skip(($request->get('page')-1)*$per_page);
-  }
-  $results = $search->get();
+    if ($request->get('page') > 1)
+    {
+      $search = $search->skip(($request->get('page')-1)*$per_page);
+    }
+    $results = $search->get();
 
-  $num_rows = \DB::select('SELECT FOUND_ROWS() AS num_rows')[0]->num_rows;
+    $num_rows = \DB::select('SELECT FOUND_ROWS() AS num_rows')[0]->num_rows;
 
 
-  $paginator = new \Illuminate\Pagination\LengthAwarePaginator($results, $num_rows, $per_page, $request->get('page'));
-  $paginator->setPath($request->url());
-  //return var_dump($paginator->toArray());
+    $paginator = new \Illuminate\Pagination\LengthAwarePaginator($results, $num_rows, $per_page, $request->get('page'));
+    $paginator->setPath($request->url());
+    //return var_dump($paginator->toArray());
 
-  if (\Auth::check())
-  {
-    $saved_tutors = \Auth::user()->saved_tutors()->join('users', 'tutor_id', '=', 'users.id')->get()->pluck('tutor_id')->toArray();
-    return view('search/showresults', ['results' => $results, 'num_results' => $num_rows, 'paginator' => $paginator]);
-  }
-  else $saved_tutors = array();
+    if (\Auth::check())
+    {
+      $saved_tutors = \Auth::user()->saved_tutors()->join('users', 'tutor_id', '=', 'users.id')->get()->pluck('tutor_id')->toArray();
+      return view('search/showresults', ['results' => $results, 'num_results' => $num_rows, 'paginator' => $paginator]);
+    }
+    else $saved_tutors = array();
     \Session::flash('feedback_warning', "For the protection of our site's tutors, we are blocking most of the site's functionality including the ability to view their profile, see reviews, and contact them. Please <a href=\"".route('auth.login')."\">login/register</a>.");
-  return view('search/showresultsplain', ['results' => $results, 'num_results' => $num_rows, 'paginator' => $paginator]);
+    return view('search/showresultsplain', ['results' => $results, 'num_results' => $num_rows, 'paginator' => $paginator]);
 
   }
 

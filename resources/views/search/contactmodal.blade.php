@@ -13,8 +13,8 @@ $( document ).ready(function() {
 
       $('#contactModal #contact-userid').val(id);
       $.ajax({
-        type: "POST",
-        url : "{{ route("search.ajaxcontacttutor") }}",
+        type: "GET",
+        url : "{{ route("myaccount.ajaxcontacttutor") }}",
         data : {userid: id},
         success : function(data){
           $('#contactModal h4').html('<i class="fa fa-envelope-o"></i> Contact <a href="' + data.tutor_profile + '">' + data.name + '</a>');
@@ -37,7 +37,7 @@ $( document ).ready(function() {
     // process the form
     $.ajax({
         type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
-        url         : '{{ route('search.sendmessage') }}',
+        url         : '{{ route('myaccount.sendmessage') }}',
         data        : formData, // our data object
         //callback
         success : function(data){

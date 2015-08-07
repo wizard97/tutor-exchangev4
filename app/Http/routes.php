@@ -35,21 +35,7 @@ Route::get('search/showtutorprofile/{id}', [
     'middleware' => 'auth',
     'uses' => 'Search\SearchHomeController@showtutorprofile'
 ]);
-Route::post('search/sendmessage', [
-    'as' => 'search.sendmessage',
-     'middleware' => 'auth',
-     'uses' => 'Search\SearchHomeController@sendmessage'
-]);
-Route::post('search/savetutor', [
-    'as' => 'search.ajaxsavetutor',
-     'middleware' => 'auth',
-     'uses' => 'Search\SearchHomeController@ajaxsavetutor'
-]);
-Route::post('search/contacttutor', [
-    'as' => 'search.ajaxcontacttutor',
-     'middleware' => 'auth',
-     'uses' => 'Search\SearchHomeController@ajaxcontactjson'
-]);
+
 
 //school tutoring
 Route::get('search/school/index', [
@@ -84,7 +70,7 @@ Route::get('search/school/hsorabove/find/prefetch', [
 ]);
 
 
-/*
+/* deprecated 8/5/15
 //search
 Route::get('search/index', [
     'as' => 'search.index', 'uses' => 'SearchController@index'
@@ -158,6 +144,33 @@ Route::post('account/settings/editpassword', [
 //user dashboard
 Route::get('account/myaccount/index', [
     'as' => 'myaccount.dashboard', 'uses' => 'Account\MyAccountController@index'
+]);
+//ajax methods
+
+Route::post('account/myaccount/sendmessage', [
+    'as' => 'myaccount.sendmessage',
+     'middleware' => 'auth',
+     'uses' => 'Account\MyAccountController@sendmessage'
+]);
+Route::post('account/myaccount/savetutor', [
+    'as' => 'myaccount.ajaxsavetutor',
+     'middleware' => 'auth',
+     'uses' => 'Account\MyAccountController@ajaxsavetutor'
+]);
+Route::get('account/myaccount/contacttutor', [
+    'as' => 'myaccount.ajaxcontacttutor',
+     'middleware' => 'auth',
+     'uses' => 'Account\MyAccountController@ajaxcontactjson'
+]);
+
+Route::get('account/myaccount/savedtutors', [
+    'as' => 'myaccount.ajaxsavedtutors', 'uses' => 'Account\MyAccountController@ajaxsavedtutors'
+]);
+Route::get('account/myaccount/tutorcontacts', [
+    'as' => 'myaccount.ajaxtutorcontacts', 'uses' => 'Account\MyAccountController@ajaxtutorcontacts'
+]);
+Route::get('account/myaccount/tutorreviews', [
+    'as' => 'myaccount.ajaxtutorreviews', 'uses' => 'Account\MyAccountController@ajaxtutorreviews'
 ]);
 
 
