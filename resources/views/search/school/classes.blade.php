@@ -60,7 +60,7 @@ $(document).ready(function() {
     columns: [
       { "visible": false, "title": 'Class ID', "data": 'id'},
       { "title": 'Class Name', "data": 'class_name'},
-      { "title": 'Subject', "data": 'class_type'},
+      { "title": 'Subject', "data": 'subject_name'},
       { "visible": false, "title": 'Level Num', "data": 'level_num'},
       { "title": 'Level', "data": 'level_name'},
       {
@@ -76,10 +76,10 @@ $(document).ready(function() {
   //array of array of classes keyed by subject
   var class_subjects = {};
   $.each(classes, function(idx, val) {
-    if (typeof class_subjects[val.class_type] == 'undefined') {
-      class_subjects[val.class_type] = new Array();
+    if (typeof class_subjects[val.subject_name] == 'undefined') {
+      class_subjects[val.subject_name] = new Array();
     }
-    class_subjects[val.class_type].push(val.id);
+    class_subjects[val.subject_name].push(val.id);
   });
 
   var $class_table = $('#school-classes');
@@ -98,7 +98,7 @@ $(document).ready(function() {
       },
       { "visible": false, "title": 'Class ID', "data": 'id'},
       { "title": 'Class Name', "data": 'class_name'},
-      { "title": 'Class Subject', "data": 'class_type'},
+      { "title": 'Class Subject', "data": 'subject_name'},
       { "title": 'Class Level', "data": null, orderable: false, createdCell: function (td, cellData, rowData, row, col) {
         var sel = $('<select class="form-control class-level"></select>').attr("id", 'class-' + rowData.id).attr("name", 'class-' + rowData.id);
 
@@ -121,7 +121,7 @@ $(document).ready(function() {
       var search_class = new Object();
       search_class.id = data.id;
       search_class.class_name = data.class_name;
-      search_class.class_type = data.class_type;
+      search_class.subject_name = data.subject_name;
       search_class.level_num = $clicked_row.find(".class-level").val();
       search_class.level_name = $clicked_row.find(".class-level option[value=" + search_class.level_num +"]").text();
       $button = $($selected.DataTable().row.add(search_class).draw().node()).find('.class-remove-btn');

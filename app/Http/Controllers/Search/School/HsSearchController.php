@@ -54,12 +54,21 @@ class HsSearchController extends Controller
     $hs_id = $request->session()->get('hs_id');
 
     //make sure it has at elast one level
-    $classes = \App\SchoolClass::where('school_id', '=', $hs_id)->orderBy('class_name', 'asc')->get();
+    $classes = \App\SchoolClass::where('classes.school_id', '=', $hs_id)
+    ->join('school_subjects', 'classes.subject_id', '=', 'school_subjects.id')
+    ->select('classes.*', 'school_subjects.subject_name')
+    ->orderBy('class_name', 'asc')->get();
 
     //return (\App\SchoolClass::where('school_id', '=', $hs_id)->orderBy('class_name', 'asc')->toSql());
-    $levels = \App\Level::where('classes.school_id', '=', $hs_id)->join('classes', 'classes.id', '=', 'levels.class_id')->orderBy('level_num', 'desc')->get()->groupBy('class_id');
+    $levels = \App\Level::where('classes.school_id', '=', $hs_id)
+    ->join('classes', 'classes.id', '=', 'levels.class_id')
+    ->orderBy('level_num', 'desc')
+    ->select('levels.*')
+    ->get()
+    ->groupBy('class_id');
+
     //  $classes->merge($levels);
-    $subjects = \App\SchoolClass::where('school_id', '=', $hs_id)->groupBy('class_type')->get()->pluck('class_type');
+    $subjects = \App\SchoolSubject::where('school_id', '=', $hs_id)->orderBy('subject_name', 'asc')->get()->pluck('subject_name');
     $grades = \App\Grade::all();
 
     \JavaScript::put([
@@ -184,14 +193,14 @@ class HsSearchController extends Controller
       $class_select = "100 AS 'classes_match'";
     }
 
-    $dist_select = sprintf("3959*ACOS(COS(RADIANS(zips.lat)) * COS(RADIANS('%s')) * COS(RADIANS(zips.lon) - RADIANS('%s')) + SIN(RADIANS(zips.lat)) * SIN(RADIANS('%s'))) AS '%s'", $u_lat, $u_lon, $u_lat, 'distance');
+    $dist_select = sprintf("3959*ACOS(COS(RADIANS(users.lat)) * COS(RADIANS('%s')) * COS(RADIANS(users.lon) - RADIANS('%s')) + SIN(RADIANS(users.lat)) * SIN(RADIANS('%s'))) AS '%s'", $u_lat, $u_lon, $u_lat, 'distance');
 
 
     if(isset($max_dist))
     {
-      $dist_select2 = sprintf("ROUND(((%s - 3959*ACOS(COS(RADIANS(zips.lat)) * COS(RADIANS('%s')) * COS(RADIANS(zips.lon) - RADIANS('%s')) + SIN(RADIANS(zips.lat)) * SIN(RADIANS('%s'))))/%s)*100, 0) as %s", escape_sql($max_dist), $u_lat, $u_lon, $u_lat, escape_sql($max_dist), 'distance_match');
-      $search = $search->whereRaw("zips.lat BETWEEN (? - (? / 69.0)) AND (? + (? / 69.0))", [$u_lat, $max_dist, $u_lat, $max_dist])
-      ->whereRaw("zips.lon BETWEEN (? - (? / (69.0 * COS(RADIANS(?))))) AND (? + (? / (69.0 * COS(RADIANS(?)))))", [$u_lon, $max_dist, $u_lon, $u_lon, $max_dist, $u_lon])
+      $dist_select2 = sprintf("ROUND(((%s - 3959*ACOS(COS(RADIANS(users.lat)) * COS(RADIANS('%s')) * COS(RADIANS(users.lon) - RADIANS('%s')) + SIN(RADIANS(users.lat)) * SIN(RADIANS('%s'))))/%s)*100, 0) as %s", escape_sql($max_dist), $u_lat, $u_lon, $u_lat, escape_sql($max_dist), 'distance_match');
+      $search = $search->whereRaw("users.lat BETWEEN (? - (? / 69.0)) AND (? + (? / 69.0))", [$u_lat, $max_dist, $u_lat, $max_dist])
+      ->whereRaw("users.lon BETWEEN (? - (? / (69.0 * COS(RADIANS(?))))) AND (? + (? / (69.0 * COS(RADIANS(?)))))", [$u_lon, $max_dist, $u_lon, $u_lon, $max_dist, $u_lon])
       ->having('distance', '<=', $max_dist);
     } else {
       $dist_select2 = "100 AS 'distance_match'";

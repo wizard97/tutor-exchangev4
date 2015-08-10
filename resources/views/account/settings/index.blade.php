@@ -42,7 +42,7 @@
       <li class="list-group-item">
         <div class="row">
           <div class="col-xs-8">
-            <h4 class="list-group-item-heading">Street Address:</h4>
+            <h4 class="list-group-item-heading">Address:</h4>
             <p class="list-group-item-text text-muted">
               {{ Auth::user()->address }}
             </p>
@@ -53,6 +53,7 @@
         </div>
       </li>
 
+<!--
       <li class="list-group-item">
         <div class="row">
           <div class="col-xs-8">
@@ -66,6 +67,7 @@
           </div>
         </div>
       </li>
+-->
 
       <li class="list-group-item">
         <div class="row">
@@ -175,7 +177,7 @@
         <div class="modal-body">
           <div class="form-group">
             {!! Form::label('address', 'New street address') !!}
-            {!! Form::text('address', null, ['class' => 'form-control']) !!}
+            {!! Form::text('address', null, ['class' => 'form-control', 'placeholder' => '251 Waltham St, Lexington, MA 02421']) !!}
             <p class="help-block">This will be kept private, we only use it for our tutor search algorithm.</p>
           </div>
         </div>
@@ -188,7 +190,8 @@
     </div>
   </div>
 
-
+<?php
+/* NO LONGER NEEDED
   <!-- Modal -->
   <div class="modal fade" id="zip" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
@@ -215,6 +218,8 @@
       </div>
     </div>
   </div>
+  */
+  ?>
 
   <!-- Modal -->
   <div class="modal fade" id="account_type" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

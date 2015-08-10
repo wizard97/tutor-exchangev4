@@ -16,10 +16,10 @@ class ClassesTableSeeder extends Seeder
 
       $schools->each(function($u) {
         //figure out how many classes for each school
-        $classes = rand(1, 50);
+        $classes = rand(1, 30);
         for ($i =0; $i < $classes; $i++)
         {
-          $u->classes()->save(factory('App\SchoolClass')->make());
+          $u->classes()->save(factory('App\SchoolClass')->make(['subject_id' => $u->subjects()->orderBy(\DB::raw('RAND()'))->firstOrFail()->id]));
         }
       });
 

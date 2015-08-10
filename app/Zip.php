@@ -11,7 +11,7 @@ class Zip extends Model
 
     public function schools()
     {
-      return $this->hasMany('App\School', 'zip_id', 'zip_code');
+      return $this->hasMany('App\School', 'zip_id', 'id');
     }
 
     public function users()

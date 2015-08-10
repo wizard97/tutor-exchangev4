@@ -13,19 +13,17 @@ class InsertClasses extends Migration
     {
 
 //create LHs listing
-$zip_id = \App\Zip::where('city', '=', 'LEXINGTON')->where('zip_code', '=', '02421')->first()->id;
+$school= \App\Zip::where('city', '=', 'LEXINGTON')->where('zip_code', '=', '02421')
+->first()
+->schools()
+->create(['school_name' => 'Lexington High School']);
 
-DB::table('schools')->insert(
-array(
-    'id' => '1',
-    'zip_id' => $zip_id,
-    'school_name' => 'Lexington High School',
-)
-);
+$subjects = array('math' => 'Math', 'english' => 'English', 'science' => 'Science', 'social' => 'Social Studies', 'french' => 'French', 'spanish' => 'Spanish', 'german' => 'German', 'italian' => 'Italian', 'mandarin' => 'Mandarin');
 
-        $subjects = array('math' => 'Math', 'english' => 'English', 'science' => 'Science', 'social' => 'Social Studies', 'french' => 'French', 'spanish' => 'Spanish', 'german' => 'German', 'italian' => 'Italian', 'mandarin' => 'Mandarin');
-
-
+foreach($subjects as $subject)
+{
+  $school->subjects()->create(['subject_name' => $subject]);
+}
 //english
 $english_classes["analytical_essay"] = new stdClass;
 $english_classes["analytical_essay"]->name = "Analytical Essays";
@@ -390,40 +388,26 @@ $mandarin_classes["mandarin_AP"]->levels[4] = "AP";
 
 
 
-        $class_id = 1;
+foreach ($subjects as $prefix => $sub_name)
+{
+  //get the subject model for the school
+  $sub_model = $school->subjects()->where('subject_name', $sub_name)->firstOrFail();
 
 
-        foreach ($subjects as $prefix => $sub_name)
-        {
+  foreach (${$prefix.'_classes'} as $class)
+  {
+    $class_mod = $sub_model->classes()->create(['class_name' => $class->name, 'school_id' => $school->id]);
 
+    foreach($class->levels as $level_num => $level_name)
+    {
+      $class_mod->levels()->create(['level_name' => $level_name]);
+    }
 
-        foreach (${$prefix.'_classes'} as $class)
-        {
-          DB::table('classes')->insert(
-          array(
-              'school_id' => 1,
-              'class_type' => $sub_name,
-              'class_name' => $class->name,
-          )
-          );
-
-          foreach($class->levels as $level_num => $level_name)
-          {
-            DB::table('levels')->insert(
-            array(
-                'level_num' => $level_num,
-                'class_id' => $class_id,
-                'level_name' => $level_name,
-            )
-            );
-          }
-
-        $class_id++;
-        }
-
-
-      }
   }
+
+
+}
+}
 
     /**
      * Reverse the migrations.

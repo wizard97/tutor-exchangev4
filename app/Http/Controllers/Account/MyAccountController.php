@@ -42,7 +42,7 @@ class MyAccountController extends Controller
       ->select('tutor_contacts.*', 'users.fname', 'users.lname')
       ->orderBy('tutor_contacts.created_at', 'desc')
       ->get();
-
+/*
       //bind data to be printed as json
       //careful not to send any sensitive data!!!!!
       \JavaScript::put([
@@ -50,7 +50,7 @@ class MyAccountController extends Controller
         'reviews' => $reviews,
         'contacts' => $contacts,
         ]);
-
+*/
         return view('/account/myaccount/index')->with('saved_tutors', $saved_tutors);
       }
 
@@ -139,33 +139,43 @@ class MyAccountController extends Controller
       ->leftJoin('reviews', 'tutors.user_id', '=', 'reviews.tutor_id')
       ->leftJoin('grades', 'tutors.grade', '=', 'grades.id')
       ->leftJoin('zips', 'users.zip_id', '=', 'zips.id')
-      ->select('users.id', 'fname', 'lname', 'account_type', 'last_login', 'user_active', 'users.created_at', 'last_login', 'tutors.*', 'grades.grade_name', \DB::raw('COUNT(reviews.tutor_id) as num_reviews'), \DB::raw('AVG(reviews.rating) as rating'))
+      ->select('users.id', 'fname', 'lname', 'account_type', 'last_login', 'user_active', 'users.created_at', 'tutors.user_id AS tutor_id', 'last_login', 'tutors.*', 'grades.grade_name', \DB::raw('COUNT(reviews.tutor_id) as num_reviews'), \DB::raw('AVG(reviews.rating) as rating'))
       ->groupBy('tutors.user_id')->orderBy('pivot_created_at', 'desc')->get();
 
-      return response()->json($saved_tutors);
+      return response()->json(['data' => $saved_tutors]);
     }
 
     //note this method does not give you full tutor profile, only the name and date
     public function ajaxtutorcontacts(Request $request)
     {
       $contacts = \App\User::findOrFail($this->id)->tutor_contacts()
+      ->leftJoin('saved_tutors', function($join)
+      {
+        $join->on('saved_tutors.user_id', '=', 'tutor_contacts.user_id');
+        $join->on('saved_tutors.tutor_id', '=', 'tutor_contacts.tutor_id');
+      })
       ->join('users', 'tutor_contacts.tutor_id', '=', 'users.id')
-      ->select('tutor_contacts.*', 'users.fname', 'users.lname')
+      ->select('tutor_contacts.*', 'users.fname', 'users.lname', \DB::raw("CASE WHEN saved_tutors.user_id IS NULL THEN 'FALSE' ELSE 'TRUE' END  AS saved"))
       ->orderBy('tutor_contacts.created_at', 'desc')
       ->get();
 
-      return response()->json($contacts);
+      return response()->json(['data' => $contacts]);
     }
 
     public function ajaxtutorreviews(Request $request)
     {
       $reviews = \App\User::findOrFail($this->id)->reviews()
+      ->leftJoin('saved_tutors', function($join)
+      {
+        $join->on('saved_tutors.user_id', '=', 'reviews.reviewer_id');
+        $join->on('saved_tutors.tutor_id', '=', 'reviews.tutor_id');
+      })
       ->join('users', 'reviews.tutor_id', '=', 'users.id')
-      ->select('reviews.*', 'users.fname', 'users.lname')
+      ->select('reviews.*', 'users.fname', 'users.lname', \DB::raw("CASE WHEN saved_tutors.user_id IS NULL THEN 'FALSE' ELSE 'TRUE' END AS saved"))
       ->orderBy('reviews.created_at', 'desc')
       ->get();
 
-      return response()->json($reviews);
+      return response()->json(['data' => $reviews]);
     }
 
 }

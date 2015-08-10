@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Level extends Model
 {
+  protected $fillable = ['level_num', 'level_name'];
+  
   public function school_class()
   {
     return $this->belongsTo('App\SchoolClass', 'class_id', 'id');

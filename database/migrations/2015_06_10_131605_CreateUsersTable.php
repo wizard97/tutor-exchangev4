@@ -17,9 +17,11 @@ class CreateUsersTable extends Migration
             $table->string('fname', 30);
             $table->string('lname', 30);
             $table->integer('account_type');
+            $table->float('lat');
+            $table->float('lon');
             $table->string('email', 64)->unique();
             $table->boolean('user_active')->default(0);
-            $table->string('address', 64);
+            $table->string('address', 128);
             $table->integer('zip_id')->unsigned();
             $table->foreign('zip_id')->references('id')->on('zips')->onDelete('cascade');
             $table->boolean('has_picture')->default(0);
