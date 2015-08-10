@@ -35,6 +35,11 @@ Route::get('search/showtutorprofile/{id}', [
     'middleware' => 'auth',
     'uses' => 'Search\SearchHomeController@showtutorprofile'
 ]);
+Route::get('search/tutorprofileinfo/getclassesbyschool', [
+    'as' => 'search.tutorclasses',
+    'middleware' => 'auth',
+    'uses' => 'Search\SearchHomeController@ajaxtutorclasses'
+]);
 
 
 //school tutoring
@@ -131,9 +136,11 @@ Route::post('account/settings/editemail', [
 Route::post('account/settings/editaddress', [
     'as' => 'accountsettings.editaddress', 'uses' => 'Account\SettingsController@editaddress'
 ]);
+/* Deprecated after implimented google geocoding api
 Route::post('account/settings/editzip', [
     'as' => 'accountsettings.editzip', 'uses' => 'Account\SettingsController@editzip'
 ]);
+*/
 Route::post('account/settings/editaccounttype', [
     'as' => 'accountsettings.editaccounttype', 'uses' => 'Account\SettingsController@editaccounttype'
 ]);

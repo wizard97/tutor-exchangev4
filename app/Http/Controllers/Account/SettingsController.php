@@ -58,14 +58,41 @@ class SettingsController extends Controller
       'address' => 'required'
     ]);
 
+    $url = "https://maps.googleapis.com/maps/api/geocode/json?";
+
+    $query = $url.http_build_query(['address' => $request->input('address'), 'key' => getenv('GOOGLE_API_KEY')]);
+    $response = json_decode(file_get_contents($query));
+
+    if(empty($response->results[0]))
+    {
+      \Session::flash('feedback_negative', 'We were unable to lookup your address.');
+      return back();
+    }
+
+    $zip = '';
+    foreach($response->results[0]->address_components as $comp)
+    {
+      //parse the array
+      if($comp->types[0] == 'postal_code')
+      {
+        $zip = $comp->short_name;
+      }
+    }
+
+    //return var_dump($response->results[0]->geometry->location->lat);
+
     $user = \App\User::findOrFail($this->id);
-    $user->address = $request->input('address');
+    $user->address = $response->results[0]->formatted_address;
+    $user->zip_id = \App\Zip::where('zip_code', '=', $zip)->firstOrFail()->id;
+    $user->lat = $response->results[0]->geometry->location->lat;
+    $user->lon = $response->results[0]->geometry->location->lng;
+
     $user->save();
 
-    \Session::flash('feedback_positive', 'You have successfully updated your street address.');
+    \Session::flash('feedback_positive', 'You have successfully updated your address.');
     return back();
   }
-
+/* no longer needed
   public function editzip(Request $request)
   {
     $this->validate($request, [
@@ -79,7 +106,7 @@ class SettingsController extends Controller
     \Session::flash('feedback_positive', 'You have successfully updated your Zip code.');
     return back();
   }
-
+*/
   public function editaccounttype(Request $request)
   {
     $this->validate($request, [

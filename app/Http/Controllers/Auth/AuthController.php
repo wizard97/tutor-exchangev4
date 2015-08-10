@@ -27,8 +27,7 @@ class AuthController extends Controller {
         $validator = \Validator::make($request->all(), [
                     'fname' => 'required|max:30|alpha',
                     'lname' => 'required|max:30|alpha',
-                    'address' => 'required',
-                    'zip'   => 'required|digits:5|numeric|exists:zips,zip_code',
+                    'address' => 'required|string',
                     'email' => 'required|email|max:255|unique:users',
                     'password' => 'required|confirmed|min:6',
                     'account_type' => 'required|integer|min:1|max:3',
@@ -42,17 +41,42 @@ class AuthController extends Controller {
 
         $confirmation_code = str_random(30);
 
-        $zip_model = \App\Zip::where('zip_code', '=', (string)$request->input('zip'))->firstOrFail();
+
+        $url = "https://maps.googleapis.com/maps/api/geocode/json?";
+
+        $query = $url.http_build_query(['address' => $request->input('address'), 'key' => getenv('GOOGLE_API_KEY')]);
+        $response = json_decode(file_get_contents($query));
+
+        if(empty($response->results[0]))
+        {
+          \Session::flash('feedback_negative', 'We were unable to lookup your address.');
+          return back();
+        }
+
+        $zip = '';
+        foreach($response->results[0]->address_components as $comp)
+        {
+          //parse the array
+          if($comp->types[0] == 'postal_code')
+          {
+            $zip = $comp->short_name;
+          }
+        }
+
+        $zip_model = \App\Zip::where('zip_code', '=', $zip)->firstOrFail();
+
 
         $new_user = $zip_model->users()->create([
           'fname' => $request->input('fname'),
           'lname' => $request->input('lname'),
-          'address' => $request->input('address'),
-            'email' => $request->input('email'),
-            'password' => bcrypt($request->input('password')),
-            'account_type' => $request->input('account_type'),
-            'activation_hash' => $confirmation_code,
-            'user_active' => 0
+          'address' => $response->results[0]->formatted_address,
+          'lat' => $response->results[0]->geometry->location->lat,
+          'lon' => $response->results[0]->geometry->location->lng,
+          'email' => $request->input('email'),
+          'password' => bcrypt($request->input('password')),
+          'account_type' => $request->input('account_type'),
+          'activation_hash' => $confirmation_code,
+          'user_active' => 0
         ]);
 
         //if a tutor, create their profile

@@ -34,19 +34,17 @@
     </div>
 
     <div class="form-group">
-      {!! Form::label('address', 'Street Address') !!}
-      {!! Form::text('address', null, ['class' => 'form-control', 'placeholder' => '123 Massachusetts Ave']) !!}
+      {!! Form::label('address', 'Address') !!}
+      {!! Form::text('address', null, ['class' => 'form-control', 'placeholder' => '251 Waltham St, Lexington, MA 02421']) !!}
       <p class="help-block">This will be kept private, we only use it for our tutor search algorithm.</p>
     </div>
 
-
+<!--
     <div class="form-group">
       {!! Form::label('zip', 'Zip Code') !!}
       {!! Form::text('zip', null, ['class' => 'form-control']) !!}
     </div>
-
-
-
+-->
 
     <div class="form-group">
       {!! Form::label('password', 'Password') !!}

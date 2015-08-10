@@ -49,7 +49,7 @@
             <div class="panel-body">
                 <small class="social-title">Active Tutors</small>
                 <h3 class="count">
-                <span class="integers">{{ $stats->active_tutors }}
+                <span class="integers">{{ \App\Tutor::where('tutor_active', '1')->where('profile_expiration', '>=', date("Y-m-d H:i:s"))->count() }}
                 </span></h3>
                 <i class="fa-stat fa fa-graduation-cap"></i>
             </div>
@@ -74,7 +74,7 @@
             <div class="panel-body">
                 <small class="social-title">Tutor Matches</small>
                 <h3 class="count">
-                <span class="integers">123
+                <span class="integers">{{ \App\TutorContact::count() }}
                 </span></h3>
                 <i class="fa-stat fa fa-envelope"></i>
             </div>

@@ -19,6 +19,8 @@ $factory->define(App\User::class, function ($faker) {
     return [
         'fname' => $faker->firstName,
         'lname' => $faker->lastName,
+        'lat' => $zip->lat,
+        'lon' => $zip->lon,
         'email' => $faker->email,
         'address' => $faker->streetAddress,
         'zip_id' => $zip->id,
@@ -105,12 +107,9 @@ $factory->define(App\Review::class, function ($faker) {
 });
 
 $factory->define(App\SchoolClass::class, function ($faker) {
-  //some random subjects
-  $subjects = ['Math', 'Science', 'English', 'History', 'Social Studies', 'French', 'Spanish', 'Physics', 'German', 'Mandarin', 'Computer Science', 'Engineering'];
-  $rand_subject = $subjects[rand(0, count($subjects)-1)];
+
     return [
-        'class_name' => $faker->catchPhrase,
-        'class_type' => $rand_subject,
+        'class_name' => $faker->catchPhrase
     ];
 });
 
