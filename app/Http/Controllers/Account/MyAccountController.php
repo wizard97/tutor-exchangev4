@@ -132,6 +132,47 @@ class MyAccountController extends Controller
 
     }
 
+    public function posttutorreview(Request $request)
+    {
+      $validator = \Validator::make($request->all(), [
+        'tutor_id' => 'required|exists:tutors,user_id',
+        'review_title' => 'required|string|max:100',
+        'reviewer' => 'required|string|in:student,parent',
+        'rating' => 'required|numeric|between:1,5',
+        'message' => 'required|string|max:2000',
+        'anonymous' => '',
+      ]);
+
+      $validator->after(function($validator) use($request) {
+        if (!\Auth::user()->reviews()->where('tutor_id', $request->get('tutor_id'))->get()->isEmpty()) {
+            $validator->errors()->add('Tutor', 'You can only review a tutor once!');
+        }
+      });
+
+      if ($validator->fails())
+      {
+      return redirect()->back()->withErrors($validator->errors())->withInput();;
+      }
+
+
+      $review = new \App\Review;
+      $review->tutor_id = $request->get('tutor_id');
+      $review->rating = $request->get('rating');
+      $review->title = $request->get('review_title');
+      $review->message = $request->get('message');
+      if ($request->get('reviewer') == 'student') $review->reviewer = 'Student';
+      else $review->reviewer = 'Parent';
+      if (!is_null($request->get('anonymous')) && $request->get('anonymous') == '1') $review->anonymous = 1;
+      else $review->anonymous = 0;
+
+      $tutor = \App\Tutor::get_tutor_profile($request->get('tutor_id'));
+      //insert into db
+      \Auth::user()->reviews()->save($review);
+      \Session::flash('feedback_positive', "Thanks for taking the time to review {$tutor->fname} {$tutor->lname}. Your feedback will be used to help others.");
+      return redirect()->back();
+
+    }
+
     public function ajaxsavedtutors(Request $request)
     {
       $saved_tutors = \App\User::findOrFail($this->id)->saved_tutors()

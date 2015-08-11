@@ -62,10 +62,10 @@
       <div class="panel-heading">
         <i class="fa fa-bell fa-fw"></i> Notifications
       </div>
-      <!-- /.panel-heading -->
       <div class="panel-body">
+        <p class="text text-muted bg-warning"><span class="text text-danger">Attention:</br></span>we now have an updated <a href="/LextutorexchangePrivacyPolicy.pdf" target="_blank">Privacy Policy</a> and <a href="/LextutorexchangeTermsofUse.pdf" target="_blank">Terms of Use</a>. We advise that you read these documents, as your use of this websites constitutes your agreement to these terms. Thank you, </br>The Creators</p>
+
       </div>
-      <!-- /.panel-body -->
     </div>
   </div>
 </div>
@@ -79,36 +79,43 @@ $reviews.dataTable( {
   columns: [{"title": 'Tutor', "data": null, "defaultContent": null, createdCell: function(td, cellData, rowData, row, col) {
     $(td).html(rowData.fname + ' ' + rowData.lname);
   }},
-  {"title": 'Title', "data": 'title'},
+  {"title": 'Title', "data": null, "defaultContent": null, createdCell: function(td, cellData, rowData, row, col) {
+    $(td).html('<span class="readmore">' + rowData.title + "</span>");
+    $(".readmore").readmore({
+      collapsedHeight: 41,
+      moreLink: '<a href="#">Read more</a>',
+      lessLink: '<a href="#">Read less</a>'
+    });
+  }},
   {"title": 'Rating', orderable: false, "data": null, "defaultContent": null, createdCell: function (td, cellData, rowData, row, col) {
     $(td).empty();
     var string = "";
     var star_count = Math.floor(rowData.rating);
     for (var i = 0; i < star_count; i++)
     {
-      string += "<i style='color: #FEC601' class='fa fa-star'></i>";
+      string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star'></i>";
     }
     var delta = rowData.rating - star_count;
     if (delta >= 0.25)
     {
       if (delta < 0.75)
       {
-        string += "<i style='color: #FEC601' class='fa fa-star-half-o'></i>";
+        string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star-half-o'></i>";
       }
       else
       {
-        string += "<i style='color: #FEC601' class='fa fa-star'></i>";
+        string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star'></i>";
       }
       for (var i = 0; i < 4 - star_count; i++)
       {
-        string += "<i style='color: #FEC601' class='fa fa-star-o'></i>";
+        string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star-o'></i>";
       }
     }
     else
     {
       for (var i = 0; i < 5 - star_count; i++)
       {
-        string += "<i style='color: #FEC601' class='fa fa-star-o'></i>";
+        string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star-o'></i>";
       }
     }
     $(td).append(string);
@@ -121,8 +128,16 @@ $reviews.dataTable( {
     });
   }
 },
-{"title": 'Body', "data": 'message'},
+{"title": 'Body', "data": null, "defaultContent": null, createdCell: function(td, cellData, rowData, row, col) {
+  $(td).html('<span class="readmore">' + rowData.message + '</span>');
+  $(".readmore").readmore({
+    collapsedHeight: 83,
+    moreLink: '<a href="#">Read more</a>',
+    lessLink: '<a href="#">Read less</a>'
+  });
+}},
 {"title": 'Options', orderable: false, "data": null, createdCell: function(td, cellData, rowData, row, col) {
+  $(td).addClass('text-center');
   var profileLink = ("{{ route('search.showtutorprofile', ['id' => '0']) }}" + rowData.tutor_id);
   if (rowData.saved == 'TRUE') {
     $(td).html('<a href="javascript:void(0)"><i style="font-size: 20px;" class="fa fa-fw fa-times text-danger"></i></a><a href=' + profileLink + ' target="_blank"><i style="font-size: 20px;" class="fa fa-fw fa-user text-primary"></i></a>'
@@ -136,21 +151,42 @@ $reviews.dataTable( {
 });
 var getContacts = "{{route('myaccount.ajaxtutorcontacts')}}";
 var $contacts = $('#contacts');
-var saved_index = -1;
 $contacts.dataTable( {
   ajax: getContacts,
   columns: [{"title": 'To', "data": null, "defaultcontent": null, createdCell: function (td, cellData, rowData, row, col){
     $(td).html(rowData.fname + ' ' + rowData.lname);
   }},
-  {"visible": false, "title": "Tutor ID", "data": "tutor_id"},
-  {"visible": false, "title": "saved_index", "data": saved_index},
-  {"title": 'Subject', "data": 'subject'},
-  {"title": 'Message', "data": 'message'},
+  {"visible": false, "title": "Tutor ID", "data": null, "defaultContent": null, createdCell: function (td, cellData, rowData, row, col) {
+    $(td).html('<span class="readmore">' + rowData.tutor_id + "</span>");
+    $(".readmore").readmore({
+      collapsedHeight: 41,
+      moreLink: '<a href="#">Read more</a>',
+      lessLink: '<a href="#">Read less</a>'
+    });
+  }},
+  {"title": 'Subject', "data": null, "defaultContent": null, createdCell: function (td, cellData, rowData, row, col) {
+    $(td).html('<span class="readmore">' + rowData.subject + "</span>");
+    $(".readmore").readmore({
+      collapsedHeight: 41,
+      moreLink: '<a href="#">Read more</a>',
+      lessLink: '<a href="#">Read less</a>'
+    });
+  }},
+  {"title": 'Message', "data": null, "defaultContent": null, createdCell: function (td, cellData, rowData, row, col) {
+    $(td).html('<span class="readmore">' + rowData.message + '</span>');
+    $(".readmore").readmore({
+      collapsedHeight: 41,
+      moreLink: '<a href="#">Read more</a>',
+      lessLink: '<a href="#">Read less</a>'
+    });
+
+  }},
   {"title": 'Date', "data": null, "defaultContent": null, createdCell: function (td, cellData, rowData, row, col) {
     var date = new Date(rowData.created_at);
     $(td).html(date.toLocaleDateString());
   }},
   {"title": 'Options', "data": null, orderable: false, createdCell: function (td, cellData, rowData, row, col) {
+    $(td).addClass('text-center');
     var profileLink = ("{{ route('search.showtutorprofile', ['id' => '0']) }}" + rowData.tutor_id);
     if (rowData.saved == 'TRUE') {
       $(td).html('<a href="javascript:void(0)"><i style="font-size: 20px;" class="fa fa-fw fa-times text-danger"></i></a><a href=' + profileLink + ' target="_blank"><i style="font-size: 20px;" class="fa fa-fw fa-user text-primary"></i></a>'
@@ -202,34 +238,36 @@ $saved_tutors.dataTable( {
     var star_count = Math.floor(rowData.rating);
     for (var i = 0; i < star_count; i++)
     {
-      string += "<i style='color: #FEC601' class='fa fa-star'></i>";
+      string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star'></i>";
     }
     var delta = rowData.rating - star_count;
     if (delta >= 0.25)
     {
       if (delta < 0.75)
       {
-        string += "<i style='color: #FEC601' class='fa fa-star-half-o'></i>";
+        string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star-half-o'></i>";
       }
       else
       {
-        string += "<i style='color: #FEC601' class='fa fa-star'></i>";
+        string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star'></i>";
       }
       for (var i = 0; i < 4 - star_count; i++)
       {
-        string += "<i style='color: #FEC601' class='fa fa-star-o'></i>";
+        string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star-o'></i>";
       }
     }
     else
     {
       for (var i = 0; i < 5 - star_count; i++)
       {
-        string += "<i style='color: #FEC601' class='fa fa-star-o'></i>";
+        string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star-o'></i>";
       }
     }
+    string += ' <span style = "font-size: 20px">(<a href = "javascript:void(0)">' + rowData.num_reviews + '</a>)</span>';
     $(td).append(string);
   }},
   {"title": 'Options', "data": null, orderable: false, createdCell: function (td, cellData, rowData, row, col) {
+    $(td).addClass('text-center');
     var profileLink = ("{{ route('search.showtutorprofile', ['id' => '0']) }}" + rowData.tutor_id);
     $(td).html('<a href="javascript:void(0)"><i style="font-size: 20px;" class="fa fa-fw fa-times text-danger"></i></a><a href=' + profileLink + ' target="_blank"><i style="font-size: 20px;" class="fa fa-fw fa-user text-primary"></i></a>'
     + '<a href = "javascript:void(0)"><i style="font-size: 20px;" class="fa fa-fw fa-envelope text-primary" data-toggle="modal" data-target="#contactModal" data-userid=' + rowData.tutor_id + '></i></a>');
@@ -247,7 +285,6 @@ $('.contact-message').readmore({
 
 
 $('#saved_tutors').on('click', 'i.fa-times', function () {
-  console.log("clicked");
   var $clicked_row = $(this).closest('tr');
   var data = $saved_tutors.DataTable().row($clicked_row).data();
   $.ajax({
@@ -256,7 +293,9 @@ $('#saved_tutors').on('click', 'i.fa-times', function () {
     data : {user_id: data.tutor_id},
     success : function(data){
       $saved_tutors.DataTable().row($clicked_row).remove();
-      $saved_tutors.DataTable().draw();
+      $saved_tutors.DataTable().ajax.reload();
+      $contacts.DataTable().ajax.reload();
+      $reviews.DataTable().ajax.reload();
     }
   });
   $.ajax({
@@ -271,24 +310,56 @@ $('#saved_tutors').on('click', 'i.fa-times', function () {
   });
 });
 
-$('#contacts').on('click', 'i.fa-times', function () {
-  console.log("clicked");
+
+$('#contacts').on('click', 'i.fa-times, i.fa-plus', function () {
   var $clicked_row = $(this).closest('tr');
   var $icon = $clicked_row.find("i.fa");
   var data = $contacts.DataTable().row($clicked_row).data();
 
 
-  $saved_tutors.DataTable().draw();
-  $contacts.DataTable().draw();
+  $saved_tutors.DataTable().ajax.reload();
+  $contacts.DataTable().ajax.reload();
+  $reviews.DataTable().ajax.reload();
 
-  console.log("saved_index = " + saved_index);
   $.ajax({
     type: "POST",
-    url : "",
+    url : "{{route('myaccount.ajaxsavetutor')}}",
     data : {user_id: data.tutor_id},
-    success : function(data, saved_index){
-      console.log("saved_index = " + saved_index);
+    success : function(data){
+      $saved_tutors.DataTable().ajax.reload();
+      $contacts.DataTable().ajax.reload();
+      $reviews.DataTable().ajax.reload();
+    }
+  });
+  $.ajax({
+    type: "GET",
+    url : "{{ route('feedback') }}",
+    success: function (data){
+      $("#feedback").replaceWith(function() {
+        return $(data).hide().fadeIn('slow');
+      });
 
+    }
+  });
+});
+$('#reviews').on('click', 'i.fa-times, i.fa-plus', function () {
+  var $clicked_row = $(this).closest('tr');
+  var $icon = $clicked_row.find("i.fa");
+  var data = $reviews.DataTable().row($clicked_row).data();
+
+
+  $saved_tutors.DataTable().ajax.reload();
+  $contacts.DataTable().ajax.reload();
+  $reviews.DataTable().ajax.reload();
+
+  $.ajax({
+    type: "POST",
+    url : "{{route('myaccount.ajaxsavetutor')}}",
+    data : {user_id: data.tutor_id},
+    success : function(data){
+      $saved_tutors.DataTable().ajax.reload();
+      $contacts.DataTable().ajax.reload();
+      $reviews.DataTable().ajax.reload();
     }
   });
   $.ajax({
@@ -304,6 +375,9 @@ $('#contacts').on('click', 'i.fa-times', function () {
 });
 
 
+$(document).on("lex:contact_submit", function() {
+  $contacts.DataTable().ajax.reload();
+});
 
 });
 </script>

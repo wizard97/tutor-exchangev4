@@ -8,6 +8,8 @@ class Review extends Model
 {
   protected $table = 'reviews';
 
+  protected $fillable = ['tutor_id', 'rating' ,'title', 'message', 'anonymous'];
+
   public function user()
   {
     return $this->belongsTo('App\User', 'reviewer_id', 'id');

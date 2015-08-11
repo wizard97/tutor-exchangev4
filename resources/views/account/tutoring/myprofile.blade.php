@@ -10,7 +10,7 @@
 
       @include('templates/feedback')
       <div class="page-header">
-        <h1>{{ $tutor->fname.' '.$tutor->lname }}</h1>
+        <h1>Your Profile<small> This is how others will see it</small></h1>
       </div>
 
       @include('/search/profile')
