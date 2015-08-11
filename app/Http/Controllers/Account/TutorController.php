@@ -52,6 +52,7 @@ class TutorController extends Controller
 
   public function geteditclasses()
   {
+    /*
     $classes = \App\SchoolClass::with('levels')
     ->get();
 
@@ -61,11 +62,13 @@ class TutorController extends Controller
 
     //get basic tutor info
     $tutor = \App\Tutor::get_tutor_profile($this->id);
-
-    return view('/account/tutoring/editclasses')
+*/
+    return view('/account/tutoring/editclasses');
+    /*
     ->with('tutor', $tutor)
     ->with('subjects', $subjects)
     ->with('classes', $classes);
+    */
   }
 
   public function posteditclasses(Request $request)
@@ -141,12 +144,30 @@ class TutorController extends Controller
 
   public function getmyprofile()
   {
-    //get subjects
-    $subjects = \App\SchoolClass::groupBy('class_type')->get()->pluck('class_type');
-    //get basic tutor info
+    $tutor = \App\Tutor::findOrFail($this->id);
+    //get levels and join on class info, get all the subjects
+    $subjects = $tutor->levels()
+    ->join('classes', 'levels.class_id', '=', 'classes.id')
+    ->join('school_subjects', 'classes.subject_id', '=', 'school_subjects.id')
+    ->groupBy('subject_id')
+    ->select('classes.school_id', 'classes.subject_id', 'subject_name', \DB::raw('count(*) AS num_classes'))
+    ->get()
+    ->groupBy('school_id');
+
+    //get tutor schools
+    $schools = $tutor->schools()
+      ->leftJoin('classes', 'classes.school_id', '=', 'schools.id')
+      ->join('levels', 'levels.class_id', '=', 'classes.id')
+      ->join('tutor_levels', 'tutor_levels.level_id', '=', 'levels.id')
+      ->where('tutor_levels.user_id', $tutor->user_id)
+      ->groupBy('schools.id')
+      ->orderBy('num_classes', 'desc')
+      ->select('schools.school_name', 'schools.id', \DB::raw('COUNT(*) AS num_classes'))
+      ->get();
+
     $tutor = \App\Tutor::get_tutor_profile($this->id);
-    $saved_tutors = \Auth::user()->saved_tutors()->join('users', 'tutor_id', '=', 'users.id')->get()->pluck('tutor_id')->toArray();
-    return view('/account/tutoring/myprofile')->with('tutor', $tutor)->with('subjects', $subjects)->with('saved_tutors', $saved_tutors);
+    $saved_tutors = \Auth::user()->saved_tutors()->get()->pluck('tutor_id')->toArray();
+    return view('account/tutoring/myprofile')->with('tutor', $tutor)->with('subjects', $subjects)->with('saved_tutors', $saved_tutors)->with('schools', $schools);
   }
 
   public function pauselisting(Request $request)

@@ -149,10 +149,10 @@ class HsSearchController extends Controller
     if (!empty($form_inputs['min_grade'])) $search = $search->where('grade', '>=', $form_inputs['min_grade']);
     if (!empty($form_inputs['max_dist'])) $max_dist = $form_inputs['max_dist'];
     //school_id
-    if (!empty($hs_id)) $search = $search->where('classes.school_id', '=', $hs_id);
+    if (!empty($hs_id)) $search->where('classes.school_id', '=', $hs_id);
 
     //handle user classes
-    $search = $search->where(function ($query) use($form_inputs, $classes){
+    $search->where(function ($query) use($form_inputs, $classes){
       //build query for classes the user selects
       foreach($classes as $class_id => $class)
       {
@@ -164,7 +164,7 @@ class HsSearchController extends Controller
     });
       //handle times
     $time_array = array();
-    $search = $search->where(function ($query) use($form_inputs, $time_alias, &$time_array){
+    $search->where(function ($query) use($form_inputs, $time_alias, &$time_array){
       $days = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun'];
       foreach($days as $day)
       {
@@ -176,6 +176,9 @@ class HsSearchController extends Controller
         }
       }
     });
+
+    //count and search query diverge here
+    $count_query = clone $search;
 
     if(!empty($time_array))
     {
@@ -193,13 +196,13 @@ class HsSearchController extends Controller
       $class_select = "100 AS 'classes_match'";
     }
 
-    $dist_select = sprintf("3959*ACOS(COS(RADIANS(users.lat)) * COS(RADIANS('%s')) * COS(RADIANS(users.lon) - RADIANS('%s')) + SIN(RADIANS(users.lat)) * SIN(RADIANS('%s'))) AS '%s'", $u_lat, $u_lon, $u_lat, 'distance');
 
+    $dist_select = sprintf("3959*ACOS(COS(RADIANS(users.lat)) * COS(RADIANS('%s')) * COS(RADIANS(users.lon) - RADIANS('%s')) + SIN(RADIANS(users.lat)) * SIN(RADIANS('%s'))) AS '%s'", $u_lat, $u_lon, $u_lat, 'distance');
 
     if(isset($max_dist))
     {
       $dist_select2 = sprintf("ROUND(((%s - 3959*ACOS(COS(RADIANS(users.lat)) * COS(RADIANS('%s')) * COS(RADIANS(users.lon) - RADIANS('%s')) + SIN(RADIANS(users.lat)) * SIN(RADIANS('%s'))))/%s)*100, 0) as %s", escape_sql($max_dist), $u_lat, $u_lon, $u_lat, escape_sql($max_dist), 'distance_match');
-      $search = $search->whereRaw("users.lat BETWEEN (? - (? / 69.0)) AND (? + (? / 69.0))", [$u_lat, $max_dist, $u_lat, $max_dist])
+      $search->whereRaw("users.lat BETWEEN (? - (? / 69.0)) AND (? + (? / 69.0))", [$u_lat, $max_dist, $u_lat, $max_dist])
       ->whereRaw("users.lon BETWEEN (? - (? / (69.0 * COS(RADIANS(?))))) AND (? + (? / (69.0 * COS(RADIANS(?)))))", [$u_lon, $max_dist, $u_lon, $u_lon, $max_dist, $u_lon])
       ->having('distance', '<=', $max_dist);
     } else {
@@ -207,7 +210,28 @@ class HsSearchController extends Controller
     }
     $per_page = 15;
 
-    $search = $search->join('tutor_levels', 'levels.id', '=', 'tutor_levels.level_id')
+
+    //build count
+    $count_query
+    ->whereRaw("3959*ACOS(COS(RADIANS(users.lat)) * COS(RADIANS(?)) * COS(RADIANS(users.lon) - RADIANS(?)) + SIN(RADIANS(users.lat)) * SIN(RADIANS(?))) <= ?", [$u_lat, $u_lon, $u_lat, $max_dist])
+    ->whereRaw("users.lat BETWEEN (? - (? / 69.0)) AND (? + (? / 69.0))", [$u_lat, $max_dist, $u_lat, $max_dist])
+    ->whereRaw("users.lon BETWEEN (? - (? / (69.0 * COS(RADIANS(?))))) AND (? + (? / (69.0 * COS(RADIANS(?)))))", [$u_lon, $max_dist, $u_lon, $u_lon, $max_dist, $u_lon]);
+
+    $res_count = $count_query
+    ->join('tutor_levels', 'levels.id', '=', 'tutor_levels.level_id')
+    ->join('classes', 'classes.id', '=', 'levels.class_id')
+    ->join('users', 'users.id', '=', 'tutor_levels.user_id')
+    ->join('tutors', 'tutors.user_id', '=', 'tutor_levels.user_id')
+    ->join('zips', 'users.zip_id', '=', 'zips.id')
+    ->where('account_type', '>=', '2')
+    ->where('tutors.tutor_active', '=', '1')
+    ->where('tutors.profile_expiration', '>=', date('Y-m-d H:i:s'))
+    ->select(\DB::raw($dist_select), 'tutor_levels.user_id', \DB::raw('COUNT(DISTINCT tutor_levels.user_id) AS num_rows'))->get();
+    //figure out num of rows
+    $num_rows = $res_count->first()->toArray()['num_rows'];
+
+    //finish building search
+    $search->join('tutor_levels', 'levels.id', '=', 'tutor_levels.level_id')
     ->join('classes', 'classes.id', '=', 'levels.class_id')
     ->join('users', 'users.id', '=', 'tutor_levels.user_id')
     ->join('tutors', 'tutors.user_id', '=', 'tutor_levels.user_id')
@@ -216,7 +240,7 @@ class HsSearchController extends Controller
     ->where('account_type', '>=', '2')
     ->where('tutors.tutor_active', '=', '1')
     ->where('tutors.profile_expiration', '>=', date('Y-m-d H:i:s'))
-    ->select(\DB::raw('SQL_CALC_FOUND_ROWS tutor_levels.user_id'), \DB::raw($dist_select), \DB::raw($dist_select2), \DB::raw($class_select), \DB::raw($time_select), 'users.account_type', 'tutor_levels.user_id', 'users.id',
+    ->select(\DB::raw($dist_select), \DB::raw($dist_select2), \DB::raw($class_select), \DB::raw($time_select), 'users.account_type', 'tutor_levels.user_id', 'users.id',
     'users.fname', 'users.lname', 'users.last_login', 'users.created_at','tutors.*', 'grades.*', 'zips.*')
     ->groupBy('tutor_levels.user_id')
     ->orderBy('classes_match', 'desc')
@@ -225,14 +249,11 @@ class HsSearchController extends Controller
     ->orderBy('lname', 'asc')
     ->take($per_page);
 
-
     if ($request->get('page') > 1)
     {
-      $search = $search->skip(($request->get('page')-1)*$per_page);
+      $search->skip(($request->get('page')-1)*$per_page);
     }
     $results = $search->get();
-
-    $num_rows = \DB::select('SELECT FOUND_ROWS() AS num_rows')[0]->num_rows;
 
 
     $paginator = new \Illuminate\Pagination\LengthAwarePaginator($results, $num_rows, $per_page, $request->get('page'));

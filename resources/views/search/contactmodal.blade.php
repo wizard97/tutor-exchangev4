@@ -43,6 +43,7 @@ $( document ).ready(function() {
         success : function(data){
           $('#feedback').html(data);
           $('#contactModal').modal('hide');
+          $( document ).trigger("lex:contact_submit");
         },
         error: function(data)
         {

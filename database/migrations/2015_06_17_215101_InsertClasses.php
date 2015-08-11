@@ -400,7 +400,7 @@ foreach ($subjects as $prefix => $sub_name)
 
     foreach($class->levels as $level_num => $level_name)
     {
-      $class_mod->levels()->create(['level_name' => $level_name]);
+      $class_mod->levels()->create(['level_name' => $level_name, 'level_num' => $level_num]);
     }
 
   }

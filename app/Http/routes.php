@@ -152,8 +152,11 @@ Route::post('account/settings/editpassword', [
 Route::get('account/myaccount/index', [
     'as' => 'myaccount.dashboard', 'uses' => 'Account\MyAccountController@index'
 ]);
+//submit review
+Route::post('account/myaccount/posttutorreview', [
+    'as' => 'myaccount.posttutorreview', 'uses' => 'Account\MyAccountController@posttutorreview'
+]);
 //ajax methods
-
 Route::post('account/myaccount/sendmessage', [
     'as' => 'myaccount.sendmessage',
      'middleware' => 'auth',

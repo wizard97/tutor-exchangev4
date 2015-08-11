@@ -8,11 +8,11 @@
     <div class="row">
       <div class="text-center">
         @if(in_array($tutor->user_id, $saved_tutors))
-        <button type="button" name="saved_tutor_id" data-userid="{{ $tutor->user_id }}" class="btn btn-info btn-sm tutor-save-btn" aria-expanded="false"><i class="fa fa-minus" aria-hidden="true"></i> Remove</button>
+        <button type="button" name="saved_tutor_id" data-userid="{{ $tutor->user_id }}" class="btn btn-info btn-lg tutor-save-btn" aria-expanded="false"><i class="fa fa-minus" aria-hidden="true"></i> Remove</button>
         @else
-        <button type="button" name="saved_tutor_id" data-userid="{{ $tutor->user_id }}" class="btn btn-warning btn-sm tutor-save-btn" aria-expanded="false"><i class="fa fa-plus" aria-hidden="true"></i> Save</button>
+        <button type="button" name="saved_tutor_id" data-userid="{{ $tutor->user_id }}" class="btn btn-warning btn-lg tutor-save-btn" aria-expanded="false"><i class="fa fa-plus" aria-hidden="true"></i> Save</button>
         @endif
-        <a class="btn btn-primary" data-toggle="modal" data-target="#contactModal" data-userid="{{ $tutor->user_id }}"><span class="fa fa-envelope" aria-hidden="true"></i> Contact</a>
+        <a class="btn btn-lg btn-primary" data-toggle="modal" data-target="#contactModal" data-userid="{{ $tutor->user_id }}"><span class="fa fa-envelope" aria-hidden="true"></i> Contact</a>
         </div>
         <br>
       </div>
@@ -90,7 +90,9 @@
         <div class="row" id="post-review-box" style="display:none;">
           <div class="col-md-12">
             <hr style="height:1px;border:none;color:#333;background-color:#333;">
-            <form accept-charset="UTF-8" action="" method="post">
+            <form accept-charset="UTF-8" action="{{ route('myaccount.posttutorreview') }}" method="post">
+              {!! csrf_field() !!}
+              <input name="tutor_id" type="hidden" value="{{ $tutor->user_id }}">
               <div class="row">
                 <div class="col-md-5 form-group">
                   <label for="review_title">Review Title</label>
