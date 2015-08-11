@@ -52,8 +52,7 @@ class TutorController extends Controller
 
   public function geteditclasses()
   {
-    /*
-    $classes = \App\SchoolClass::with('levels')
+    /*$classes = \App\SchoolClass::with('levels')
     ->get();
 
     $subjects = \App\SchoolClass::groupBy('class_type')->get()->pluck('class_type');
@@ -64,11 +63,9 @@ class TutorController extends Controller
     $tutor = \App\Tutor::get_tutor_profile($this->id);
 */
     return view('/account/tutoring/editclasses');
-    /*
-    ->with('tutor', $tutor)
+    /*->with('tutor', $tutor)
     ->with('subjects', $subjects)
-    ->with('classes', $classes);
-    */
+    ->with('classes', $classes);*/
   }
 
   public function posteditclasses(Request $request)

@@ -5,99 +5,79 @@
 <div class="container-fluid">
   <div class="row">
     @include('/account/tutoring/sidebar')
+    @include('templates/feedback')
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-@include('templates/feedback')
-
-  <h1>Your Classes</h1>
-
-<p class="alert alert-info"><i class="fa fa-info-circle"></i>  This is where you update your tutoring info. Make sure to fill it out as completely as possible and keep it updated.</p>
-
-<ul class="nav nav-tabs">
-  <li class="active"><a data-toggle="tab" href="#Math">Math</a></li>
-  <li><a data-toggle="tab" href="#Science">Science</a></li>
-  <li><a data-toggle="tab" href="#SocialStudies">Social Studies</a></li>
-  <li><a data-toggle="tab" href="#English">English</a></li>
-    <li role="presentation" class="dropdown">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
-      Language <span class="caret"></span>
-    </a>
-    <ul class="dropdown-menu" role="menu">
-    <li><a data-toggle="tab" href="#French">French</a></li>
-    <li><a data-toggle="tab" href="#German">German</a></li>
-    <li><a data-toggle="tab" href="#Italian">Italian</a></li>
-    <li><a data-toggle="tab" href="#Mandarin">Mandarin</a></li>
-    <li><a data-toggle="tab" href="#Spanish">Spanish</a></li>
-    </ul>
-  </li>
-</ul>
-
-
-{!! Form::open(['url' => route('tutoring.editclasses')]) !!}
-{!! csrf_field() !!}
-
-<div class="tab-content">
-
-
-@foreach ($subjects as $subject)
-<div id="{{ str_replace(' ', '', $subject) }}" class="tab-pane fade @if($subject == 'Math') in active @endif">
-  <div class="row">
-    <div class="col-md-6">
-      <h3>{{ $subject }}</h3>
-      <hr>
-      <div class="form-group">
-        {!! Form::label('highest_'.strtolower(str_replace(' ', '', $subject)), 'Highest level I completed in '.strtolower($subject)).':' !!}
-        {!! Form::text('highest_'.strtolower(str_replace(' ', '', $subject)), $tutor->{'highest_'.strtolower(str_replace(' ', '', $subject))}, ['class' => 'form-control', 'placeholder' => 'Calculus (Honors)']) !!}
-        <p class="help-block">Include both class name and level or degree and university.</p>
+      <div class="page-header">
+        <h1>Step 3. Select Your Classes</h1>
       </div>
-      <hr>
-      <label>Which of these classes can you tutor?</label>
-      @foreach ($classes->get($subject) as $class)
-      <?php unset($level_array); foreach($class->levels as $level) $level_array[$level->level_num] = $level->level_name; ?>
+      <div class="row">
+        <h2>School</h2>
+        <div class="col-xs-12 col-sm-6 col-md-6">
 
-        <div class="row">
-
-          <div class="col-xs-7">
-            <div class="checkbox">
-              <label>
-                @if(isset($tutor->tutor_classes[$subject][$class->id]))
-                {!! Form::checkbox('classes[]', $class->id, true) !!}
-                @else
-                {!! Form::checkbox('classes[]', $class->id, false) !!}
-                @endif
-                {{ $class->class_name }}
-              </label>
-            </div>
+          <div class="input-group">
+            <input type="text" class="typeahead form-control tt-input" id="school-input" name="school_name" autocomplete="off" spellcheck="false" dir="auto" style="position: relative; vertical-align: top; background-color: transparent;">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button">Go!</button>
+            </span>
           </div>
-
-          <div class="col-xs-5">
-            <div class="form-group">
-              @if(isset($tutor->tutor_classes[$subject][$class->id]->level_id))
-              {!! Form::select('class_'.$class->id, $level_array, $tutor->tutor_classes[$subject][$class->id]->level_id, ['class' => 'form-control']) !!}
-              @else
-              {!! Form::select('class_'.$class->id, $level_array, null, ['class' => 'form-control']) !!}
-              @endif
-            </div>
-          </div>
-
         </div>
-      @endforeach
+      </div>
+      <div class="row">
+        <h2>Classes</h2>
+        <div class="col-xs-12 col-sm-6 col-md-6">
+          <div class="panel panel-default">
+            <div class="panel-heading"><i class="fa fa-bars"></i> School Classes</div>
+            <div class="panel-body">
+              <div class="table-responsive">
+                <table id="school_classes" class="table table-striped table-bordered table-hover"></table>
+              </div>
+            </div>
+          </div>
+        </div>
 
+        <div class="col-xs-12 col-sm-6 col-md-6">
+          <div class="panel panel-primary">
+            <div class="panel-heading"><i class="fa fa-bars"></i> Your Classes</div>
+            <div class="panel-body">
+              <div class="table-responsive">
+                <table id="your_classes" class="table table-striped table-bordered table-hover"></table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+
 </div>
-@endforeach
-</div>
-
-<div class="clearfix"></div>
-
-<hr>
-    <div class="pull-left">
-      <button type="submit" class="btn btn-lg btn-success"> <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Update </button>
-    </div>
-
+<script>
+$( document ).ready(function() {
+  var data = [['French Film', 'French'],['American History', 'Social Studies'],['Holocaust', 'English']];
+  var $school_classes = $('#school_classes');
+  var $your_classes = $('#your_classes');
+  $school_classes.DataTable({
+    data: data,
+    columns: [{'title': 'Class Name:'}, {'title': 'Class Subject'}, {'title': 'Class Level', 'orderable': false, 'data': null, createdCell: function(td, cellData, rowData, row, col){
+      var string = "<div class='btn-group'><button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'> Level <span class='caret'></span></button><ul class='dropdown-menu'><li><a href='#'>Level 2</a></li><li><a href='#'>Level 1</a></li><li><a href='#'>Honors</a></li><li><a href='#'>AP</a></li></ul></div>"
+      $(td).html(string);
+    }}, {'orderable': false, 'data': null, createdCell: function(td, cellData, rowData, row, col) {
+      var string = '<i style="font-size: 20px;" class="fa fa-fw fa-plus text-success"></i>';
+      $(td).html(string);
+    }}]
+  });
+  $your_classes.DataTable({
+    data: data,
+    columns: [{'title': 'Class Name:'}, {'title': 'Class Subject'}, {'title': 'Class Level', 'orderable': false, 'data': null, createdCell: function(td, cellData, rowData, row, col){
+      var string = "<div class='btn-group'><button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'> Level <span class='caret'></span></button><ul class='dropdown-menu'><li><a href='#'>Level 2</a></li><li><a href='#'>Level 1</a></li><li><a href='#'>Honors</a></li><li><a href='#'>AP</a></li></ul></div>"
+      $(td).html(string);
+    }}, {'orderable': false, 'data': null, createdCell: function(td, cellData, rowData, row, col) {
+      var string = '<i style="font-size: 20px;" class="fa fa-fw fa-minus text-danger"></i>';
+      $(td).html(string);
+    }}]
+  });
+});
+</script>
 {!! Form::close() !!}
-</div>
-</div>
-</div>
+
 @stop

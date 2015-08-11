@@ -19,4 +19,15 @@
   </div>
 </div>
 
+<script>
+//stuff to disable functionality for tutors vieweing their own profile
+$(document).ready(function() {
+  $('.tutor-save-btn').off().removeClass('tutor-save-btn').addClass('disabled');
+  $('.tutor-contact-btn').off().removeClass('tutor-contact-btn').addClass('disabled');
+  $('.tutor-submit-review').addClass('disabled');
+  $('.tutor-review-form').submit(function(e) {return false;});
+});
+
+</script>
+
 @stop

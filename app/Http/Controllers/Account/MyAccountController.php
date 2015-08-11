@@ -147,6 +147,9 @@ class MyAccountController extends Controller
         if (!\Auth::user()->reviews()->where('tutor_id', $request->get('tutor_id'))->get()->isEmpty()) {
             $validator->errors()->add('Tutor', 'You can only review a tutor once!');
         }
+        if (!\Auth::user()->id = $request->get('tutor_id')) {
+            $validator->errors()->add('Yourself', "Nice try, but you can't review yourself!");
+        }
       });
 
       if ($validator->fails())
