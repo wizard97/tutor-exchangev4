@@ -41,7 +41,7 @@
 
           <div class="form-group">
             {!! Form::label('about_me', 'About me') !!}
-            {!! Form::textarea('about_me', $tutor->about_me, ['class' => 'form-control', 'rows' => '10', 'cols' => '50', 'maxlength' => '3000', 'placeholder' => 'Tell people a little about yourself/your tutoring ability. Are you an NHS member? Maybe mention your schedule. This is confidential, and will only be viewable by people with registered accounts.']) !!}
+            {!! Form::textarea('about_me', $tutor->about_me, ['class' => 'form-control', 'rows' => '10', 'cols' => '50', 'maxlength' => '3000', 'placeholder' => 'Tell people a little about yourself/your tutoring ability. Are you an NHS member? Maybe mention your schedule. This will only be viewable by people with registered accounts.']) !!}
           </div>
         </div>
       </div>
