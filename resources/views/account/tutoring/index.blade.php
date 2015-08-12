@@ -12,44 +12,6 @@
 <div class="row">
   <div class="col-lg-7">
 
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-          <i class="fa fa-link fa-fw"></i> Quick Links
-      </div>
-
-      <div class="panel-body">
-  <div class="btn-group btn-group-justified">
-
-  <a class="btn btn-primary" href="{{ route('tutoring.info') }}">
-    <i class="fa fa-info fa-2x"></i><br>
-    Update Info
-  </a>
-
-  <a class="btn btn-primary" href="{{ route('tutoring.classes') }}">
-    <i class="fa fa-graduation-cap fa-2x"></i><br>
-    Update Classes
-  </a>
-
-  <a class="btn btn-primary" href="">
-    <i class="fa fa-music fa-2x"></i><br>
-    Update Music
-  </a>
-
-  <a class="btn btn-primary" href="">
-    <i class="fa fa-calendar fa-2x"></i><br>
-    Update Schedule
-  </a>
-
-  <a class="btn btn-primary" href="{{ route('tutoring.myprofile') }}">
-    <i class="fa fa-user fa-2x"></i><br>
-    View Profile
-  </a>
-
-  </div>
-  </div>
-</div>
-
-
 <div class="row">
   <div class="col-md-7">
     <div class="panel panel-default">
@@ -164,7 +126,7 @@
         @if(strtotime($tutor->profile_expiration) < strtotime('1 week') && $tutor->tutor_active)
         <p class="alert alert-warning"><i class="fa fa-info-circle"></i> Your listing expires in less than a week!</p>
         @endif
-        <p class="text text-muted bg-warning"><span class="text text-danger">Attention:</br></span>we now have an updated <a href="/LextutorexchangePrivacyPolicy.pdf" target="_blank">Privacy Policy</a> and <a href="/LextutorexchangeTermsofUse.pdf" target="_blank">Terms of Use</a>. We advise that you read these documents, as your use of this websites constitutes your agreement to these terms. Thank you, </br>The Creators</p>
+        <p class="text text-muted bg-warning"><span class="text text-danger">Attention:</br></span>we now have an updated <a href="/LextutorexchangePrivacyPolicy.pdf" target="_blank">Privacy Policy</a> and <a href="/LextutorexchangeTermsofUse.pdf" target="_blank">Terms of Use</a>. We advise that you read these documents, as your use of this website constitutes your agreement to these terms. Thank you, </br>The Creators</p>
       </div>
       <!-- /.panel-body -->
   </div>
@@ -207,7 +169,7 @@
               @foreach($contacts as $contact)
               <tr>
                 <td>{{ $contact->fname.' '.$contact->lname }}</td>
-                <td>{{ $contact->subject }}</td>
+                <td><div class="contact-subject">{{ $contact->subject }}</div></td>
                 <td> <div class="contact-message">{!! nl2br($contact->message) !!}</div></td>
                 <td>{{ date ("m/d/Y", strtotime($contact->created_at)) }}</td>
               </tr>
@@ -242,7 +204,7 @@
               <div class="form-group">
                 <label>Image</label>
                 {!! Form::file('image') !!}
-                <p class="help-block">Only registered user's will be able to view your profile image.</p>
+                <p class="help-block">Only registered users will be able to view your profile image.</p>
               </div>
             </div>
             <div class="modal-footer">
@@ -259,9 +221,14 @@
     <script>
     $( document ).ready(function() {
         $('.contact-message').readmore({
-          collapsedHeight: 100,
-          moreLink: '<a href="#">Expand »</a>',
-          lessLink: '<a href="#">Close</a>',
+          collapsedHeight: 41,
+          moreLink: '<a href="#">Read More</a>',
+          lessLink: '<a href="#">Read Less</a>',
+        });
+        $('.contact-subject').readmore({
+          collapsedHeight: 41,
+          moreLink: '<a href="#">Read More</a>',
+          lessLink: '<a href="#">Read Less</a>',
         });
     });
 
