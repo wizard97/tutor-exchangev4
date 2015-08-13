@@ -31,7 +31,7 @@ class AuthenticateTutors
       }
       elseif($request->user()->account_type < 2)
       {
-        \Session::flash('feedback_negative', "You must be a tutor to view that page, you can change your account type here.");
+        \Session::put('feedback_negative', "You must be a tutor to view that page, you can change your account type here.");
         return redirect()->guest(route('accountsettings.index'));
       }
       return $next($request);

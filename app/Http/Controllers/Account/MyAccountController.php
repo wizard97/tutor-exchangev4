@@ -93,7 +93,7 @@ class MyAccountController extends Controller
         $message->subject($inputs['subject']);
       });
 
-      \Session::flash('feedback_positive', 'Your email to '.$tutor->fname.' '.$tutor->lname.' has been successfully sent!');
+      \Session::put('feedback_positive', 'Your email to '.$tutor->fname.' '.$tutor->lname.' has been successfully sent!');
 
       $contact = new \App\TutorContact;
       $contact->user_id = $user->id;
@@ -119,14 +119,14 @@ class MyAccountController extends Controller
       if (is_null($search))
       {
         \Auth::user()->saved_tutors()->attach($id);
-        \Session::flash('feedback_positive', 'You have successfully added '.$tutor->fname.' '.$tutor->lname.' to your saved tutors.');
+        \Session::put('feedback_positive', 'You have successfully added '.$tutor->fname.' '.$tutor->lname.' to your saved tutors.');
         return response()->json([$id => true]);
       }
 
       else
       {
         \Auth::user()->saved_tutors()->detach($id);
-        \Session::flash('feedback_positive', 'You have successfully removed '.$tutor->fname.' '.$tutor->lname.' from your saved tutors.');
+        \Session::put('feedback_positive', 'You have successfully removed '.$tutor->fname.' '.$tutor->lname.' from your saved tutors.');
         return response()->json([$id => false]);
       }
 
@@ -171,7 +171,7 @@ class MyAccountController extends Controller
       $tutor = \App\Tutor::get_tutor_profile($request->get('tutor_id'));
       //insert into db
       \Auth::user()->reviews()->save($review);
-      \Session::flash('feedback_positive', "Thanks for taking the time to review {$tutor->fname} {$tutor->lname}. Your feedback will be used to help others.");
+      \Session::put('feedback_positive', "Thanks for taking the time to review {$tutor->fname} {$tutor->lname}. Your feedback will be used to help others.");
       return redirect()->back();
 
     }

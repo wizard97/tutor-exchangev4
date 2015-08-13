@@ -50,6 +50,11 @@ class TutorController extends Controller
     return view('/account/tutoring/index')->with('contacts', $contacts)->with('tutor', $tutor)->with('contacts_array', $contacts_array)->with('checklist', $checklist);
   }
 
+  public function geteditschedule()
+  {
+    return view('/account/tutoring/geteditschedule');
+  }
+
   public function geteditclasses()
   {
     /*$classes = \App\SchoolClass::with('levels')
@@ -223,6 +228,19 @@ class TutorController extends Controller
     isset($tutor->grade) && isset($tutor->rate) && isset($tutor->about_me) ? $checklist['info'] = true : $checklist['info'] = false;
     !$tutor->levels()->get()->isEmpty() ? $checklist['classes'] = true : $checklist['classes'] = false;
     $tutor->tutor_active ? $checklist['active'] = true : $checklist['active'] = false;
+
+    $days = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun'];
+
+    $checklist['schedule'] = false;
+    foreach($days as $day)
+    {
+        if((isset($tutor->{"{$day}1_start"}) && isset($tutor->{"{$day}1_end"})) || (isset($tutor->{"{$day}2_start"}) && isset($tutor->{"{$day}2_end"})))
+        {
+          $checklist['schedule'] = true;
+          break;
+        }
+    }
+
     return $checklist;
   }
 

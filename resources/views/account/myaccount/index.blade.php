@@ -10,7 +10,6 @@
 }
 </style>
 <div class="container-fluid">
-  @include('templates/feedback')
   <h1 class="page-header">Dashboard</h1>
   @include('templates/feedback')
   <div class="col-md-4">
@@ -80,9 +79,17 @@ $( document ).ready(function() {
       columns:
       [
         {
-          "title": 'Name', "data": null, "defaultContent": null, createdCell: function(td, cellData, rowData, row, col)
+          "title": 'Name', "data": "fname", "defaultContent": null, createdCell: function(td, cellData, rowData, row, col)
           {
-            $(td).html(rowData.fname + ' ' + rowData.lname);
+            if((rowData.fname != null) && (rowData.lname != null))
+            {
+              $(td).html(rowData.fname + ' ' + rowData.lname);
+
+            }
+            else
+            {
+              $(id).html('N/A');
+            }
           }
         },
         {
@@ -90,71 +97,95 @@ $( document ).ready(function() {
           {
             "title": 'Grade', "data": 'grade_name'},
             {
-              "title": 'Age', "data": null, "defaultContent": null, createdCell: function (td, celldata, rowData, row, col)
+              "title": 'Age', "data": "age", "defaultContent": null, createdCell: function (td, celldata, rowData, row, col)
               {
-                if (rowData.age == null)
+                if (rowData.age != null)
+                {
+                  $(td).html(rowData.age + ' years');
+
+                }
+                else
                 {
                   $(td).html('N/A');
                 }
+              }
+            },
+            {
+              "title": 'Hourly Rate', "data": "rate", "defaultContent": null, createdCell: function (td, cellData, rowData, row, col)
+              {
+                if (rowData.rate != null)
+                {
+                  $(td).html(rowData.rate + ' $/hr');
+
+                }
                 else
                 {
-                  $(td).html(rowData.age + ' years');
+                  $(td).html('N/A');
                 }
+
               }
             },
             {
-              "title": 'Hourly Rate', "data": null, "defaultContent": null, createdCell: function (td, cellData, rowData, row, col)
+              "title": 'Tutor Type', "data": "account_type", "defaultContent": null, createdCell: function (td, cellData, rowData, row, col)
               {
-                $(td).html(rowData.rate + ' $/hr');
-              }
-            },
-            {
-              "title": 'Tutor Type', "data": null, "defaultContent": null, createdCell: function (td, cellData, rowData, row, col)
-              {
-                if (rowData.account_type == 3)
+                if (rowData.account_type != null)
                 {
-                  $(td).html('Professional');
-                }
-                else {
-                  $(td).html('Standard');
-                }
-              }
-            },
-            {
-              "title": 'Rating', "data": null, "defaultContent": null, createdCell: function (td, cellData, rowData, row, col)
-              {
-                $(td).empty();
-                var string = "<span class='text-nowrap'>";
-                var star_count = Math.floor(rowData.rating);
-                for (var i = 0; i < star_count; i++)
-                {
-                  string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star'></i>";
-                }
-                var delta = rowData.rating - star_count;
-                if (delta >= 0.25)
-                {
-                  if (delta < 0.75)
+                  if (rowData.account_type == 3)
                   {
-                    string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star-half-o'></i>";
+                    $(td).html('Professional');
                   }
-                  else
+                  else {
+                    $(td).html('Standard');
+                  }
+                }
+                else
+                {
+                  $(td).html('N/A');
+                }
+              }
+            },
+            {
+              "title": 'Rating', "data": "rating", "defaultContent": null, createdCell: function (td, cellData, rowData, row, col)
+              {
+                if(rowData.rating != null)
+                {
+                  $(td).empty();
+                  var string = "<span class='text-nowrap'>";
+                  var star_count = Math.floor(rowData.rating);
+                  for (var i = 0; i < star_count; i++)
                   {
                     string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star'></i>";
                   }
-                  for (var i = 0; i < 4 - star_count; i++)
+                  var delta = rowData.rating - star_count;
+                  if (delta >= 0.25)
                   {
-                    string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star-o'></i>";
+                    if (delta < 0.75)
+                    {
+                      string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star-half-o'></i>";
+                    }
+                    else
+                    {
+                      string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star'></i>";
+                    }
+                    for (var i = 0; i < 4 - star_count; i++)
+                    {
+                      string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star-o'></i>";
+                    }
                   }
+                  else
+                  {
+                    for (var i = 0; i < 5 - star_count; i++)
+                    {
+                      string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star-o'></i>";
+                    }
+                  }
+                  string += ' <span style = "font-size: 20px">(<a href = "javascript:void(0)">' + rowData.num_reviews + '</a>)</span></span>';
+                  $(td).append(string);
                 }
                 else
                 {
-                  for (var i = 0; i < 5 - star_count; i++)
-                  {
-                    string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star-o'></i>";
-                  }
+                  $(td).html('N/A');
                 }
-                string += ' <span style = "font-size: 20px">(<a href = "javascript:void(0)">' + rowData.num_reviews + '</a>)</span></span>';
-                $(td).append(string);
               }
             },
             {
@@ -177,35 +208,60 @@ $( document ).ready(function() {
           ajax: getContacts,
           columns: [
             {
-              "title": 'To', "data": null, "defaultcontent": null, createdCell: function (td, cellData, rowData, row, col)
+              "title": 'To', "data": "fname", "defaultcontent": null, createdCell: function (td, cellData, rowData, row, col)
               {
-                $(td).html(rowData.fname + ' ' + rowData.lname);
+                if ((rowData.fname != null) && (rowData.lname != null))
+                {
+                  $(td).html(rowData.fname + ' ' + rowData.lname);
+                }
+                else
+                {
+                  $(td).html('N/A');
+                }
               }
             },
             {
-              "title": 'Subject', "data": null, "defaultContent": null, createdCell: function (td, cellData, rowData, row, col)
+              "title": 'Subject', "data": "subject", "defaultContent": null, createdCell: function (td, cellData, rowData, row, col)
               {
-
-                $info = $('<div class="readmore"><p></p></div>');
-                $info.find('p').text(rowData.subject);
-                $(td).html($info[0].outerHTML);
-
+                if (rowData.subject != null)
+                {
+                  $info = $('<div class="readmore"><p></p></div>');
+                  $info.find('p').text(rowData.subject);
+                  $(td).html($info[0].outerHTML);
+                }
+                else
+                {
+                  $(td).html('N/A');
+                }
               }
             },
             {
-              "title": 'Message', "data": null, "defaultContent": null, createdCell: function (td, cellData, rowData, row, col)
+              "title": 'Message', "data": "message", "defaultContent": null, createdCell: function (td, cellData, rowData, row, col)
               {
-                $info = $('<div class="readmore"><p></p></div>');
-                $info.find('p').text(rowData.message);
-                $(td).html($info[0].outerHTML);
-
+                if (rowData.message != null)
+                {
+                  $info = $('<div class="readmore"><p></p></div>');
+                  $info.find('p').text(rowData.message);
+                  $(td).html($info[0].outerHTML);
+                }
+                else
+                {
+                  $(td).html('N/A');
+                }
               }
             },
             {
-              "title": 'Date', "data": null, "defaultContent": null, createdCell: function (td, cellData, rowData, row, col)
+              "title": 'Date', "data": "created_at", "defaultContent": null, createdCell: function (td, cellData, rowData, row, col)
               {
-                var date = new Date(rowData.created_at);
-                $(td).html(date.toLocaleDateString());
+                if (rowData.created_at != null)
+                {
+                  var date = new Date(rowData.created_at);
+                  $(td).html(date.toLocaleDateString());
+                }
+                else
+                {
+                  $(td).html('N/A');
+                }
               }
             },
             {
@@ -234,219 +290,234 @@ $( document ).ready(function() {
           ajax: getReviews,
           columns: [
             {
-              "title": 'Tutor', "data": null, "defaultContent": null, createdCell: function(td, cellData, rowData, row, col)
+              "title": 'Tutor', "data": "fname", "defaultContent": null, createdCell: function(td, cellData, rowData, row, col)
               {
-                $(td).html(rowData.fname + ' ' + rowData.lname);
-              }
-            },
-            {
-              "title": 'Title', "data": null, "defaultContent": null, createdCell: function(td, cellData, rowData, row, col)
-              {
-                $info = $('<div class="readmore"><p></p></div>');
-                $info.find('p').text(rowData.title);
-                $(td).html($info[0].outerHTML);
-
-              }
-            },
-            {
-              "title": 'Rating', orderable: false, "data": null, "defaultContent": null, createdCell: function (td, cellData, rowData, row, col)
-              {
-                $(td).empty();
-                var string = "<span class='text-nowrap'>";
-                var star_count = Math.floor(rowData.rating);
-                for (var i = 0; i < star_count; i++)
+                if ((rowData.fname != null) && (rowData.lname != null))
                 {
-                  string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star'></i>";
-                }
-                var delta = rowData.rating - star_count;
-                if (delta >= 0.25)
-                {
-                  if (delta < 0.75)
-                  {
-                    string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star-half-o'></i>";
-                  }
-                  else
-                  {
-                    string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star'></i>";
-                  }
-                  for (var i = 0; i < 4 - star_count; i++)
-                  {
-                    string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star-o'></i>";
-                  }
+                  $(td).html(rowData.fname + ' ' + rowData.lname);
                 }
                 else
                 {
-                  for (var i = 0; i < 5 - star_count; i++)
-                  {
-                    string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star-o'></i>";
-                  }
+                  $(td).html('N/A');
                 }
-                string += '</span>';
-                $(td).append(string);
-                $.ajax({
-                  type: "GET",
-                  url : "{{ route('myaccount.ajaxtutorreviews') }}",
-                  success: function (data){
-
-                  }
-                });
               }
             },
             {
-              "title": 'Body', "data": null, "defaultContent": null, createdCell: function(td, cellData, rowData, row, col)
+              "title": 'Title', "data": "title", "defaultContent": null, createdCell: function(td, cellData, rowData, row, col)
               {
-                $info = $('<div class="readmore"><p></p></div>');
-                $info.find('p').text(rowData.message);
-                $(td).html($info[0].outerHTML);
-
-            }
-          },
-          {
-            "title": 'Options', orderable: false, "data": null, "defaultContent": null, createdCell: function(td, cellData, rowData, row, col)
+                if (rowData.title != null)
+                {
+                  $info = $('<div class="readmore"><p></p></div>');
+                  $info.find('p').text(rowData.title);
+                  $(td).html($info[0].outerHTML);
+                }
+                else
+                {
+                  $(td).html('N/A');
+                }
+              }
+            },
             {
-              $(td).addClass('text-center');
-              var profileLink = ("{{ route('search.showtutorprofile', ['id' => '0']) }}" + rowData.tutor_id);
-              if (rowData.saved == 'TRUE') {
-                $(td).html('<span class="text-nowrap"><a href="javascript:void(0)"><i style="font-size: 20px;" class="fa fa-fw fa-times text-danger"></i></a><a href=' + profileLink + ' target="_blank"><i style="font-size: 20px;" class="fa fa-fw fa-user text-primary"></i></a>'
-                + '<a href="javascript:void(0)"><i style="font-size: 20px" class="fa fa-fw fa-envelope text-primary" data-toggle="modal" data-target="#contactModal" data-userid=' + rowData.tutor_id + '></i></a></span>');
+              "title": 'Rating', orderable: false, "data": "rating", "defaultContent": null, createdCell: function (td, cellData, rowData, row, col)
+              {
+                if (rowData.rating != null)
+                {
+                  $(td).empty();
+                  var string = "<span class='text-nowrap'>";
+                  var star_count = Math.floor(rowData.rating);
+                  for (var i = 0; i < star_count; i++)
+                  {
+                    string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star'></i>";
+                  }
+                  var delta = rowData.rating - star_count;
+                  if (delta >= 0.25)
+                  {
+                    if (delta < 0.75)
+                    {
+                      string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star-half-o'></i>";
+                    }
+                    else
+                    {
+                      string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star'></i>";
+                    }
+                    for (var i = 0; i < 4 - star_count; i++)
+                    {
+                      string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star-o'></i>";
+                    }
+                  }
+                  else
+                  {
+                    for (var i = 0; i < 5 - star_count; i++)
+                    {
+                      string += "<i style='color: #FEC601; font-size: 20px' class='fa fa-star-o'></i>";
+                    }
+                  }
+                  string += '</span>';
+                  $(td).append(string);
+                  $.ajax({
+                    type: "GET",
+                    url : "{{ route('myaccount.ajaxtutorreviews') }}",
+                    success: function (data){
+
+                    }
+                  });
+                }
+                else
+                {
+                  $(td).html('N/A');
+                }
               }
-              else {
-                $(td).html('<span class="text-nowrap"><a href="javascript:void(0)"><i style="font-size: 20px;" class="fa fa-fw fa-plus text-success"></i></a><a href=' + profileLink + ' target="_blank"><i style="font-size: 20px;" class="fa fa-fw fa-user text-primary"></i></a>'
-                + '<a href="javascript:void(0)"><i style="font-size: 20px" class="fa fa-fw fa-envelope text-primary" data-toggle="modal" data-target="#contactModal" data-userid=' + rowData.tutor_id + '></i></a></span>');
+            },
+            {
+              "title": 'Body', "data": "message", "defaultContent": null, createdCell: function(td, cellData, rowData, row, col)
+              {
+                if (rowData.message != null)
+                {
+                  $info = $('<div class="readmore"><p></p></div>');
+                  $info.find('p').text(rowData.message);
+                  $(td).html($info[0].outerHTML);
+                }
+                else
+                {
+                  $(td).html('N/A');
+                }
+              }
+            },
+            {
+              "title": 'Options', orderable: false, "data": null, "defaultContent": null, createdCell: function(td, cellData, rowData, row, col)
+              {
+                $(td).addClass('text-center');
+                var profileLink = ("{{ route('search.showtutorprofile', ['id' => '0']) }}" + rowData.tutor_id);
+                if (rowData.saved == 'TRUE') {
+                  $(td).html('<span class="text-nowrap"><a href="javascript:void(0)"><i style="font-size: 20px;" class="fa fa-fw fa-times text-danger"></i></a><a href=' + profileLink + ' target="_blank"><i style="font-size: 20px;" class="fa fa-fw fa-user text-primary"></i></a>'
+                  + '<a href="javascript:void(0)"><i style="font-size: 20px" class="fa fa-fw fa-envelope text-primary" data-toggle="modal" data-target="#contactModal" data-userid=' + rowData.tutor_id + '></i></a></span>');
+                }
+                else {
+                  $(td).html('<span class="text-nowrap"><a href="javascript:void(0)"><i style="font-size: 20px;" class="fa fa-fw fa-plus text-success"></i></a><a href=' + profileLink + ' target="_blank"><i style="font-size: 20px;" class="fa fa-fw fa-user text-primary"></i></a>'
+                  + '<a href="javascript:void(0)"><i style="font-size: 20px" class="fa fa-fw fa-envelope text-primary" data-toggle="modal" data-target="#contactModal" data-userid=' + rowData.tutor_id + '></i></a></span>');
+                }
               }
             }
+          ]
+
+        }
+      );
+      $(".clickable-row").click(function() {
+        window.document.location = $(this).data("href");
+      });
+      $contacts.on( 'draw.dt', function () {
+        $(this).find("td .readmore").readmore({
+          collapsedHeight: 41,
+          moreLink: '<a href="#">Read more</a>',
+          lessLink: '<a href="#">Read less</a>'
+        });
+      } );
+      $reviews.on( 'draw.dt', function () {
+        $(this).find("td .readmore").readmore({
+          collapsedHeight: 41,
+          moreLink: '<a href="#">Read more</a>',
+          lessLink: '<a href="#">Read less</a>'
+        });
+      } );
+
+
+      $('#saved_tutors').on('click', 'i.fa-times', function () {
+        var $clicked_row = $(this).closest('tr');
+        var data = $saved_tutors.DataTable().row($clicked_row).data();
+        $.ajax({
+          type: "POST",
+          url : "{{route('myaccount.ajaxsavetutor')}}",
+          data : {user_id: data.tutor_id},
+          success : function(data){
+            $saved_tutors.DataTable().row($clicked_row).remove();
+            $saved_tutors.DataTable().ajax.reload();
+            $contacts.DataTable().ajax.reload();
+            $reviews.DataTable().ajax.reload();
+            $.ajax({
+              type: "GET",
+              url : "{{ route('feedback') }}",
+              success: function (data){
+                $("#feedback").replaceWith(function() {
+                  return $(data).hide().fadeIn('slow');
+                });
+
+              }
+            });
           }
-        ]
+        });
 
-      }
-    );
-    $(".clickable-row").click(function() {
-      window.document.location = $(this).data("href");
-    });
-    $contacts.on( 'draw.dt', function () {
-$(this).find("td .readmore").readmore({
-collapsedHeight: 41,
-moreLink: '<a href="#">Read more</a>',
-lessLink: '<a href="#">Read less</a>'
-});
-} );
-$reviews.on( 'draw.dt', function () {
-$(this).find("td .readmore").readmore({
-collapsedHeight: 41,
-moreLink: '<a href="#">Read more</a>',
-lessLink: '<a href="#">Read less</a>'
-});
-} );
-
-
-    $('#saved_tutors').on('click', 'i.fa-times', function () {
-      var $clicked_row = $(this).closest('tr');
-      var data = $saved_tutors.DataTable().row($clicked_row).data();
-      $.ajax({
-        type: "POST",
-        url : "{{route('myaccount.ajaxsavetutor')}}",
-        data : {user_id: data.tutor_id},
-        success : function(data){
-          $saved_tutors.DataTable().row($clicked_row).remove();
-          $saved_tutors.DataTable().ajax.reload();
-          $contacts.DataTable().ajax.reload();
-          $reviews.DataTable().ajax.reload();
-        }
       });
-      $.ajax({
-        type: "GET",
-        url : "{{ route('feedback') }}",
-        success: function (data){
-          $("#feedback").replaceWith(function() {
-            return $(data).hide().fadeIn('slow');
-          });
 
-        }
+
+      $('#contacts').on('click', 'i.fa-times, i.fa-plus', function () {
+        var $clicked_row = $(this).closest('tr');
+        var $icon = $clicked_row.find("i.fa");
+        var data = $contacts.DataTable().row($clicked_row).data();
+
+
+        $.ajax({
+          type: "POST",
+          url : "{{route('myaccount.ajaxsavetutor')}}",
+          data : {user_id: data.tutor_id},
+          success : function(data){
+            $saved_tutors.DataTable().ajax.reload();
+            $contacts.DataTable().ajax.reload();
+            $reviews.DataTable().ajax.reload();
+            $.ajax({
+              type: "GET",
+              url : "{{ route('feedback') }}",
+              success: function (data){
+                $("#feedback").replaceWith(function() {
+                  return $(data).hide().fadeIn('slow');
+                });
+
+              }
+            });
+          }
+        });
+
       });
-    });
+      $('#reviews').on('click', 'i.fa-times, i.fa-plus', function () {
+        var $clicked_row = $(this).closest('tr');
+        var $icon = $clicked_row.find("i.fa");
+        var data = $reviews.DataTable().row($clicked_row).data();
 
+        $.ajax({
+          type: "POST",
+          url : "{{route('myaccount.ajaxsavetutor')}}",
+          data : {user_id: data.tutor_id},
+          success : function(data){
+            $saved_tutors.DataTable().ajax.reload();
+            $contacts.DataTable().ajax.reload();
+            $reviews.DataTable().ajax.reload();
+            $.ajax({
+              type: "GET",
+              url : "{{ route('feedback') }}",
+              success: function (data){
+                $("#feedback").replaceWith(function() {
+                  return $(data).hide().fadeIn('slow');
+                });
 
-    $('#contacts').on('click', 'i.fa-times, i.fa-plus', function () {
-      var $clicked_row = $(this).closest('tr');
-      var $icon = $clicked_row.find("i.fa");
-      var data = $contacts.DataTable().row($clicked_row).data();
+              }
+            });
+          }
+        });
 
-
-      $saved_tutors.DataTable().ajax.reload();
-      $contacts.DataTable().ajax.reload();
-      $reviews.DataTable().ajax.reload();
-
-      $.ajax({
-        type: "POST",
-        url : "{{route('myaccount.ajaxsavetutor')}}",
-        data : {user_id: data.tutor_id},
-        success : function(data){
-          $saved_tutors.DataTable().ajax.reload();
-          $contacts.DataTable().ajax.reload();
-          $reviews.DataTable().ajax.reload();
-        }
       });
-      $.ajax({
-        type: "GET",
-        url : "{{ route('feedback') }}",
-        success: function (data){
-          $("#feedback").replaceWith(function() {
-            return $(data).hide().fadeIn('slow');
-          });
-
-        }
+      $(document).on("lex:contact_submit", function() {
+        $contacts.DataTable().ajax.reload();
       });
-    });
-    $('#reviews').on('click', 'i.fa-times, i.fa-plus', function () {
-      var $clicked_row = $(this).closest('tr');
-      var $icon = $clicked_row.find("i.fa");
-      var data = $reviews.DataTable().row($clicked_row).data();
+      $(window).load(function(){
+        //your code here
+        $(".readmore").readmore();
 
 
-      $saved_tutors.DataTable().ajax.reload();
-      $contacts.DataTable().ajax.reload();
-      $reviews.DataTable().ajax.reload();
-
-      $.ajax({
-        type: "POST",
-        url : "{{route('myaccount.ajaxsavetutor')}}",
-        data : {user_id: data.tutor_id},
-        success : function(data){
-          $saved_tutors.DataTable().ajax.reload();
-          $contacts.DataTable().ajax.reload();
-          $reviews.DataTable().ajax.reload();
-        }
       });
-      $.ajax({
-        type: "GET",
-        url : "{{ route('feedback') }}",
-        success: function (data){
-          $("#feedback").replaceWith(function() {
-            return $(data).hide().fadeIn('slow');
-          });
-
-        }
       });
-    });
 
 
-    $(document).on("lex:contact_submit", function() {
-      $contacts.DataTable().ajax.reload();
-    });
-$(window).load(function(){
-  //your code here
-$(".readmore").readmore();
 
-});
 
-/*
-    $(".readmore").readmore({
-      collapsedHeight: 41,
-      moreLink: '<a href="#">Read more</a>',
-      lessLink: '<a href="#">Read less</a>'
-    });
-*/
- });
   </script>
   @include("/search/contactmodal")
   @stop

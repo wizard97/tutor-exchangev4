@@ -50,7 +50,7 @@
       <script src="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 
       <!-- Typeahead -->
-      <script src="/js/typeahead.bundle.min.js"></script>
+      <script src="/js/typeahead.bundle.js"></script>
 
       <!-- Bootstrap Wizard -->
       <script src="/js/bootstrap.wizard.min.js"></script>

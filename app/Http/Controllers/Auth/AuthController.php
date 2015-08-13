@@ -49,7 +49,7 @@ class AuthController extends Controller {
 
         if(empty($response->results[0]))
         {
-          \Session::flash('feedback_negative', 'We were unable to lookup your address.');
+          \Session::put('feedback_negative', 'We were unable to lookup your address.');
           return back();
         }
 
@@ -88,7 +88,7 @@ class AuthController extends Controller {
         \Mail::queue('emails.verify', array('confirmation_code' => $confirmation_code, 'name' => $request->input('fname').' '.$request->input('lname')), function($message) use ($inputs) {
             $message->to($inputs['email'], $inputs['fname'].' '.$inputs['lname'])->subject('Activate your account')->from('no-reply@lextutorexchange.com','Lexington Tutor Exchange');
         });
-        \Session::flash('feedback_positive', 'Thanks for signing up! Please check your email for an activation link to activate your account.');
+        \Session::put('feedback_positive', 'Thanks for signing up! Please check your email for an activation link to activate your account.');
 
         return redirect('home');
     }
@@ -104,7 +104,7 @@ class AuthController extends Controller {
 
        if ( ! $user)
        {
-         \Session::flash('feedback_negative', "That was not a valid activation link, are you sure you didn't already activate your account?");
+         \Session::put('feedback_negative', "That was not a valid activation link, are you sure you didn't already activate your account?");
          return redirect('auth/login');
        }
 
@@ -112,7 +112,7 @@ class AuthController extends Controller {
        $user->activation_hash = null;
        $user->save();
 
-       \Session::flash('feedback_positive', 'You have successfully verified your account.');
+       \Session::put('feedback_positive', 'You have successfully verified your account.');
 
        return redirect('auth/login');
    }
@@ -158,7 +158,7 @@ class AuthController extends Controller {
       $model->last_login = date('Y-m-d H:i:s');
       $model->save();
 
-      \Session::flash('feedback_positive', 'Welcome back '.$user->fname.' '.$user->lname.'!');
+      \Session::put('feedback_positive', 'Welcome back '.$user->fname.' '.$user->lname.'!');
       if ($user->account_type > 1) return redirect()->intended(route('tutoring.dashboard'));
       else return redirect()->intended('home');
   }
@@ -167,7 +167,7 @@ class AuthController extends Controller {
   {
     \Session::flush();
     Auth::logout();
-    \Session::flash('feedback_positive', 'You have been logged out.');
+    \Session::put('feedback_positive', 'You have been logged out.');
     return redirect('home');
   }
 }

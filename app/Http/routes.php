@@ -122,6 +122,9 @@ Route::post('account/tutoring/runlisting', [
 Route::get('account/tutoring/pauselisting', [
     'as' => 'tutoring.pauselisting', 'uses' => 'Account\TutorController@pauselisting'
 ]);
+Route::get('account/tutoring/editschedule', [
+    'as' => 'tutoring.schedule', 'uses' => 'Account\TutorController@geteditschedule'
+]);
 
 //settings
 Route::get('account/settings/index', [

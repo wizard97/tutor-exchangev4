@@ -150,7 +150,7 @@
       		<ul class="pager wizard">
       			<li class="previous no-red"><a href="#">Previous</a></li>
       		  <li class="next no-red"><a href="#">Next</a></li>
-            <li class="next finish no-red" style="display:none;"><a href="#" type="submit">Finish!</a></li>
+            <li class="next finish no-red" style="display:none;"><a href="#" type="submit">Next</a></li>
       		</ul>
 
       	</div>
@@ -226,7 +226,11 @@ $('.clockpicker').clockpicker({
   });
 
 $('.time-row .checkbox input').change(function(){
-  $(this).closest('.time-row').toggleClass('success');
+  if ($(this).is(':checked'))
+  {
+    $(this).closest('.time-row').addClass('success');
+  }
+  else $(this).closest('.time-row').removeClass('success');
 });
 
 $('.school-selection').click(function() {
@@ -243,6 +247,14 @@ $('.tutor-selection').click(function() {
 
 $('#rootwizard .finish').click(function() {
 $("#search-form").submit();
+});
+
+$('.time-row .checkbox input').each(function(){
+  if ($(this).is(':checked'))
+  {
+    $(this).closest('.time-row').addClass('success');
+  }
+  else $(this).closest('.time-row').removeClass('success');
 });
 
 });

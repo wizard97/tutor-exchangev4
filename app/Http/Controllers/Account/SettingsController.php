@@ -34,7 +34,7 @@ class SettingsController extends Controller
     $user->lname = $request->input('lname');
     $user->save();
 
-    \Session::flash('feedback_positive', 'You have successfully updated your name.');
+    \Session::put('feedback_positive', 'You have successfully updated your name.');
     return back();
   }
 
@@ -48,7 +48,7 @@ class SettingsController extends Controller
     $user->email = $request->input('email');
     $user->save();
 
-    \Session::flash('feedback_positive', 'You have successfully updated your email address.');
+    \Session::put('feedback_positive', 'You have successfully updated your email address.');
     return back();
   }
 
@@ -65,7 +65,7 @@ class SettingsController extends Controller
 
     if(empty($response->results[0]))
     {
-      \Session::flash('feedback_negative', 'We were unable to lookup your address.');
+      \Session::put('feedback_negative', 'We were unable to lookup your address.');
       return back();
     }
 
@@ -89,7 +89,7 @@ class SettingsController extends Controller
 
     $user->save();
 
-    \Session::flash('feedback_positive', 'You have successfully updated your address.');
+    \Session::put('feedback_positive', 'You have successfully updated your address.');
     return back();
   }
 /* no longer needed
@@ -103,7 +103,7 @@ class SettingsController extends Controller
     $user->zip_id = \App\Zip::where('zip_code', '=', $request->input('zip'))->firstOrFail()->id;
     $user->save();
 
-    \Session::flash('feedback_positive', 'You have successfully updated your Zip code.');
+    \Session::put('feedback_positive', 'You have successfully updated your Zip code.');
     return back();
   }
 */
@@ -116,7 +116,7 @@ class SettingsController extends Controller
 
     if ($user->account_type == $request->input('account_type'))
     {
-      \Session::flash('feedback_negative', 'You are already this account type');
+      \Session::put('feedback_negative', 'You are already this account type');
       return back();
     }
 
@@ -130,7 +130,7 @@ class SettingsController extends Controller
       $user->tutor()->delete();
       $user->account_type = $request->input('account_type');
       $user->save();
-      \Session::flash('feedback_positive', 'You have successfully downgraded your account, your tutoring info has been deleted.');
+      \Session::put('feedback_positive', 'You have successfully downgraded your account, your tutoring info has been deleted.');
     }
     //if upgrading from standard user
     elseif($user->account_type == 1)
@@ -138,14 +138,14 @@ class SettingsController extends Controller
       $user->tutor()->firstOrCreate([]);
       $user->account_type = $request->input('account_type');
       $user->save();
-      \Session::flash('feedback_positive', 'You have successfully upgraded your account.');
+      \Session::put('feedback_positive', 'You have successfully upgraded your account.');
     }
     //if only changing tutoring type
     else
     {
       $user->account_type = $request->input('account_type');
       $user->save();
-      \Session::flash('feedback_positive', 'You have successfully changed your account type.');
+      \Session::put('feedback_positive', 'You have successfully changed your account type.');
     }
 
     return back();
@@ -161,7 +161,7 @@ class SettingsController extends Controller
     $user->password = bcrypt($request->input('password'));
     $user->save();
 
-    \Session::flash('feedback_positive', 'You have successfully changed your password.');
+    \Session::put('feedback_positive', 'You have successfully changed your password.');
     return back();
   }
 }

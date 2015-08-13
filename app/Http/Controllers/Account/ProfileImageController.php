@@ -110,7 +110,7 @@ class ProfileImageController extends Controller
       $user = \App\User::findOrFail($this->id);
       $user->has_picture = true;
       $user->save();
-      \Session::flash('feedback_positive', 'You successfully uploaded your profile picture.');
+      \Session::put('feedback_positive', 'You successfully uploaded your profile picture.');
       return back();
     }
 
@@ -145,7 +145,7 @@ class ProfileImageController extends Controller
       $user = \App\User::findOrFail($this->id);
       $user->has_picture = false;
       $user->save();
-      \Session::flash('feedback_positive', 'You successfully deleted your profile picture.');
+      \Session::put('feedback_positive', 'You successfully deleted your profile picture.');
       return back();
     }
 }
