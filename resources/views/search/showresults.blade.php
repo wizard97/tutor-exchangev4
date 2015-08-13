@@ -45,9 +45,24 @@ jQuery('.readmore').readmore({
   </div>
   @endif
 <caption>We found you {{ $num_results }} possible tutor(s):</caption>
+<span>Sort By:</span>
+<div class="dropdown">
+  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    Dropdown
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+    <li class="active"><a href="#">Name</a></li>
+    <li><a href="#">Rating</a></li>
+    <li><a href="#">Age</a></li>
+    <li><a href="#">Class</a></li>
+    <li><a href="#">Proximity</a></li>
+    <li><a href="#">Schedule</a></li>
+    <li><a href="#">Hourly Rate</a></li>
+  </ul>
+</div>
 @foreach($results as $tutor)
   <div class="row">
-
     <div  class="@if($tutor->account_type > 2) alert alert-success @else alert alert-info @endif">
       <div class="row vertical-align">
         <div class=" col-xs-12 col-sm-2 col-md-2">

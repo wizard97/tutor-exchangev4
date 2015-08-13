@@ -266,7 +266,7 @@ class HsSearchController extends Controller
       return view('search/showresults', ['results' => $results, 'num_results' => $num_rows, 'paginator' => $paginator]);
     }
     else $saved_tutors = array();
-    \Session::flash('feedback_warning', "For the protection of our site's tutors, we are blocking most of the site's functionality including the ability to view their profile, see reviews, and contact them. Please <a href=\"".route('auth.login')."\">login/register</a>.");
+    \Session::put('feedback_warning', "For the protection of our site's tutors, we are blocking most of the site's functionality including the ability to view their profile, see reviews, and contact them. Please <a href=\"".route('auth.login')."\">login/register</a>.");
     return view('search/showresultsplain', ['results' => $results, 'num_results' => $num_rows, 'paginator' => $paginator]);
 
   }

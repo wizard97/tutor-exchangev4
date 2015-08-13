@@ -188,7 +188,7 @@ class SearchController extends Controller
         return view('search/showresults', ['results' => $results, 'num_results' => $num_results, 'saved_tutors' => $saved_tutors]);
       }
       else $saved_tutors = array();
-        \Session::flash('feedback_warning', "For the protection of our site's tutors, we are blocking most of the site's functionality including the ability to view their profile, see reviews, and contact them. Please <a href=\"".route('auth.login')."\">login/register</a>.");
+        \Session::put('feedback_warning', "For the protection of our site's tutors, we are blocking most of the site's functionality including the ability to view their profile, see reviews, and contact them. Please <a href=\"".route('auth.login')."\">login/register</a>.");
       return view('search/showresultsplain', ['results' => $results, 'num_results' => $num_results, 'saved_tutors' => $saved_tutors]);
      }
 
@@ -256,7 +256,7 @@ class SearchController extends Controller
           $message->subject($inputs['subject']);
         });
 
-        \Session::flash('feedback_positive', 'Your email to '.$tutor->fname.' '.$tutor->lname.' has been successfully sent!');
+        \Session::put('feedback_positive', 'Your email to '.$tutor->fname.' '.$tutor->lname.' has been successfully sent!');
 
         $contact = new \App\TutorContact;
         $contact->user_id = $user->id;
@@ -285,14 +285,14 @@ class SearchController extends Controller
         $saved_model->user_id = \Auth::user()->id;
         $saved_model->tutor_id = $id;
         $saved_model->save();
-        \Session::flash('feedback_positive', 'You have successfully added '.$tutor->fname.' '.$tutor->lname.' to your saved tutors.');
+        \Session::put('feedback_positive', 'You have successfully added '.$tutor->fname.' '.$tutor->lname.' to your saved tutors.');
         return response()->json([$id => true]);
       }
 
       else
       {
         \App\SavedTutor::where('user_id', \Auth::user()->id)->where('tutor_id', $id)->delete();
-        \Session::flash('feedback_positive', 'You have successfully removed '.$tutor->fname.' '.$tutor->lname.' from your saved tutors.');
+        \Session::put('feedback_positive', 'You have successfully removed '.$tutor->fname.' '.$tutor->lname.' from your saved tutors.');
         return response()->json([$id => false]);
       }
 
