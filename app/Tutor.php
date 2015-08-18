@@ -18,6 +18,11 @@ class Tutor extends Model
       return $this->belongsToMany('App\Level', 'tutor_levels', 'user_id', 'level_id')->withTimestamps();
     }
 
+    public function music()
+    {
+      return $this->belongsToMany('App\Music', 'tutor_music', 'tutor_id', 'music_id')->withTimestamps()->withPivot('upto_years', 'years_experiance');
+    }
+
     public function reviews()
     {
       return $this->hasMany('App\Review', 'tutor_id', 'user_id');

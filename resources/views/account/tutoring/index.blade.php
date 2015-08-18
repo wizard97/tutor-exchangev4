@@ -37,7 +37,7 @@
                       @endif
                     </span>
                 </a>
-                <a href="#" class="list-group-item disabled" data-toggle="tooltip" data-placement="right" title="Work in progress...">
+                <a href="#" class="list-group-item disabled" data-toggle="tooltip" data-placement="right" title="Feature coming soon...">
                     <i class="fa fa-music fa-fw"></i> Your Music
                     <span class="pull-right">
 

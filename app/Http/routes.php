@@ -74,6 +74,18 @@ Route::get('search/school/hsorabove/find/prefetch', [
     'as' => 'hs.prefetch', 'uses' => 'Search\School\HsSearchController@prefetch'
 ]);
 
+//music
+Route::get('search/music/index', [
+    'as' => 'music.index', 'uses' => 'Search\Music\MusicController@index'
+]);
+Route::post('search/music/submitsearch', [
+    'as' => 'music.submitsearch', 'uses' => 'Search\Music\MusicController@searchformsubmit'
+]);
+Route::get('search/music/showresults', [
+    'as' => 'music.showresults', 'uses' => 'Search\Music\MusicController@showresults'
+]);
+
+
 
 /* deprecated 8/5/15
 //search

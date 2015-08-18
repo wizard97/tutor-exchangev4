@@ -128,11 +128,10 @@
                   In the event you believe that material or content published on the Website may infringe on your copyright or that of another, please contact us.
                 </p>
               </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
 
-
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
           </div>
         </div>

@@ -62,11 +62,7 @@ $factory->define(App\Tutor::class, function ($faker) {
         'highest_science' => $faker->text($maxNbChars = 50),
         'highest_socialstudies' => $faker->text($maxNbChars = 50),
         'highest_english' => $faker->text($maxNbChars = 50),
-        'highest_french' => $faker->text($maxNbChars = 50),
-        'highest_spanish' => $faker->text($maxNbChars = 50),
-        'highest_german' => $faker->text($maxNbChars = 50),
-        'highest_italian' => $faker->text($maxNbChars = 50),
-        'highest_mandarin' => $faker->text($maxNbChars = 50),
+        'highest_lang' => $faker->text($maxNbChars = 50),
     ];
     $days = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun'];
     foreach ($days as $day)

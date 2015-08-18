@@ -9,25 +9,22 @@
  }
 </style>
   <div class="page-header">
-    <h1>School Tutoring <small>First we need some info...</small></h1>
+    <h1>Music Tutoring <small>First we need some info...</small></h1>
   </div>
-  <!--
-  <div class="alert alert-info" role="alert">
-  <p>Before we can show you relevant tutors, we first need some more info about what you need hlep in.</p>
-  </div>
--->
+
 @include('templates/feedback')
 <br>
 <br>
 
 
-<div class="col-lg-offset-2 col-lg-8">
-  <form class="form" id="search-form" method="POST" action="{{ route('school.submitsearch') }}">
+<div class="col-lg-offset-1 col-lg-10">
+  <form class="form" id="search-form" method="POST" action="{{ route('music.submitsearch') }}">
     {!! csrf_field() !!}
     <div class="row">
     <div id="rootwizard">
       	<ul style="font-size: 20px; margin-bottom: 10px;">
-      	  	<li><a href="#tab1" data-toggle="tab"><i class="fa fa-location-arrow fa-fw no-red"></i> Location</a></li>
+          <li><a href="#tab0" data-toggle="tab"><i class="fa fa-music fa-fw no-red"></i> Instrument</a></li>
+      	  <li><a href="#tab1" data-toggle="tab"><i class="fa fa-location-arrow fa-fw no-red"></i> Location</a></li>
       		<li><a href="#tab2" data-toggle="tab"><i class="fa fa-university fa-fw no-red"></i> Grade</a></li>
       		<li><a href="#tab3" data-toggle="tab"><i class="fa fa-graduation-cap fa-fw no-red"></i> Tutor</a></li>
       		<li><a href="#tab4" data-toggle="tab"><i class="fa fa-money fa-fw no-red"></i> Pricing</a></li>
@@ -41,6 +38,30 @@
 
       	<div class="tab-content well">
 
+          <div class="tab-pane" id="tab0">
+            <h3 class="text-center">Your Instrument</h3>
+            <br>
+
+            <div class="col-lg-offset-2 col-lg-8">
+              <div class="form-group">
+                <label for="music-select">Instrument</label>
+                <select class="form-control" id="music-select" name="instrument">
+                  <option default>Choose Your Instrument</option>
+                  @foreach($instruments as $instrument)
+                  <option value="{{ $instrument->id }}">{{ $instrument->music_name }} ({{ $instrument->num_tutors }} tutors)</option>
+                  @endforeach
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="years_playing">How long have you been playing?</label>
+                <input type="number" class="form-control" id="years_playing" placeholder="Number of years" name="years_playing">
+              </div>
+            </div>
+            <div class="clearfix"></div>
+
+          </div>
+
       	    <div class="tab-pane" id="tab1">
                 <h3 class="text-center">Locations and Distances</h3>
                 <br>
@@ -51,7 +72,7 @@
                         <label>Max Tutor Distance</label><br>
                         <b>1 Mile</b> <input name="max_dist" class="form-control" id="dist-slider" type="number" data-slider-scale="logarithmic" data-slider-value="10" data-slider-min="1" data-slider-max="200" data-slider-step="1"/> <b>200 Miles</b>
                       </div>
-                      </div>
+                    </div>
                   </div>
 
                 <div class="form-group">
