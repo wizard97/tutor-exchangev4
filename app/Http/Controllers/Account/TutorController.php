@@ -52,7 +52,7 @@ class TutorController extends Controller
 
   public function geteditschedule()
   {
-    return view('/account/tutoring/geteditschedule');
+    return view('/account/tutoring/editschedule');
   }
 
   public function geteditclasses()

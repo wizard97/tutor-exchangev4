@@ -191,7 +191,7 @@ class HsSearchController extends Controller
     //default to 100 if empty
     if($num_classes)
     {
-      $class_select = "ROUND((COUNT(*)/{$num_classes})*100, 0) as 'classes_match'";
+      $class_select = "ROUND((COUNT(DISTINCT levels.class_id)/{$num_classes})*100, 0) as 'classes_match'";
     } else {
       $class_select = "100 AS 'classes_match'";
     }
@@ -230,24 +230,93 @@ class HsSearchController extends Controller
     //figure out num of rows
     $num_rows = $res_count->first()->toArray()['num_rows'];
 
+
     //finish building search
     $search->join('tutor_levels', 'levels.id', '=', 'tutor_levels.level_id')
     ->join('classes', 'classes.id', '=', 'levels.class_id')
     ->join('users', 'users.id', '=', 'tutor_levels.user_id')
     ->join('tutors', 'tutors.user_id', '=', 'tutor_levels.user_id')
     ->leftjoin('grades', 'tutors.grade', '=', 'grades.id')
+    ->leftjoin('reviews', 'reviews.tutor_id', '=', 'tutor_levels.user_id')
     ->join('zips', 'users.zip_id', '=', 'zips.id')
     ->where('account_type', '>=', '2')
     ->where('tutors.tutor_active', '=', '1')
     ->where('tutors.profile_expiration', '>=', date('Y-m-d H:i:s'))
-    ->select(\DB::raw($dist_select), \DB::raw($dist_select2), \DB::raw($class_select), \DB::raw($time_select), 'users.account_type', 'tutor_levels.user_id', 'users.id',
+    ->select(\DB::raw($dist_select), \DB::raw($dist_select2), \DB::raw($class_select), \DB::raw($time_select), \DB::raw('AVG(reviews.rating) AS avg_rating'), 'users.account_type', 'tutor_levels.user_id', 'users.id',
     'users.fname', 'users.lname', 'users.last_login', 'users.created_at','tutors.*', 'grades.*', 'zips.*')
     ->groupBy('tutor_levels.user_id')
-    ->orderBy('classes_match', 'desc')
-    ->orderBy('times_match', 'desc')
-    ->orderBy('distance_match', 'desc')
-    ->orderBy('lname', 'asc')
     ->take($per_page);
+
+    //figure out how to sort it by
+    $sort_options = ['best_match' => 'Best Match', 'name' => 'Last Name', 'proximity' => 'Proximity', 'rate' => 'Hourly Rate', 'rating' => 'Rating', 'schedule' => 'Schedule Match'];
+
+
+    $sort_by = 'best_match'; //default sort
+
+    switch ($request->get('sort'))
+    {
+
+      case 'best_match':
+        $search
+        ->orderBy('classes_match', 'desc')
+        ->orderBy('times_match', 'desc')
+        ->orderBy('distance_match', 'desc')
+        ->orderBy('lname', 'asc');
+        $sort_by = 'best_match';
+        break;
+      case 'name':
+        $search
+        ->orderBy('lname', 'asc')
+        ->orderBy('fname', 'asc')
+        ->orderBy('classes_match', 'desc')
+        ->orderBy('times_match', 'desc')
+        ->orderBy('distance_match', 'desc');
+        $sort_by = 'name';
+        break;
+      case 'proximity':
+        $search
+        ->orderBy('distance_match', 'desc')
+        ->orderBy('classes_match', 'desc')
+        ->orderBy('times_match', 'desc')
+        ->orderBy('lname', 'asc');
+        $sort_by = 'proximity';
+        break;
+      case 'schedule':
+        $search
+        ->orderBy('times_match', 'desc')
+        ->orderBy('classes_match', 'desc')
+        ->orderBy('distance_match', 'desc')
+        ->orderBy('lname', 'asc');
+        $sort_by = 'schedule';
+        break;
+      case 'rate':
+        $search
+        ->orderBy('tutors.rate', 'asc')
+        ->orderBy('classes_match', 'desc')
+        ->orderBy('times_match', 'desc')
+        ->orderBy('distance_match', 'desc')
+        ->orderBy('lname', 'asc');
+        $sort_by = 'rate';
+        break;
+      case 'rating':
+        $search
+        ->orderBy('avg_rating', 'desc')
+        ->orderBy('classes_match', 'desc')
+        ->orderBy('times_match', 'desc')
+        ->orderBy('distance_match', 'desc')
+        ->orderBy('lname', 'asc');
+        $sort_by = 'rating';
+        break;
+      default:
+        $search
+        ->orderBy('classes_match', 'desc')
+        ->orderBy('times_match', 'desc')
+        ->orderBy('distance_match', 'desc')
+        ->orderBy('lname', 'asc');
+        $sort_by = 'best_match';
+        break;
+    }
+
 
     if ($request->get('page') > 1)
     {
@@ -258,16 +327,17 @@ class HsSearchController extends Controller
 
     $paginator = new \Illuminate\Pagination\LengthAwarePaginator($results, $num_rows, $per_page, $request->get('page'));
     $paginator->setPath($request->url());
+    $paginator->appends('sort', $sort_by);
     //return var_dump($paginator->toArray());
 
     if (\Auth::check())
     {
       $saved_tutors = \Auth::user()->saved_tutors()->join('users', 'tutor_id', '=', 'users.id')->get()->pluck('tutor_id')->toArray();
-      return view('search/showresults', ['results' => $results, 'num_results' => $num_rows, 'paginator' => $paginator]);
+      return view('search/showresults', ['results' => $results, 'num_results' => $num_rows, 'paginator' => $paginator, 'sort_options' => $sort_options, 'sort_by' => $sort_by]);
     }
     else $saved_tutors = array();
     \Session::put('feedback_warning', "For the protection of our site's tutors, we are blocking most of the site's functionality including the ability to view their profile, see reviews, and contact them. Please <a href=\"".route('auth.login')."\">login/register</a>.");
-    return view('search/showresultsplain', ['results' => $results, 'num_results' => $num_rows, 'paginator' => $paginator]);
+    return view('search/showresultsplain', ['results' => $results, 'num_results' => $num_rows, 'paginator' => $paginator, 'sort_options' => $sort_options, 'sort_by' => $sort_by]);
 
   }
 

@@ -27,11 +27,7 @@ class CreateTutorsTable extends Migration
             $table->string('highest_science', 50);
             $table->string('highest_socialstudies', 50);
             $table->string('highest_english', 50);
-            $table->string('highest_french', 50);
-            $table->string('highest_spanish', 50);
-            $table->string('highest_german', 50);
-            $table->string('highest_italian', 50);
-            $table->string('highest_mandarin', 50);
+            $table->string('highest_lang', 50);
             $table->time('mon1_start')->nullable();
             $table->time('mon1_end')->nullable();
             $table->time('mon2_start')->nullable();

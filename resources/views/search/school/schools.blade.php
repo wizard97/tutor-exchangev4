@@ -8,19 +8,22 @@
     <h1>Select Your School</h1>
   </div>
   @include('templates/feedback')
-  <div class="col-md-6">
+  <div class="col-md-6 col-md-offset-3">
+    <div class="well">
     <form action="{{ route('hs.submitschool') }}" method="POST">
       {!! csrf_field() !!}
+
       <div class="form-group">
         <label for="school-input">School Name</label>
         <div class="input-group">
-          <input type="text" class="typeahead form-control" id="school-input" name="school_name">
+          <input type="search" class="typeahead form-control" id="school-input" name="school_name">
           <span class="input-group-btn">
           <button class="btn btn-success" type="submit">Submit</button>
         </span>
         </div>
       </div>
-
+    </div>
+    </div>
     </form>
   </div>
 
@@ -35,7 +38,6 @@
         return Bloodhound.tokenizers.whitespace(no_commas);
       },
       datumTokenizer: function(datum) {
-        console.log(datum);
         var tokens = [];
         tokens.push(String(datum.school_name));
         tokens.push(String(datum.city));

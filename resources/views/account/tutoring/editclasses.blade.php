@@ -11,34 +11,39 @@
       <div class="page-header">
         <h1>Step 3. Select Your Classes</h1>
       </div>
-      <div class="row">
-        <h2>School</h2>
-        <div class="col-xs-12 col-sm-6 col-md-6">
+      <p class="alert alert-info"><i class="fa fa-info-circle"></i>  This is where you update the classes you can tutor. It is in your best interest to only select classes you can truly tutor, rather than risk negative feedback.</p>
 
-          <div class="input-group">
-            <input type="text" class="typeahead form-control tt-input" id="school-input" name="school_name" autocomplete="off" spellcheck="false" dir="auto" style="position: relative; vertical-align: top; background-color: transparent;">
-            <span class="input-group-btn">
-              <button class="btn btn-default" type="button">Go!</button>
-            </span>
-          </div>
-        </div>
-      </div>
       <div class="row">
         <h2>Classes</h2>
         <div class="col-xs-12 col-sm-6 col-md-6">
           <div class="panel panel-default">
-            <div class="panel-heading"><i class="fa fa-bars"></i> School Classes</div>
-            <div class="panel-body">
-              <div class="table-responsive">
-                <table id="school_classes" class="table table-striped table-bordered table-hover"></table>
+            <div class="panel-heading"><i class="fa fa-bars"></i> School Classes
+              <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                  Schools
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                  <li><a href="#">Lexington High School</a></li>
+                  <li><a href="#">Waltham High School</a></li>
+                  <li><a href="#">Andover High School</a></li>
+                  <li><a href="#">Arlington High School</a></li>
+                </ul>
               </div>
             </div>
+            <div class="panel-body">
+
+                <div class="table-responsive">
+                  <table id="school_classes" class="table table-striped table-bordered table-hover"></table>
+                </div>
+              </div>
+
           </div>
         </div>
 
         <div class="col-xs-12 col-sm-6 col-md-6">
           <div class="panel panel-primary">
-            <div class="panel-heading"><i class="fa fa-bars"></i> Your Classes</div>
+            <div class="panel-heading"><i class="fa fa-bars"></i> Your Classes: Lexington High School</div>
             <div class="panel-body">
               <div class="table-responsive">
                 <table id="your_classes" class="table table-striped table-bordered table-hover"></table>

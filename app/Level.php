@@ -6,16 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Level extends Model
 {
+  protected $table = 'levels';
   protected $fillable = ['level_num', 'level_name'];
-  
+
   public function school_class()
   {
     return $this->belongsTo('App\SchoolClass', 'class_id', 'id');
   }
 
-  public function tutors_levels()
+  public function tutors()
   {
-    return $this->hasMany('App\TutorLevel', 'level_id', 'id');
+    return $this->belongsToMany('App\Tutor', 'tutor_levels', 'level_id', 'user_id')->withTimestamps();
   }
 
   //return ids of matches
