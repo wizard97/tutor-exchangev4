@@ -180,12 +180,17 @@ class HsSearchController extends Controller
     //count and search query diverge here
     $count_query = clone $search;
 
+    $num_availability = count($time_array);
+
     if(!empty($time_array))
     {
-      $time_select = "ROUND(((".implode(' + ', $time_array).")/".count($time_array).")*100, 0) AS 'times_match'";
+      $time_select = "ROUND(((".implode(' + ', $time_array).")/{$num_availability})*100, 0) AS 'times_match'";
     } else {
       $time_select = "100 AS 'times_match'";
     }
+
+    if (!empty($time_array)) $time_select2 = "(".implode(' + ', $time_array).") AS availability_count";
+    else $time_select2 = "0 AS availability_count";
 
     $num_classes = count($classes);
     //default to 100 if empty
@@ -196,8 +201,10 @@ class HsSearchController extends Controller
       $class_select = "100 AS 'classes_match'";
     }
 
+    $class_select2 = "COUNT(DISTINCT levels.class_id) AS classes_count";
 
-    $dist_select = sprintf("3959*ACOS(COS(RADIANS(users.lat)) * COS(RADIANS('%s')) * COS(RADIANS(users.lon) - RADIANS('%s')) + SIN(RADIANS(users.lat)) * SIN(RADIANS('%s'))) AS '%s'", $u_lat, $u_lon, $u_lat, 'distance');
+
+    $dist_select = sprintf("ROUND(3959*ACOS(COS(RADIANS(users.lat)) * COS(RADIANS('%s')) * COS(RADIANS(users.lon) - RADIANS('%s')) + SIN(RADIANS(users.lat)) * SIN(RADIANS('%s'))), 0) AS '%s'", $u_lat, $u_lon, $u_lat, 'distance');
 
     if(isset($max_dist))
     {
@@ -242,7 +249,7 @@ class HsSearchController extends Controller
     ->where('account_type', '>=', '2')
     ->where('tutors.tutor_active', '=', '1')
     ->where('tutors.profile_expiration', '>=', date('Y-m-d H:i:s'))
-    ->select(\DB::raw($dist_select), \DB::raw($dist_select2), \DB::raw($class_select), \DB::raw($time_select), \DB::raw('AVG(reviews.rating) AS avg_rating'), 'users.account_type', 'tutor_levels.user_id', 'users.id',
+    ->select(\DB::raw($dist_select), \DB::raw($dist_select2), \DB::raw($class_select), \DB::raw($class_select2), \DB::raw($time_select), \DB::raw($time_select2), \DB::raw('AVG(reviews.rating) AS avg_rating'), 'users.account_type', 'tutor_levels.user_id', 'users.id',
     'users.fname', 'users.lname', 'users.last_login', 'users.created_at','tutors.*', 'grades.*', 'zips.*')
     ->groupBy('tutor_levels.user_id')
     ->take($per_page);
@@ -332,8 +339,11 @@ class HsSearchController extends Controller
 
     if (\Auth::check())
     {
+
+      $tutor_contacts = \Auth::user()->tutor_contacts()->select('tutor_id')->get()->pluck('tutor_id')->toArray();
       $saved_tutors = \Auth::user()->saved_tutors()->join('users', 'tutor_id', '=', 'users.id')->get()->pluck('tutor_id')->toArray();
-      return view('search/showresults', ['results' => $results, 'num_results' => $num_rows, 'paginator' => $paginator, 'sort_options' => $sort_options, 'sort_by' => $sort_by]);
+      return view('search/showresults', ['results' => $results, 'num_results' => $num_rows, 'paginator' => $paginator, 'sort_options' => $sort_options,
+       'sort_by' => $sort_by, 'num_classes' => $num_classes, 'num_availability' => $num_availability, 'tutor_contacts' => $tutor_contacts]);
     }
     else $saved_tutors = array();
     \Session::put('feedback_warning', "For the protection of our site's tutors, we are blocking most of the site's functionality including the ability to view their profile, see reviews, and contact them. Please <a href=\"".route('auth.login')."\">login/register</a>.");
