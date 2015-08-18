@@ -29,8 +29,6 @@ $english_classes["analytical_essay"] = new stdClass;
 $english_classes["analytical_essay"]->name = "Analytical Essays";
 $english_classes["analytical_essay"]->levels[4] = "High School (11-12th)";
 $english_classes["analytical_essay"]->levels[3] = "High School (9-10th)";
-$english_classes["analytical_essay"]->levels[2] = "Middle School";
-$english_classes["analytical_essay"]->levels[1] = "Elementary School";
 
 $english_classes["memoir"] = new stdClass;
 $english_classes["memoir"]->name = "Memoir/Narrative/Fiction";
@@ -62,16 +60,6 @@ $english_classes["other_english"]->levels[1] = "Elementary School";
 
 
 //math
-$math_classes["elementary_math"] = new stdClass;
-$math_classes["elementary_math"]->name = "Elementary School Math";
-$math_classes["elementary_math"]->levels[3] = "Honors";
-$math_classes["elementary_math"]->levels[2] = "Standard";
-
-$math_classes["middle_math"] = new stdClass;
-$math_classes["middle_math"]->name = "Middle School Math";
-$math_classes["middle_math"]->levels[3] = "Honors";
-$math_classes["middle_math"]->levels[2] = "Standard";
-
 $math_classes["math_1"] = new stdClass;
 $math_classes["math_1"]->name = "Math 1";
 $math_classes["math_1"]->levels[3] = "Honors";
@@ -117,16 +105,6 @@ $math_classes["calc"]->levels[1] = "Level 2";
 
 
 //science
-$science_classes["elementary_science"] = new stdClass;
-$science_classes["elementary_science"]->name = "Elementary School Science";
-$science_classes["elementary_science"]->levels[3] = "Honors";
-$science_classes["elementary_science"]->levels[2] = "Standard";
-
-$science_classes["middle_science"] = new stdClass;
-$science_classes["middle_science"]->name = "Middle School Science";
-$science_classes["middle_science"]->levels[3] = "Honors";
-$science_classes["middle_science"]->levels[2] = "Standard";
-
 $science_classes["earth_science"] = new stdClass;
 $science_classes["earth_science"]->name = "Earth Science";
 $science_classes["earth_science"]->levels[3] = "Honors";
@@ -157,16 +135,6 @@ $science_classes["phys"]->levels[1] = "Level 2";
 
 
 //social studies
-$social_classes["elementary_social"] = new stdClass;
-$social_classes["elementary_social"]->name = "Elementary School Social Studies";
-$social_classes["elementary_social"]->levels[3] = "Honors";
-$social_classes["elementary_social"]->levels[2] = "Standard";
-
-$social_classes["middle_social"] = new stdClass;
-$social_classes["middle_social"]->name = "Middle School Social Studies";
-$social_classes["middle_social"]->levels[3] = "Honors";
-$social_classes["middle_social"]->levels[2] = "Standard";
-
 $social_classes["world_history_1"] = new stdClass;
 $social_classes["world_history_1"]->name = "World History 1";
 $social_classes["world_history_1"]->levels[3] = "Honors";
@@ -206,16 +174,6 @@ $social_classes["psych"]->levels[1] = "Level 2";
 
 //foriegn language
 //french
-$french_classes["elementary_french"] = new stdClass;
-$french_classes["elementary_french"]->name = "Elementary School French";
-$french_classes["elementary_french"]->levels[3] = "Honors";
-$french_classes["elementary_french"]->levels[2] = "Standard";
-
-$french_classes["middle_french"] = new stdClass;
-$french_classes["middle_french"]->name = "Middle School French";
-$french_classes["middle_french"]->levels[3] = "Honors";
-$french_classes["middle_french"]->levels[2] = "Standard";
-
 $french_classes["french_1"] = new stdClass;
 $french_classes["french_1"]->name = "French 1";
 $french_classes["french_1"]->levels[3] = "Honors";
@@ -251,16 +209,6 @@ $french_classes["french_AP"]->name = "AP French";
 $french_classes["french_AP"]->levels[4] = "AP";
 
 //spanish
-$spanish_classes["elementary_spanish"] = new stdClass;
-$spanish_classes["elementary_spanish"]->name = "Elementary School Spanish";
-$spanish_classes["elementary_spanish"]->levels[3] = "Honors";
-$spanish_classes["elementary_spanish"]->levels[2] = "Level 1";
-
-$spanish_classes["middle_spanish"] = new stdClass;
-$spanish_classes["middle_spanish"]->name = "Middle School Spanish";
-$spanish_classes["middle_spanish"]->levels[3] = "Honors";
-$spanish_classes["middle_spanish"]->levels[2] = "Level 1";
-
 $spanish_classes["spanish_1"] = new stdClass;
 $spanish_classes["spanish_1"]->name = "Spanish 1";
 $spanish_classes["spanish_1"]->levels[3] = "Honors";

@@ -81,9 +81,9 @@ jQuery('.readmore').readmore({
             <span class="text-muted"><i class="fa fa-map-marker"></i> {{ ucwords(strtolower($tutor->city)).', '.$tutor->state_prefix }}</span>
           </div>
           <div class="row">
-            <strong class="text-warning">Grade: </strong><span class="text-muted">{{ $tutor->grade_name }}</span>
 
           </div>
+            <strong class="text-warning">Grade: </strong><span class="text-muted">{{ $tutor->grade_name }}</span>
           </div>
           <div class="row">
             <div class="readmore">
