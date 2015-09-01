@@ -80,8 +80,10 @@
                     <div class="col-md-offset-3 col-md-6 col-sm-offset-2 col-sm-8 col-xs-offset-0 col-xs-12">
                       <label>Your Zip Code</label>
                       @if(Auth::check())
-                      <input name="zip" class="form-control" id="zip" placeholder="Enter your zip code" value="{{Auth::user()->zip->zip_code}}">
+                      <label>Your Address (<a href="{{ route('accountsettings.index') }}">edit</a>)</label>
+                      <input name="address" class="form-control" id="address" placeholder="Address" value="{{Auth::user()->address}}" disabled>
                       @else
+                      <label>Your Zip Code</label>
                       <input name="zip" class="form-control" id="zip" placeholder="Enter your zip code">
                       @endif
                     </div>

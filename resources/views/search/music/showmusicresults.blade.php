@@ -44,23 +44,20 @@ $(document).ready(function(){
     <i class="fa fa-frown-o"></i> <strong>Sorry! </strong>We were not able to find a match for you. Perhaps broaden your search criteria and/or check back in a week or two. Would you like to <a href="/search/index" class="alert-link">Search Again</a>?
   </div>
   @endif
-
-  <h4>We found you {{ $num_results }} possible tutor(s):</h4>
-
-  <div class="dropdown" style="margin-bottom: 5px">
-    <button class="btn btn-default dropdown-toggle" type="button" id="sort-by" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-      Sort By
-      <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-      @foreach($sort_options as $option => $option_name)
-      <li @if($sort_by == $option) class="active" @endif><a href="{{ \Request::url().'?sort='.$option }}">{{ $option_name }}</a></li>
-      @endforeach
-    </ul>
+  <div class="row" style="margin-bottom: 10px">
+    <span class="h4">We found you {{ $num_results }} possible tutor(s):</span>
+    <div class="dropdown " style="display: inline;">
+      <button class="btn btn-default dropdown-toggle" type="button" id="sort-by" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        Sort By
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        @foreach($sort_options as $option => $option_name)
+        <li @if($sort_by == $option) class="active" @endif><a href="{{ \Request::url().'?sort='.$option }}">{{ $option_name }}</a></li>
+        @endforeach
+      </ul>
+    </div>
   </div>
-
-
-
   @foreach($results as $tutor)
   <div class="row">
     <div  class="@if($tutor->account_type > 2) alert alert-success @else alert alert-info @endif">
@@ -74,16 +71,22 @@ $(document).ready(function(){
               <span style="font-size: 20px" class="text-nowrap">
                 {!! print_stars($tutor->avg_rating) !!}
               </span>
-              (<span style="font-size: 16px"><a href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}">{{ \App\Tutor::findOrFail($tutor->user_id)->reviews()->count() }}</a></span>)
+              (<span style="font-size: 16px"><a href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}" target="_blank">{{ \App\Tutor::findOrFail($tutor->user_id)->reviews()->count() }}</a></span>)
             </div>
           </div>
         </div>
+
         <div class="col-xs-12 col-sm-3 col-md-4">
-          <div class="row" style="margin-bottom: 10px;">
-            <h3 style="margin-top: 0px; display:inline;" data-toggle="tooltip" data-placement="top" title="{{ $tutor->grade_name }}"><i class="fa fa-user" aria-hidden="true"></i>{{ ' '.$tutor->fname.' '.$tutor->lname }}
+          <div class="row">
+            <h3 style="margin-top: 0px; display:inline;"><i class="fa fa-user" aria-hidden="true"></i>{{ ' '.$tutor->fname.' '.$tutor->lname }}
             </h3>
-            <span class="text-muted"><i class="fa fa-map-marker"></i> {{ ucwords(strtolower($tutor->city)).', '.$tutor->state_prefix }}</span>
+            <span class="text-muted" style="white-space: nowrap"><i class="fa fa-map-marker"></i> {{ ucwords(strtolower($tutor->city)).', '.$tutor->state_prefix }}</span>
           </div>
+          <div class="row">
+            <strong class="text-warning">Grade: </strong><span class="text-muted">{{ $tutor->grade_name }}</span>
+
+          </div>
+
           <div class="row">
             <div class="readmore">
               <p>{{ $tutor->about_me }}</p>
@@ -92,19 +95,7 @@ $(document).ready(function(){
         </div>
         <div class="col-xs-12 col-sm-3 col-md-3">
           <div class="row">
-            <h3 class="text-center">Percent Match</h3>
-          </div>
-          <div class="row">
-            <div class="col-xs-2 col-xs-offset-2 col-sm-3 col-sm-offset-1">
-              <span class="label label-success">Classes</span>
-            </div>
-            <div class="col-xs-6 col-xs-offset-0 col-sm-6 col-sm-offset-1">
-              <div class="progress">
-                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ $tutor->classes_match }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $tutor->classes_match }}%; min-width: 3em;">
-                  {{ $tutor->classes_match }}%
-                </div>
-              </div>
-            </div>
+            <h3 class="text-center">Smart Match</h3>
           </div>
           <div class="row">
             <div class="col-xs-2 col-xs-offset-2 col-sm-3 col-sm-offset-1">
@@ -113,7 +104,7 @@ $(document).ready(function(){
             <div class="col-xs-6 col-xs-offset-0 col-sm-6 col-sm-offset-1">
               <div class="progress">
                 <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ $tutor->distance_match }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $tutor->distance_match }}%; min-width: 3em;">
-                  {{ $tutor->distance_match }}%
+                  {{ $tutor->distance }} mi.
                 </div>
               </div>
             </div>
@@ -125,7 +116,7 @@ $(document).ready(function(){
             <div class="col-xs-6 col-xs-offset-0 col-sm-6 col-sm-offset-1">
               <div class="progress">
                 <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ $tutor->times_match }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $tutor->times_match }}%; min-width: 3em;">
-                  {{ $tutor->times_match }}%
+                  {{ $tutor->availability_count }}/{{$num_availability}}
                 </div>
               </div>
             </div>
@@ -150,11 +141,9 @@ $(document).ready(function(){
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="text-center">
-              <i class="fa fa-comments-o" style="font-size: 22px;" data-toggle="tooltip" data-placement="bottom" title="You already contacted this tutor."></i>
-            </div>
-          </div>
+          @if(in_array($tutor->user_id, $tutor_contacts))
+          <div class='row'><div class='text-center'><i class='fa fa-comments-o' style='font-size: 22px;' data-toggle='tooltip' data-placement='bottom' title='You have contacted this tutor before.'></i></div></div>
+          @endif
         </div>
       </div>
     </div>

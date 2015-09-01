@@ -52,7 +52,94 @@ class TutorController extends Controller
 
   public function geteditschedule()
   {
-    return view('/account/tutoring/editschedule');
+    $tutor = \App\Tutor::get_tutor_profile($this->id);
+    return view('/account/tutoring/editschedule')->with('tutor', $tutor);
+  }
+
+  public function posteditschedule(Request $request)
+  {
+    $tutor = \App\Tutor::findOrFail($this->id);
+
+    $days = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun'];
+    foreach($days as $day)
+    {
+      $feedback_day = ucfirst($day).'.';
+      if (!empty($request->get($day.'1_start')) && !empty($request->get($day.'1_end')))
+      {
+        //first timespan is set, and possibly second as well
+        $ts_start = \DateTime::createFromFormat( 'H:iA', $request->get($day.'1_start'));
+        $ts_end = \DateTime::createFromFormat( 'H:iA', $request->get($day.'1_end'));
+        if (intval($ts_start->format('U')) >= intval($ts_end->format('U')))
+        {
+          //invalid timestamp
+          $request->session()->put('feedback_negative', "The start time can't be after the end time for {$feedback_day}!");
+          return redirect(route('tutoring.schedule'));
+        }
+
+        //first range passed validation
+        $tutor->{$day.'1_start'} = $ts_start->format('H:i:s');
+        $tutor->{$day.'1_end'} = $ts_end->format( 'H:i:s');
+
+        //check if second range is set
+        if (!empty($request->get($day.'2_start')) && !empty($request->get($day.'2_end')))
+        {
+          //first and second timespan is set
+          $ts2_start = \DateTime::createFromFormat( 'H:iA', $request->get($day.'2_start'));
+          $ts2_end = \DateTime::createFromFormat( 'H:iA', $request->get($day.'2_end'));
+          //make sure input is valid
+          if (intval($ts2_start->format( 'U')) >= intval($ts2_end->format( 'U')))
+          {
+            //invalid timestamp
+            $request->session()->put('feedback_negative', "The start time can't be after the end time for {$feedback_day}!");
+            return redirect(route('tutoring.schedule'));
+          }
+          //make sure it doesnt overlap
+          else if (intval($ts_end->format( 'U')) >= intval($ts2_start->format( 'U')))
+          {
+            //no overlap
+            $request->session()->put('feedback_negative', "The second time range for {$feedback_day} must come after the first range with no overlapping timespan.");
+            return redirect(route('tutoring.schedule'));
+          }
+          //second range passed validation
+          $tutor->{$day.'2_start'} = $ts2_start->format( 'H:i:s');
+          $tutor->{$day.'2_end'} = $ts2_end->format( 'H:i:s');
+        }
+        else {
+          //empty out second range
+          $tutor->{$day.'2_start'} = NULL;
+          $tutor->{$day.'2_end'} = NULL;
+        }
+
+      }
+      else {
+        //check if second range is set, but not first
+        $tutor->{$day.'1_start'} = NULL;
+        $tutor->{$day.'1_end'} = NULL;
+        //if second set, but first is empty
+        if (!empty($request->get($day.'2_start')) && !empty($request->get($day.'2_end')))
+        {
+          //second timespan only one set, so move it to first one
+          $ts_start = \DateTime::createFromFormat( 'H:iA', $request->get($day.'2_start'));
+          $ts_end = \DateTime::createFromFormat( 'H:iA', $request->get($day.'2_end'));
+          if (intval($ts_start->format( 'U')) >= intval($ts_end->format( 'U')))
+          {
+            //invalid timestamp
+            $request->session()->put('feedback_negative', "The start time can't be after the end time for {$feedback_day}!");
+            return redirect(route('tutoring.schedule'));
+          }
+          //first range passed validation
+          $tutor->{$day.'1_start'} = $ts_start->format( 'H:i:s');
+          $tutor->{$day.'1_end'} = $ts_end->format( 'H:i:s');
+          $tutor->{$day.'2_start'} = NULL;
+          $tutor->{$day.'2_end'} = NULL;
+        }
+      }
+    }
+    //update the db
+    $tutor->save();
+    $request->session()->put('feedback_positive', "Your tutoring schedule/availability has been updated!");
+
+    return redirect(route('tutoring.schedule'));
   }
 
   public function geteditclasses()
@@ -96,7 +183,7 @@ class TutorController extends Controller
 
       //count the classes
       $count = \App\Tutor::where('user_id', $this->id)->firstOrFail()->classes()->count();
-      $request->session()->flash('feedback_positive', 'You have successfully updated you classes. You currently tutor '.$count.' classes.');
+      $request->session()->put('feedback_positive', 'You have successfully updated you classes. You currently tutor '.$count.' classes.');
     }
     else \App\TutorLevel::where('user_id', $this->id)->delete();
 
@@ -140,7 +227,7 @@ class TutorController extends Controller
     $tutor->about_me = $request->input('about_me');
     $tutor->save();
 
-    $request->session()->flash('feedback_positive', 'You have successfully updated your tutoring info!');
+    $request->session()->put('feedback_positive', 'You have successfully updated your tutoring info!');
     return redirect('/account/tutoring/info');
   }
 
@@ -180,7 +267,7 @@ class TutorController extends Controller
     $tutor_model->profile_expiration = date('Y-m-d h:i:s');
     $tutor_model->save();
 
-    $request->session()->flash('feedback_positive', 'Your tutoring listing has been paused, you will no longer show up in tutor searches.');
+    $request->session()->put('feedback_positive', 'Your tutoring listing has been paused, you will no longer show up in tutor searches.');
     return redirect(route('tutoring.dashboard'));
   }
 
@@ -214,9 +301,16 @@ class TutorController extends Controller
     $tutor_model->tutor_active = true;
     $tutor_model->profile_expiration = date('Y-m-d h:i:s', time() + 24*60*60*$request->input('days'));
     $tutor_model->save();
-    $request->session()->flash('feedback_positive', 'You have successfully started your tutoring listing!');
+    $request->session()->put('feedback_positive', 'You have successfully started your tutoring listing!');
 
     return redirect(route('tutoring.dashboard'));
+  }
+
+  public function ajaxgetschools(Request $request)
+  {
+    $schools = \App\Tutor::findOrFail($this->id)->schools()->get();
+
+    return response()->json(['data' => $schools]);
   }
 
   //used to make checklist for tutor

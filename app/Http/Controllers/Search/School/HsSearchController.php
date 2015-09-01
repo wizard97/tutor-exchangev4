@@ -123,9 +123,17 @@ class HsSearchController extends Controller
       if (!empty($form_inputs['classes'])) $classes = $form_inputs['classes'];
 
       //get long and lat
-      $zip_model = \App\Zip::where('zip_code', '=', $form_inputs['zip'])->first();
-      $u_lat = $zip_model->lat;
-      $u_lon = $zip_model->lon;
+      if (\Auth::check())
+      {
+        $u_lat = \Auth::user()->lat;
+        $u_lon = \Auth::user()->lon;
+      }
+      else
+      {
+        $zip_model = \App\Zip::where('zip_code', '=', $form_inputs['zip'])->firstOrFail();
+        $u_lat = $zip_model->lat;
+        $u_lon = $zip_model->lon;
+      }
 
       //alias times
       $days = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun'];
@@ -237,7 +245,6 @@ class HsSearchController extends Controller
     //figure out num of rows
     $num_rows = $res_count->first()->toArray()['num_rows'];
 
-
     //finish building search
     $search->join('tutor_levels', 'levels.id', '=', 'tutor_levels.level_id')
     ->join('classes', 'classes.id', '=', 'levels.class_id')
@@ -255,7 +262,7 @@ class HsSearchController extends Controller
     ->take($per_page);
 
     //figure out how to sort it by
-    $sort_options = ['best_match' => 'Best Match', 'name' => 'Last Name', 'proximity' => 'Proximity', 'rate' => 'Hourly Rate', 'rating' => 'Rating', 'schedule' => 'Schedule Match'];
+    $sort_options = ['best_match' => 'Best Match', 'name' => 'Last Name: Ascending', 'proximity' => 'Proximity: Close to Far', 'rate' => 'Hourly Rate: Low to High', 'joined' => 'Member Since: Old to New', 'rating' => 'Rating: High to Low', 'schedule' => 'Schedule Match: Best to Worst'];
 
 
     $sort_by = 'best_match'; //default sort
@@ -295,6 +302,15 @@ class HsSearchController extends Controller
         ->orderBy('distance_match', 'desc')
         ->orderBy('lname', 'asc');
         $sort_by = 'schedule';
+        break;
+      case 'joined':
+        $search
+        ->orderBy('users.created_at', 'asc')
+        ->orderBy('classes_match', 'desc')
+        ->orderBy('times_match', 'desc')
+        ->orderBy('distance_match', 'desc')
+        ->orderBy('lname', 'asc');
+        $sort_by = 'joined';
         break;
       case 'rate':
         $search
