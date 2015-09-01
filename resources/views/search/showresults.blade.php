@@ -44,18 +44,20 @@ jQuery('.readmore').readmore({
     <i class="fa fa-frown-o"></i> <strong>Sorry! </strong>We were not able to find a match for you. Perhaps broaden your search criteria and/or check back in a week or two. Would you like to <a href="/search/index" class="alert-link">Search Again</a>?
   </div>
   @endif
-<h4>We found you {{ $num_results }} possible tutor(s):</h4>
-<div class="dropdown" style="margin-bottom: 5px">
-   <button class="btn btn-default dropdown-toggle" type="button" id="sort-by" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-     Sort By
-     <span class="caret"></span>
-   </button>
-   <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-     @foreach($sort_options as $option => $option_name)
-     <li @if($sort_by == $option) class="active" @endif><a href="{{ \Request::url().'?sort='.$option }}">{{ $option_name }}</a></li>
-     @endforeach
-   </ul>
- </div>
+  <div class="row" style="margin-bottom: 10px">
+    <span class="h4">We found you {{ $num_results }} possible tutor(s):</span>
+    <div class="dropdown " style="display: inline;">
+      <button class="btn btn-default dropdown-toggle" type="button" id="sort-by" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        Sort By
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        @foreach($sort_options as $option => $option_name)
+        <li @if($sort_by == $option) class="active" @endif><a href="{{ \Request::url().'?sort='.$option }}">{{ $option_name }}</a></li>
+        @endforeach
+      </ul>
+    </div>
+  </div>
 @foreach($results as $tutor)
   <div class="row">
     <div  class="@if($tutor->account_type > 2) alert alert-success @else alert alert-info @endif">
@@ -69,22 +71,21 @@ jQuery('.readmore').readmore({
               <span style="font-size: 20px" class="text-nowrap">
                 {!! print_stars(\App\Tutor::findOrFail($tutor->user_id)->reviews()->avg('rating')) !!}
               </span>
-              (<span style="font-size: 16px"><a href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}">{{ \App\Tutor::findOrFail($tutor->user_id)->reviews()->count() }}</a></span>)
+              (<span style="font-size: 16px"><a href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}" target="_blank">{{ \App\Tutor::findOrFail($tutor->user_id)->reviews()->count() }}</a></span>)
             </div>
           </div>
         </div>
         <div class="col-xs-12 col-sm-3 col-md-4">
-          <div class="row" style="margin-bottom: 10px;">
             <div class="row">
             <h3 style="margin-top: 0px; display:inline;"><i class="fa fa-user" aria-hidden="true"></i>{{ ' '.$tutor->fname.' '.$tutor->lname }}
             </h3>
-            <span class="text-muted"><i class="fa fa-map-marker"></i> {{ ucwords(strtolower($tutor->city)).', '.$tutor->state_prefix }}</span>
+            <span class="text-muted" style="white-space: nowrap"><i class="fa fa-map-marker"></i> {{ ucwords(strtolower($tutor->city)).', '.$tutor->state_prefix }}</span>
           </div>
           <div class="row">
             <strong class="text-warning">Grade: </strong><span class="text-muted">{{ $tutor->grade_name }}</span>
 
           </div>
-          </div>
+
           <div class="row">
             <div class="readmore">
               <p>{{ $tutor->about_me }}</p>

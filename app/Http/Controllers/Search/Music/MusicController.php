@@ -21,16 +21,31 @@ class MusicController extends Controller
 
   public function searchformsubmit(Request $request)
   {
-    $this->validate($request, [
-    'instrument' => 'required|exists:music,id',
-    'years_playing' => 'required|numeric|min:0',
-    'zip' => 'required|digits:5|numeric|exists:zips,zip_code',
-    'school_type' => 'required|in:middle,high',
-    'tutor_type' => 'required|in:standard,professional',
-    'start_rate' => 'numeric|between:0,200',
-    'end_rate' => 'numeric|between:0,200',
-    'max_dist' => 'numeric|between:1,200',
-    ]);
+    if(\Auth::check())
+    {
+        $this->validate($request, [
+        'instrument' => 'required|exists:music,id',
+        'years_playing' => 'required|numeric|min:0',
+        'school_type' => 'required|in:middle,high',
+        'tutor_type' => 'required|in:standard,professional',
+        'start_rate' => 'numeric|between:0,200',
+        'end_rate' => 'numeric|between:0,200',
+        'max_dist' => 'numeric|between:1,200',
+        ]);
+    }
+    else {
+      $this->validate($request, [
+      'instrument' => 'required|exists:music,id',
+      'years_playing' => 'required|numeric|min:0',
+      'zip' => 'required|digits:5|numeric|exists:zips,zip_code',
+      'school_type' => 'required|in:middle,high',
+      'tutor_type' => 'required|in:standard,professional',
+      'start_rate' => 'numeric|between:0,200',
+      'end_rate' => 'numeric|between:0,200',
+      'max_dist' => 'numeric|between:1,200',
+      ]);
+    }
+
 
     $input = $request->all();
     //flash form data into session
@@ -58,10 +73,17 @@ class MusicController extends Controller
     $search = \App\Music::findOrFail($inst_id)->tutors();
 
     //get long and lat
-    $zip_model = \App\Zip::where('zip_code', '=', $form_inputs['zip'])->first();
-    $u_lat = $zip_model->lat;
-    $u_lon = $zip_model->lon;
-
+    if (\Auth::check())
+    {
+      $u_lat = \Auth::user()->lat;
+      $u_lon = \Auth::user()->lon;
+    }
+    else
+    {
+      $zip_model = \App\Zip::where('zip_code', '=', $form_inputs['zip'])->firstOrFail();
+      $u_lat = $zip_model->lat;
+      $u_lon = $zip_model->lon;
+    }
     //alias times
     $days = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun'];
     $time_alias = array();
@@ -128,14 +150,17 @@ class MusicController extends Controller
     //add additional stuff for full search
     if(!empty($time_array))
     {
+      $num_availability = count($time_array);
       $time_select = "ROUND(((".implode(' + ', $time_array).")/".count($time_array).")*100, 0) AS 'times_match'";
+      $time_select2 = "(".implode(' + ', $time_array).") AS availability_count";
     } else {
+      $num_availability = 0;
       $time_select = "100 AS 'times_match'";
+      $time_select2 = "0 AS availability_count";
     }
 
-    $class_select = "100 AS 'classes_match'"; //needed for display
 
-    $dist_select = sprintf("3959*ACOS(COS(RADIANS(users.lat)) * COS(RADIANS('%s')) * COS(RADIANS(users.lon) - RADIANS('%s')) + SIN(RADIANS(users.lat)) * SIN(RADIANS('%s'))) AS '%s'", $u_lat, $u_lon, $u_lat, 'distance');
+    $dist_select = sprintf("ROUND(3959*ACOS(COS(RADIANS(users.lat)) * COS(RADIANS('%s')) * COS(RADIANS(users.lon) - RADIANS('%s')) + SIN(RADIANS(users.lat)) * SIN(RADIANS('%s'))), 0) AS '%s'", $u_lat, $u_lon, $u_lat, 'distance');
 
     if(isset($max_dist))
     {
@@ -148,14 +173,13 @@ class MusicController extends Controller
 
     $search
     ->leftjoin('reviews', 'reviews.tutor_id', '=', 'tutor_music.tutor_id')
-    ->select(\DB::raw($dist_select), \DB::raw($dist_select2), \DB::raw($class_select), \DB::raw($time_select), \DB::raw('AVG(reviews.rating) AS avg_rating'), 'users.account_type', 'tutor_music.tutor_id', 'users.id',
+    ->select(\DB::raw($dist_select), \DB::raw($dist_select2), \DB::raw($time_select), \DB::raw($time_select2), \DB::raw('AVG(reviews.rating) AS avg_rating'), 'users.account_type', 'tutor_music.tutor_id', 'users.id',
     'users.fname', 'users.lname', 'users.last_login', 'users.created_at','tutors.*', 'grades.*', 'zips.*')
     ->groupBy('tutor_music.tutor_id')
     ->take($per_page);
 
-
     //figure out how to sort it by
-    $sort_options = ['best_match' => 'Best Match', 'experience' => 'Years of Experience', 'name' => 'Last Name', 'proximity' => 'Proximity', 'rate' => 'Hourly Rate', 'rating' => 'Rating', 'schedule' => 'Schedule Match'];
+    $sort_options = ['best_match' => 'Best Match', 'experience' => 'Years of Experience: Descending', 'name' => 'Last Name: Ascending', 'proximity' => 'Proximity: Close to Far', 'rate' => 'Hourly Rate: Low to High', 'joined' => 'Member Since: Old to New', 'rating' => 'Rating: High to Low', 'schedule' => 'Schedule Match: Best to Worst'];
 
 
     $sort_by = 'best_match'; //default sort
@@ -194,6 +218,15 @@ class MusicController extends Controller
         ->orderBy('times_match', 'desc')
         ->orderBy('lname', 'asc');
         $sort_by = 'proximity';
+        break;
+      case 'joined':
+        $search
+        ->orderBy('users.created_at', 'asc')
+        ->orderBy('upto_years', 'desc')
+        ->orderBy('times_match', 'desc')
+        ->orderBy('distance_match', 'desc')
+        ->orderBy('lname', 'asc');
+        $sort_by = 'joined';
         break;
       case 'schedule':
         $search
@@ -240,11 +273,12 @@ class MusicController extends Controller
     $paginator->appends('sort', $sort_by);
     //return var_dump($paginator->toArray());
 
-
     if (\Auth::check())
     {
+      $tutor_contacts = \Auth::user()->tutor_contacts()->select('tutor_id')->get()->pluck('tutor_id')->toArray();
       $saved_tutors = \Auth::user()->saved_tutors()->join('users', 'tutor_id', '=', 'users.id')->get()->pluck('tutor_id')->toArray();
-      return view('search/music/showmusicresults', ['results' => $results, 'num_results' => $num_rows, 'paginator' => $paginator, 'sort_options' => $sort_options, 'sort_by' => $sort_by]);
+      return view('search/music/showmusicresults', ['results' => $results, 'num_results' => $num_rows, 'paginator' => $paginator, 'sort_options' => $sort_options,
+       'sort_by' => $sort_by, 'num_availability' => $num_availability, 'tutor_contacts' => $tutor_contacts]);
     }
     else $saved_tutors = array();
     \Session::put('feedback_warning', "For the protection of our site's tutors, we are blocking most of the site's functionality including the ability to view their profile, see reviews, and contact them. Please <a href=\"".route('auth.login')."\">login/register</a>.");

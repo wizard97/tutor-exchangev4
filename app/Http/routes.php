@@ -134,8 +134,15 @@ Route::post('account/tutoring/runlisting', [
 Route::get('account/tutoring/pauselisting', [
     'as' => 'tutoring.pauselisting', 'uses' => 'Account\TutorController@pauselisting'
 ]);
-Route::get('account/tutoring/editschedule', [
+Route::get('account/tutoring/schedule', [
     'as' => 'tutoring.schedule', 'uses' => 'Account\TutorController@geteditschedule'
+]);
+Route::post('account/tutoring/editschedule', [
+    'as' => 'tutoring.editschedule', 'uses' => 'Account\TutorController@posteditschedule'
+]);
+//ajax
+Route::get('account/tutoring/ajaxgetschools', [
+    'as' => 'tutoring.ajaxgetschools', 'uses' => 'Account\TutorController@ajaxgetschools'
 ]);
 
 //settings

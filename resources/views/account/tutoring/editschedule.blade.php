@@ -2,6 +2,11 @@
 @extends('app')
 
 @section('content')
+<style>
+.table tbody>tr>td.vert-align{
+    vertical-align: middle;
+}
+</style>
 <div class="container-fluid">
   <div class="row">
     @include('/account/tutoring/sidebar')
@@ -15,18 +20,16 @@
 
       <p class="alert alert-info"><i class="fa fa-info-circle"></i>  This is where you update your tutoring schedule. Make sure it accurately reflects your availability.</p>
 
-      {!! Form::open(['url' => route('tutoring.editinfo')]) !!}
+      <form action="{{ route('tutoring.editschedule') }}" method="POST">
       {!! csrf_field() !!}
-      <div class="col-md-10">
 
-        <table class="table table-condensed">
+
+        <table class="table table-bordered table-striped table-condensed">
           <thead>
             <tr>
               <th class="text-center text-primary">Day</th>
-              <th class="text-center text-primary">Ideal Time 1</th>
-              <th class="text-center text-primary">Ideal Time 2</th>
-              <th class="text-center text-primary">Ideal Time 3</th>
-              <th class="text-center text-primary">Ideal Time 4</th>
+              <th class="text-center text-primary">Range 1</th>
+              <th class="text-center text-primary">Range 2</th>
 
             </tr>
           </thead>
@@ -35,44 +38,63 @@
 
             @foreach($days as $key => $day)
             <tr class="time-row">
+              <td class="vert-align">
+                <label>{{ $day }}</label>
+              </td>
+
               <td>
-                <div class="checkbox row-checkbox">
-                  <label>
-                    <input type="checkbox" value="1" name="{{$key}}_checked"> {{ $day }}
-                  </label>
+
+                <div class="row">
+                  <div class="col-md-5">
+                    <div class="input-group clockpicker">
+                      <input type="text" class="form-control" @if($tutor->{$key.'1_start'}) value="{{ date('g:iA', strtotime($tutor->{$key.'1_start'})) }}" @endif name="{{ $key.'1_start' }}" style="min-width: 90px" placeholder="Empty">
+                      <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-time"></span>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="col-md-1 text-center">
+                    <!-- Kind of a hack, will need to find a better solution-->
+                    <label style="margin-top: 7px">to</label>
+                  </div>
+
+                  <div class="col-md-5">
+                    <div class="input-group clockpicker">
+                      <input type="text" class="form-control" @if($tutor->{$key.'1_end'}) value="{{ date('g:iA', strtotime($tutor->{$key.'1_end'})) }}" @endif name="{{ $key.'1_end' }}" style="min-width: 90px" placeholder="Empty">
+                      <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-time"></span>
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </td>
 
               <td>
-                <div class="input-group clockpicker">
-                  <input type="text" class="form-control" value="03:00PM" name="{{$key}}">
-                  <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-time"></span>
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div class="input-group clockpicker">
-                  <input type="text" class="form-control" value="03:00PM" name="{{$key}}">
-                  <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-time"></span>
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div class="input-group clockpicker">
-                  <input type="text" class="form-control" value="03:00PM" name="{{$key}}">
-                  <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-time"></span>
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div class="input-group clockpicker">
-                  <input type="text" class="form-control" value="03:00PM" name="{{$key}}">
-                  <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-time"></span>
-                  </span>
+
+                <div class="row">
+                  <div class="col-md-5">
+                    <div class="input-group clockpicker">
+                      <input type="text" class="form-control" @if($tutor->{$key.'2_start'}) value="{{ date('g:iA', strtotime($tutor->{$key.'2_start'})) }}" @endif name="{{ $key.'2_start' }}" style="min-width: 90px" placeholder="Empty">
+                      <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-time"></span>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="col-md-1 text-center">
+                    <!-- Kind of a hack, will need to find a better solution-->
+                    <label style="margin-top: 7px">to</label>
+                  </div>
+
+                  <div class="col-md-5">
+                    <div class="input-group clockpicker">
+                      <input type="text" class="form-control" @if($tutor->{$key.'2_end'}) value="{{ date('g:iA', strtotime($tutor->{$key.'2_end'})) }}" @endif name="{{ $key.'2_end' }}" style="min-width: 90px" placeholder="Empty">
+                      <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-time"></span>
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </td>
 
@@ -81,17 +103,26 @@
           </tbody>
         </table>
 
-        <div class="col-xs-4">
+
+        <div class="row col-xs-4">
           <button type="submit" class="btn btn-lg btn-primary"> <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Update </button>
         </div>
-
-      </div>
 
 
       <div class="clearfix"></div>
 
-      {!! Form::close() !!}
+    </form>
     </div>
   </div>
 </div>
+
+<script>
+$(document).ready(function() {
+  $('.clockpicker').clockpicker({
+    align: 'top',
+    donetext: 'Done',
+    twelvehour: true,
+    });
+});
+</script>
 @stop

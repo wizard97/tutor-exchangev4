@@ -14,7 +14,7 @@
   @include('templates/feedback')
   <div class="col-md-4">
     <div class="well well">
-      <h3>Welcome Matan,</h3>
+      <h3>Welcome {{ \Auth::user()->fname }},</h3>
       <p>This is your account dashboard, use it to help manage your account.</p>
     </div>
     <div class="panel panel-danger">
