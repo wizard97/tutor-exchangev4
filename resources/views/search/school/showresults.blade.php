@@ -141,7 +141,7 @@ jQuery('.readmore').readmore({
           </div>
           <div class="row">
             <div class="text-center">
-              <div class="btn-group-xs" role="group" aria-label="..." style="white-space: nowrap;">
+              <div class="btn-group-sm" role="group" aria-label="..." style="white-space: nowrap;">
                 <a class="btn btn-success btn-sm" target="_blank" href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}" role="button"><i class="fa fa-user" aria-hidden="true"></i> Profile</a>
                 <button class="btn btn-primary btn-sm contact-button" data-toggle="modal" data-target="#contactModal" data-userid="{{ $tutor->user_id }}"><i class="fa fa-envelope" aria-hidden="true"></i> Contact</button>
                 @if(!is_null(Auth::user()->saved_tutors()->find($tutor->user_id)))
