@@ -1,3 +1,4 @@
 /vendor
+/phpmyadmin
 /node_modules
 .env
