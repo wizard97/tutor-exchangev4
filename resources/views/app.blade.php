@@ -13,7 +13,7 @@
       <!-- Include font Awesome -->
       <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
       <!-- Optional theme -->
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+      <link rel="stylesheet" href="https://bootswatch.com/readable/bootstrap.min.css">
       <!-- Data Tables -->
       <link rel="stylesheet" href="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
 
@@ -33,6 +33,7 @@
       <!-- Star Rating CSS -->
       <link rel="stylesheet" href="/css/star-rating.min.css">
 
+
       <!-- jquery -->
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
       <!-- Latest compiled and minified JavaScript -->
@@ -41,6 +42,8 @@
       <!-- Bootstrap Tables-->
       <!-- Latest compiled and minified CSS -->
       <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css">
+
+
       <!-- Latest compiled and minified JavaScript -->
       <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.js"></script>
 
