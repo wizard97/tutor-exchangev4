@@ -49,7 +49,7 @@
                 <div class="panel-body">
                   <small class="social-title" style="font-size: 42px">Members:</small>
 
-                <h3 class="count">
+                  <h3 class="count">
                     <span class="integers" style="font-size: 56px; margin-left: 40px">{{$stats->std_members + $stats->tutor_members}}
                     </span>
                   </h3>
@@ -64,7 +64,7 @@
                 <div class="panel-body">
                   <small class="social-title" style="font-size: 42px">Active Tutors:</small>
 
-                <h3 class="count">
+                  <h3 class="count">
                     <span class="integers" style="font-size: 56px; margin-left: 40px">{{ \App\Tutor::where('tutor_active', '1')->where('profile_expiration', '>=', date("Y-m-d H:i:s"))->count() }}
                     </span>
                   </h3>
@@ -114,34 +114,43 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-6 col-md-offset-3">
+    <div class="col-md-6">
+    <div class="panel panel-warning">
+      <div class="panel-heading">
+        New Features:
+      </div>
+      <div class="panel-body">
+          <ul>
+            <li>New Bootstrap theme!</li>
+            <li>Improved search function</li>
+            <li>Revamped town/school/class/etc heirarchy</li>
+            <li>New <a href="/LextutorexchangeTermsofUse.pdf" target="_blank">Terms of Use</a> and <a href="/LextutorexchangePrivacyPolicy.pdf" target="_blank">Privacy Policy</a>.</li>
+            <li>Improved professional/standard tutor differentiation</li>
+            <li>Scheduling function in search and tutoring dashboard</li>
+            <li>Google Maps API for more accurate distance calculations in search</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
       <div class="panel panel-warning">
         <div class="panel-heading">
+
           <h3 class="panel-title"><i class="fa fa-wrench"></i> Features:</h3>
+
         </div>
         <div class="panel-body">
-          <div class="row vertical-divider">
-            <div class="col-md-6">
-              <h4>Upcoming</h4>
-              <ul>
-                <li>Inbuilt messaging</li>
-                <li>Online payment system</li>
-              </ul>
-            </div>
-            <div class="col-md-6">
-              <h4>New</h4>
-              <ul>
-                <li>New Bootstrap theme!</li>
-                <li>Multi-tow support</li>
-                <li>Improved search function</li>
-              </ul>
-            </div>
-          </div>
+          <ul>
+            <li>Inbuilt messaging</li>
+            <li>Online payment system</li>
+            <li>Multi-town support</li>
+            <li>Satisfaction guarranteed or your money back on tutoring sessions paid for through our upcoming online payment system.</li>
+            <li>Crowdsourcing the addition of new schools, classes, levels, instruments, etc.</li>
+          </ul>
         </div>
       </div>
     </div>
   </div>
-
 </div>
 <script>
 $(document).ready(function() {
