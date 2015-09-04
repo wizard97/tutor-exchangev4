@@ -135,7 +135,9 @@
     <div class="col-md-6">
       <div class="panel panel-warning">
         <div class="panel-heading">
-          Upcoming Features:
+
+          <h3 class="panel-title"><i class="fa fa-wrench"></i> Features:</h3>
+
         </div>
         <div class="panel-body">
           <ul>
