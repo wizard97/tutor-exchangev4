@@ -117,7 +117,7 @@
     <div class="col-md-6 col-md-offset-3">
       <div class="panel panel-warning">
         <div class="panel-heading">
-          <h3 class="panel-title"><i class="fa fa-wrench"></i> Features</h3>
+          <h3 class="panel-title"><i class="fa fa-wrench"></i> Features:</h3>
         </div>
         <div class="panel-body">
           <div class="row vertical-divider">
