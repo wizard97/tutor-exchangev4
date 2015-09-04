@@ -144,20 +144,32 @@ class TutorController extends Controller
 
   public function geteditclasses()
   {
-    /*$classes = \App\SchoolClass::with('levels')
+
+    return view('/account/tutoring/editclasses');
+
+  }
+
+  public function ajaxgetschoolclasses(Request $request)
+  {
+    /*
+    $this->validate($request, [
+    'school_id' => 'required|numeric|exists:schools,id',
+    ]);
+    */
+    $school_id = $request->get('school_id');
+    $tutor = \App\Tutor::findOrFail($this->id);
+
+    //get the tutor classes for the school_id
+    //make sure tutor has school
+    $tutor->schools()->findOrFail($school_id);
+    $classes = $tutor->levels()
+    ->join('classes', 'classes.id', '=', 'levels.class_id')
+    ->join('school_subjects', 'classes.subject_id', '=', 'school_subjects.id')
+    ->where('classes.school_id', '=', $school_id)
+    ->select('classes.*', 'school_subjects.subject_name', 'levels.*')
     ->get();
 
-    $subjects = \App\SchoolClass::groupBy('class_type')->get()->pluck('class_type');
-
-    $grades = \App\Grade::all();
-
-    //get basic tutor info
-    $tutor = \App\Tutor::get_tutor_profile($this->id);
-*/
-    return view('/account/tutoring/editclasses');
-    /*->with('tutor', $tutor)
-    ->with('subjects', $subjects)
-    ->with('classes', $classes);*/
+    return response()->json(['data' => $classes]);
   }
 
   public function posteditclasses(Request $request)
@@ -291,6 +303,7 @@ class TutorController extends Controller
     {
       if ($checklist['info'] != true) $validator->errors()->add('Info', 'Your tutoring info section is incomplete.');
       if ($checklist['classes'] != true) $validator->errors()->add('Classes', 'Your tutoring classes section is incomplete.');
+      if ($checklist['schedule'] != true) $validator->errors()->add('Schedule', 'Your tutoring schedule section is incomplete.');
 
     });
 
