@@ -117,7 +117,7 @@
     <div class="col-md-6">
     <div class="panel panel-warning">
       <div class="panel-heading">
-        New Features:
+        <i class="fa fa-wrench"></i> New Features
       </div>
       <div class="panel-body">
           <ul>
@@ -136,7 +136,7 @@
       <div class="panel panel-warning">
         <div class="panel-heading">
 
-          <h3 class="panel-title"><i class="fa fa-wrench"></i> Features:</h3>
+          <i class="fa fa-wrench"></i> Future Features
 
         </div>
         <div class="panel-body">
