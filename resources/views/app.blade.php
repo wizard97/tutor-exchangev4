@@ -204,8 +204,28 @@ $(document).ready(function(){
 
 });
 </script>
-
-
+<style>
+.homestats{
+	position: relative;
+	transform: translateY(9%);
+}
+.row.vertical-divider {
+  overflow: hidden;
+}
+.row.vertical-divider > div[class^="col-"] {
+  text-align: center;
+  padding-bottom: 100px;
+  margin-bottom: -100px;
+  border-left: 3px solid #F2F7F9;
+  border-right: 3px solid #F2F7F9;
+}
+.row.vertical-divider div[class^="col-"]:first-child {
+  border-left: none;
+}
+.row.vertical-divider div[class^="col-"]:last-child {
+  border-right: none;
+}
+</style>
   </head>
 
   <body>
