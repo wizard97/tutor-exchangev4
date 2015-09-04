@@ -11,7 +11,7 @@
   <!--    <a class="navbar-brand" href="{{ url('home') }}"><i class="fa fa-exchange"></i> Lexington Tutor Exchange</a> -->
 
       <a class="navbar-brand" rel="home" href="/home" title="Lexington Tutor Exchange">
-        <img style="max-width:130px; margin-top: -8px;" src="/img/logo.png">
+        <img style="max-width:130px" src="/img/logo.png">
       </a>
 
     </div>
@@ -52,6 +52,7 @@
  @endif
 
     </div>
-  </div>
 
+  </div>
+<hr style="margin-top: 0px; margin-bottom: 0px">
 </nav>
