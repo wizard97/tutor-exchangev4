@@ -144,9 +144,6 @@ Route::post('account/tutoring/editschedule', [
 Route::get('account/tutoring/ajaxgetschools', [
     'as' => 'tutoring.ajaxgetschools', 'uses' => 'Account\TutorController@ajaxgetschools'
 ]);
-Route::get('account/tutoring/ajaxgetschoolclasses', [
-    'as' => 'tutoring.ajaxgetschoolclasses', 'uses' => 'Account\TutorController@ajaxgetschoolclasses'
-]);
 
 //settings
 Route::get('account/settings/index', [
