@@ -20,7 +20,12 @@ Route::get('home', [
     'as' => 'home', 'uses' => 'HomeController@index'
 ]);
 Route::get('about', ['as' => 'about.index', function() { return View::make('about'); }]);
-Route::get('contact', ['as' => 'contact.index', function() { return View::make('contact'); }]);
+Route::get('contact/index', [
+    'as' => 'contact.index', 'uses' => 'ContactController@index'
+]);
+Route::post('contact/send', [
+    'as' => 'contact.send', 'uses' => 'ContactController@send'
+]);
 Route::get('user/feedback', [
     'as' => 'feedback', function() { return View::make('/templates/feedback'); }]);
 
