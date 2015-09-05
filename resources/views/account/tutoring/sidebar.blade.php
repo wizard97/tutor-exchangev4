@@ -10,49 +10,49 @@
   </ul>
 
   <ul class="nav nav-sidebar">
-      <li class=""><a href="/tutor/index"><strong><i class="fa fa-cog"></i> Tutoring Settings</strong></a></li>
+    <li class=""><a href="/tutor/index"><strong><i class="fa fa-cog"></i> Tutoring Settings</strong></a></li>
   </ul>
 </div>
 
 <div class="row">
   <div class="col-lg-7">
     <div class="visible-xs-inline">
-        <div class="panel panel-primary">
-          <div class="panel-heading">
-              <i class="fa fa-link fa-fw"></i> Quick Links
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <i class="fa fa-link fa-fw"></i> Quick Links
+        </div>
+
+        <div class="panel-body">
+          <div class="btn-group btn-group-justified">
+
+            <a class="btn btn-primary" href="{{ route('tutoring.info') }}">
+              <i class="fa fa-info fa-2x"></i><br>
+              Update Info
+            </a>
+
+            <a class="btn btn-primary" href="{{ route('tutoring.classes') }}">
+              <i class="fa fa-graduation-cap fa-2x"></i><br>
+              Update Classes
+            </a>
+
+            <a class="btn btn-primary" href="">
+              <i class="fa fa-music fa-2x"></i><br>
+              Update Music
+            </a>
+
+            <a class="btn btn-primary" href="">
+              <i class="fa fa-calendar fa-2x"></i><br>
+              Update Schedule
+            </a>
+
+            <a class="btn btn-primary" href="{{ route('tutoring.myprofile') }}">
+              <i class="fa fa-user fa-2x"></i><br>
+              View Profile
+            </a>
+
           </div>
-
-          <div class="panel-body">
-      <div class="btn-group btn-group-justified">
-
-      <a class="btn btn-primary" href="{{ route('tutoring.info') }}">
-        <i class="fa fa-info fa-2x"></i><br>
-        Update Info
-      </a>
-
-      <a class="btn btn-primary" href="{{ route('tutoring.classes') }}">
-        <i class="fa fa-graduation-cap fa-2x"></i><br>
-        Update Classes
-      </a>
-
-      <a class="btn btn-primary" href="">
-        <i class="fa fa-music fa-2x"></i><br>
-        Update Music
-      </a>
-
-      <a class="btn btn-primary" href="">
-        <i class="fa fa-calendar fa-2x"></i><br>
-        Update Schedule
-      </a>
-
-      <a class="btn btn-primary" href="{{ route('tutoring.myprofile') }}">
-        <i class="fa fa-user fa-2x"></i><br>
-        View Profile
-      </a>
-
+        </div>
       </div>
-      </div>
-    </div>
     </div>
   </div>
 </div>
