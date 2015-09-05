@@ -24,7 +24,7 @@
 
         <li class="{{ isExactRoute('about') }}"><a href="{{ route('about.index') }}">About Us</a></li>
 
-        <li class="{{ isExactRoute('contact') }}"><a href="{{ route('contact.index') }}">Contact Us</a></li>
+        <li class="{{ isActiveRoute('contact.index') }}"><a href="{{ route('contact.index') }}">Contact Us</a></li>
 
       </ul>
 
