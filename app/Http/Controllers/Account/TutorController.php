@@ -263,7 +263,7 @@ class TutorController extends Controller
       ->where('tutor_levels.user_id', $tutor->user_id)
       ->groupBy('schools.id')
       ->orderBy('num_classes', 'desc')
-      ->select('schools.school_name', 'schools.id', \DB::raw('COUNT(*) AS num_classes'))
+      ->select('schools.school_name', 'schools.id', \DB::raw('COUNT(DISTINCT classes.id) AS num_classes'))
       ->get();
 
     $tutor = \App\Tutor::get_tutor_profile($this->id);
