@@ -11,7 +11,7 @@
     @include('/account/tutoring/sidebar')
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-      <h1 class="page-header">Tutoring Dashboard</h1>
+      <h1 class="page-header">My Tutoring</h1>
       @include('templates/feedback')
 
       <div class="row">
