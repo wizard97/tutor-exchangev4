@@ -13,7 +13,7 @@
       <!-- Include font Awesome -->
       <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
       <!-- Optional theme -->
-      <link rel="stylesheet" href="https://bootswatch.com/flatly/bootstrap.min.css">
+      <link rel="stylesheet" href="/css/flatlytheme.css">
       <!-- Data Tables -->
       <link rel="stylesheet" href="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
 
@@ -97,6 +97,7 @@
       .box-b { background-color:#dd4b39; }
       .box-c { background-color:#3b5998; }
       .box-d { background-color:#eb6d20; }
+
       </style>
 
 <script>
