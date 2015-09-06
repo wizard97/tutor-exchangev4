@@ -5,7 +5,7 @@
 
   <div class="jumbotron">
     <h1 class="text-center">About Us</h1>
-    <p class="lead"><p>This was a project started in late 2014 by Aaron Wisner and Matan Silver. The entire site is coded from scratch in HTML, PHP, CSS, and MySQL. We even host our own web-server. Aaron is in charge of the back-end functionality, and both Aaron and Matan share responsibility for the front-end. Currently, this site is in beta, so we are far from complete in development. We will will add a lot more. Expect weird visual formatting, and perhaps occasional functionality problems; these will get worked out as time progresses.</p>
+    <p class="lead"><p>This was brainstormed in late 2014 by Aaron Wisner and Matan Silver during a high school lunch period senior year. The entire site runs on a Linux webserver, and is coded by hand in HTML, CSS, JavaScript, PHP, and SQL using a variety of open source projects. Aaron is in charge of the back-end functionality, and both Aaron and Matan share responsibility for the front-end. Currently, this site is in beta, so we are far from complete in development. We will will add a lot more. Expect weird visual formatting, and perhaps occasional functionality problems; these will get worked out as time progresses.</p>
 
     <p>Knowing how many high schoolers want a job and many Lexington parents want to find a reliable tutor for his/her kid, we created this site to connect tutors with students who need tutoring. Especially for younger kids, we don't think parents should have to pay $100 an hour to get someone to tutor their kid in basic Algebra--Any competent high schooler can not only do it cheaper, but can connect much more with the student they are tutoring.</p>
 
