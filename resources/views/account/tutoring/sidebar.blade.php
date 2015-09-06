@@ -5,7 +5,7 @@
     <li class="{{ isActiveRoute('tutoring.info') }}"><a href="{{route('tutoring.info')}}"><i class="fa fa-info fa-fw"></i> My Info</a></li>
     <li class="{{ isActiveRoute('tutoring.schedule') }}"><a href="{{route('tutoring.schedule')}}"><i class="fa fa-calendar fa-fw"></i> My Schedule</a></li>
     <li class="{{ isActiveRoute('tutoring.classes') }}"><a href="{{route('tutoring.classes')}}"><i class="fa fa-graduation-cap fa-fw"></i> My Classes</a></li>
-    <li class=""><a href=""><i class="fa fa-music fa-fw"></i> My Music</a></li>
+    <li class="{{ isActiveRoute('tutoring.music') }}"><a href="{{route('tutoring.music')}}"><i class="fa fa-music fa-fw"></i> My Music</a></li>
     <li class="{{ isActiveRoute('tutoring.myprofile') }}"><a href="{{route('tutoring.myprofile')}}"><i class="fa fa-user fa-fw"></i> View My Profile</a></li>
   </ul>
 
