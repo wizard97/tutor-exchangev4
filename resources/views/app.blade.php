@@ -148,12 +148,12 @@ $(".tutor-save-btn").on("click", function(){
 
         if(data[id] === true)
         {
-            button.toggleClass('btn-warning', false).toggleClass('btn-info', true);
+            button.toggleClass('btn-success', false).toggleClass('btn-danger', true);
             button.hide().html('<i class="fa fa-minus" aria-hidden="true"></i> Remove').fadeIn('slow');
         }
         else
         {
-          button.toggleClass('btn-warning', true).toggleClass('btn-info', false);
+          button.toggleClass('btn-success', true).toggleClass('btn-danger', false);
           button.hide().html('<i class="fa fa-plus" aria-hidden="true"></i> Save').fadeIn('slow');
         }
 //get feedback messages
