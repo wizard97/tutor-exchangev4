@@ -101,7 +101,7 @@ jQuery('.readmore').readmore({
               <span class="label label-success">Classes</span>
             </div>
             <div class="col-xs-6 col-xs-offset-0 col-sm-6 col-sm-offset-1">
-              <div class="progress" style="height: 19px">
+              <div class="progress"  style="margin-top: 8px">
                 <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ $tutor->classes_match }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $tutor->classes_match }}%; min-width: 3em">
                   {{ $tutor->classes_count }}/{{$num_classes}}
                 </div>
@@ -113,7 +113,7 @@ jQuery('.readmore').readmore({
               <span class="label label-info">Proximity</span>
             </div>
             <div class="col-xs-6 col-xs-offset-0 col-sm-6 col-sm-offset-1">
-              <div class="progress" style="height: 19px">
+              <div class="progress"  style="margin-top: 8px">
                 <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ $tutor->distance_match }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $tutor->distance_match }}%; min-width: 3em">
                   {{ $tutor->distance }} mi.
                 </div>
@@ -125,7 +125,7 @@ jQuery('.readmore').readmore({
               <span class="label label-warning">Schedule</span>
             </div>
             <div class="col-xs-6 col-xs-offset-0 col-sm-6 col-sm-offset-1">
-              <div class="progress" style="height: 19px">
+              <div class="progress" style="margin-top: 8px">
                 <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ $tutor->times_match }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $tutor->times_match }}%; min-width: 3em">
                   {{ $tutor->availability_count }}/{{$num_availability}}
                 </div>
