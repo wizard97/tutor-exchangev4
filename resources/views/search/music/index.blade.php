@@ -96,7 +96,7 @@
               <br>
               <div class="row">
         	      <div class="col-md-offset-2 col-md-8">
-                  <button class="btn btn-primary btn-lg btn-block school-selection" value="middle" type="button">Student <span style="font-size: 20px;">&le;</span> Middle School</button>
+                  <button class="btn btn-info btn-lg btn-block school-selection" value="middle" type="button">Student <span style="font-size: 20px;">&le;</span> Middle School</button>
                   <button class="btn btn-warning btn-lg btn-block school-selection" value="high" type="button">Student <span style="font-size: 20px;">&ge;</span> High School</button>
                   <input type="hidden" name="school_type">
                 </div>
