@@ -13,7 +13,7 @@
       <!-- Include font Awesome -->
       <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
       <!-- Optional theme -->
-      <link rel="stylesheet" href="https://bootswatch.com/readable/bootstrap.min.css">
+      <link rel="stylesheet" href="https://bootswatch.com/flatly/bootstrap.min.css">
       <!-- Data Tables -->
       <link rel="stylesheet" href="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
 
@@ -148,12 +148,12 @@ $(".tutor-save-btn").on("click", function(){
 
         if(data[id] === true)
         {
-            button.toggleClass('btn-warning', false).toggleClass('btn-info', true);
+            button.toggleClass('btn-success', false).toggleClass('btn-danger', true);
             button.hide().html('<i class="fa fa-minus" aria-hidden="true"></i> Remove').fadeIn('slow');
         }
         else
         {
-          button.toggleClass('btn-warning', true).toggleClass('btn-info', false);
+          button.toggleClass('btn-success', true).toggleClass('btn-danger', false);
           button.hide().html('<i class="fa fa-plus" aria-hidden="true"></i> Save').fadeIn('slow');
         }
 //get feedback messages

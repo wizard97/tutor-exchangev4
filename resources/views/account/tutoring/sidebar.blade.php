@@ -35,7 +35,7 @@
               Update Classes
             </a>
 
-            <a class="btn btn-primary" href="">
+            <a class="btn btn-primary" href=" {{ route('tutoring.music') }}">
               <i class="fa fa-music fa-2x"></i><br>
               Update Music
             </a>
