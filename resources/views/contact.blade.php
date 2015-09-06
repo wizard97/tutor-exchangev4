@@ -17,11 +17,11 @@
 
       <div class="form-group">
         {!! Form::label('subject', 'Subject') !!}
-        {!! Form::text('subject', null, ['class' => 'form-control']) !!}
+        {!! Form::text('subject', null, ['class' => 'form-control', 'placeholder' => 'Suggestion, bug report, etc...']) !!}
       </div>
 
       <div class="form-group">
-        {!! Form::label('email', 'Your email') !!}
+        {!! Form::label('email', 'Your email address') !!}
         {!! Form::email('email', null, ['class' => 'form-control']) !!}
       </div>
 
