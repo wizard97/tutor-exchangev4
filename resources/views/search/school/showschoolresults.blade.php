@@ -77,7 +77,7 @@ jQuery('.readmore').readmore({
         </div>
         <div class="col-xs-12 col-sm-3 col-md-4">
             <div class="row">
-            <h3 style="margin-top: 0px; display:inline;"><i class="fa fa-user" aria-hidden="true"></i>{{ ' '.$tutor->fname.' '.$tutor->lname }}
+            <h3 style="margin-top: 0px; display:inline;">@if($tutor->account_type > 2)<span class="text-success"><i class="fa fa-user-plus" aria-hidden="true"></i> {{ $tutor->fname.' '.$tutor->lname }}</span> @else <i class="fa fa-user" aria-hidden="true"></i> {{ $tutor->fname.' '.$tutor->lname }} @endif
             </h3>
             <span class="text-muted" style="white-space: nowrap"><i class="fa fa-map-marker"></i> {{ ucwords(strtolower($tutor->city)).', '.$tutor->state_prefix }}</span>
           </div>

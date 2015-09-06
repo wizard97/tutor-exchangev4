@@ -257,7 +257,7 @@ class HsSearchController extends Controller
     ->where('tutors.tutor_active', '=', '1')
     ->where('tutors.profile_expiration', '>=', date('Y-m-d H:i:s'))
     ->select(\DB::raw($dist_select), \DB::raw($dist_select2), \DB::raw($class_select), \DB::raw($class_select2), \DB::raw($time_select), \DB::raw($time_select2), \DB::raw('AVG(reviews.rating) AS avg_rating'), 'users.account_type', 'tutor_levels.user_id', 'users.id',
-    'users.fname', 'users.lname', 'users.last_login', 'users.created_at','tutors.*', 'grades.*', 'zips.*')
+    'users.fname', 'users.lname', 'users.last_login', 'users.created_at', 'users.account_type', 'tutors.*', 'grades.*', 'zips.*')
     ->groupBy('tutor_levels.user_id')
     ->take($per_page);
 
@@ -358,7 +358,7 @@ class HsSearchController extends Controller
 
       $tutor_contacts = \Auth::user()->tutor_contacts()->select('tutor_id')->get()->pluck('tutor_id')->toArray();
       $saved_tutors = \Auth::user()->saved_tutors()->join('users', 'tutor_id', '=', 'users.id')->get()->pluck('tutor_id')->toArray();
-      return view('search/showresults', ['results' => $results, 'num_results' => $num_rows, 'paginator' => $paginator, 'sort_options' => $sort_options,
+      return view('search/school/showschoolresults', ['results' => $results, 'num_results' => $num_rows, 'paginator' => $paginator, 'sort_options' => $sort_options,
        'sort_by' => $sort_by, 'num_classes' => $num_classes, 'num_availability' => $num_availability, 'tutor_contacts' => $tutor_contacts]);
     }
     else $saved_tutors = array();
