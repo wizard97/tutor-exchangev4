@@ -22,7 +22,7 @@
         <i class="fa fa-bell fa-fw"></i> Notifications
       </div>
       <div class="panel-body">
-        <p class="text text-muted bg-warning"><span class="text text-danger">Attention:</br></span>we now have an updated <a href="/LextutorexchangePrivacyPolicy.pdf" target="_blank">Privacy Policy</a> and <a href="/LextutorexchangeTermsofUse.pdf" target="_blank">Terms of Use</a>. We advise that you read these documents, as your use of this website constitutes your agreement to these terms. Thank you, </br>The Creators</p>
+        <p class="text bg-warning"><span class="text text-danger">Attention:</br></span>We now have an updated <a href="/LextutorexchangePrivacyPolicy.pdf" target="_blank">Privacy Policy</a> and <a href="/LextutorexchangeTermsofUse.pdf" target="_blank">Terms of Use</a>. We advise that you read these documents, as your use of this website constitutes your agreement to these terms. Thank you, </br>The Creators</p>
 
       </div>
     </div>
