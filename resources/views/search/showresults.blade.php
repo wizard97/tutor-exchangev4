@@ -142,12 +142,12 @@ jQuery('.readmore').readmore({
           <div class="row">
             <div class="text-center">
               <div class="btn-group-xs" role="group" aria-label="..." style="white-space: nowrap;">
-                <a class="btn btn-success btn-sm" target="_blank" href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}" role="button"><i class="fa fa-user" aria-hidden="true"></i> Profile</a>
+                <a class="btn btn-warning btn-sm" target="_blank" href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}" role="button"><i class="fa fa-user" aria-hidden="true"></i> Profile</a>
                 <button class="btn btn-primary btn-sm contact-button" data-toggle="modal" data-target="#contactModal" data-userid="{{ $tutor->user_id }}"><i class="fa fa-envelope" aria-hidden="true"></i> Contact</button>
                 @if(!is_null(Auth::user()->saved_tutors()->find($tutor->user_id)))
-                <button type="button" name="saved_tutor_id" data-userid="{{ $tutor->user_id }}" class="btn btn-info btn-sm tutor-save-btn" aria-expanded="false"><i class="fa fa-minus" aria-hidden="true"></i> Remove</button>
+                <button type="button" name="saved_tutor_id" data-userid="{{ $tutor->user_id }}" class="btn btn-danger btn-sm tutor-save-btn" aria-expanded="false"><i class="fa fa-minus" aria-hidden="true"></i> Remove</button>
                 @else
-                <button type="button" name="saved_tutor_id" data-userid="{{ $tutor->user_id }}" class="btn btn-warning btn-sm tutor-save-btn" aria-expanded="false"><i class="fa fa-plus" aria-hidden="true"></i> Save</button>
+                <button type="button" name="saved_tutor_id" data-userid="{{ $tutor->user_id }}" class="btn btn-success btn-sm tutor-save-btn" aria-expanded="false"><i class="fa fa-plus" aria-hidden="true"></i> Save</button>
                 @endif
               </div>
             </div>
