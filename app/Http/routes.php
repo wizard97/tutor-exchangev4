@@ -145,6 +145,9 @@ Route::get('account/tutoring/schedule', [
 Route::post('account/tutoring/editschedule', [
     'as' => 'tutoring.editschedule', 'uses' => 'Account\TutorController@posteditschedule'
 ]);
+Route::get('account/tutoring/music', [
+    'as' => 'tutoring.music', 'uses' => 'Account\TutorController@getmusic'
+]);
 //ajax
 Route::get('account/tutoring/ajaxgetschools', [
     'as' => 'tutoring.ajaxgetschools', 'uses' => 'Account\TutorController@ajaxgetschools'
