@@ -55,7 +55,10 @@ class TutorController extends Controller
     $tutor = \App\Tutor::get_tutor_profile($this->id);
     return view('/account/tutoring/editschedule')->with('tutor', $tutor);
   }
-
+  public function getmusic()
+  {
+    return view('/account/tutoring/music');
+  }
   public function posteditschedule(Request $request)
   {
     $tutor = \App\Tutor::findOrFail($this->id);
