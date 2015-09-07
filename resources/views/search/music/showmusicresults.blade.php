@@ -60,7 +60,7 @@ $(document).ready(function(){
   </div>
   @foreach($results as $tutor)
   <div class="row">
-    <div  class="@if($tutor->account_type > 2) alert alert-success @else alert alert-info @endif">
+    <div  class="well">
       <div class="row vertical-align">
         <div class=" col-xs-12 col-sm-2 col-md-2">
           <div class="row">
@@ -78,7 +78,7 @@ $(document).ready(function(){
 
         <div class="col-xs-12 col-sm-3 col-md-4">
           <div class="row">
-            <h3 style="margin-top: 0px; display:inline;"><i class="fa fa-user" aria-hidden="true"></i>{{ ' '.$tutor->fname.' '.$tutor->lname }}
+            <h3 style="margin-top: 0px; display:inline;">@if($tutor->account_type > 2)<span class="text-success"><i class="fa fa-user-plus" aria-hidden="true"></i> {{ $tutor->fname.' '.$tutor->lname }}</span> @else <i class="fa fa-user" aria-hidden="true"></i> {{ $tutor->fname.' '.$tutor->lname }} @endif
             </h3>
             <span class="text-muted" style="white-space: nowrap"><i class="fa fa-map-marker"></i> {{ ucwords(strtolower($tutor->city)).', '.$tutor->state_prefix }}</span>
           </div>

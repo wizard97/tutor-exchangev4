@@ -4,7 +4,7 @@
   <div class="container">
 
     <p class="navbar-text text-muted pull-left">Copyright ©  {{ Date("Y") }}. <a href="http://lextutorexchange.com">Lexington Tutor Exchange</a>. All rights reserved.
-      <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#Donate">
+      <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#Donate">
         Help Support Us
       </button></p>
 
