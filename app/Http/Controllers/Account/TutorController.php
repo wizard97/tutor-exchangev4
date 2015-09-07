@@ -329,6 +329,31 @@ class TutorController extends Controller
     return response()->json(['data' => $schools]);
   }
 
+  //remove or start music
+  public function ajaxstopstartmusic(Request $request)
+  {
+    $this->validate($request, [
+    'tutors_music' => 'required|boolean',
+    ]);
+
+    $tutor_model = \App\Tutor::findOrFail($this->id);
+    //set the tutor as tutoring music
+    if ($request->get('tutors_music'))
+    {
+      $tutor->tutors_music = true;
+    }
+    else
+    {
+      //remove everything
+      $tutor->music()->detach();
+      //the tutuor does not tutor music
+      $tutor->tutors_music = false;
+    }
+    $tutor->save();
+
+    return response()->json(['tutor_music' = $tutor->tutor_music, 'data' => $utor->music]);
+  }
+
   //used to make checklist for tutor
   private function makechecklist($tutor_id)
   {
