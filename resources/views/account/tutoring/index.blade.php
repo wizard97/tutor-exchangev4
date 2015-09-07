@@ -45,7 +45,9 @@
                     <a href="{{ route('tutoring.music') }}" class="list-group-item">
                       <i class="fa fa-music fa-fw"></i> Your Music
                       <span class="pull-right">
-                        
+                        @if($checklist['music']) <i class="fa fa-check" style="color:green; font-size:20px" data-toggle="tooltip" data-placement="right" title="Complete!"></i>
+                        @else <i class="fa fa-exclamation-triangle" style="color:orange; font-size:20px" data-toggle="tooltip" data-placement="right" title="Incomplete!"></i>
+                        @endif
                       </span>
                     </a>
                     <a href="{{ route('tutoring.schedule') }}" class="list-group-item">

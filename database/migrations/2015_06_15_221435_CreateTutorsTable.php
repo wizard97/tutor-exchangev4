@@ -15,7 +15,7 @@ class CreateTutorsTable extends Migration
         Schema::create('tutors', function (Blueprint $table) {
             $table->integer('user_id')->unsigned()->primary();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->integer('tutor_active');
+            $table->boolean('tutor_active');
             $table->timestamp('profile_expiration')->nullable();
             $table->integer('profile_views')->unsigned();
             $table->integer('contact_num')->unsigned();
@@ -23,6 +23,8 @@ class CreateTutorsTable extends Migration
             $table->integer('grade')->nullable();
             $table->integer('rate')->nullable();
             $table->text('about_me');
+            //tutors music by default
+            $table->boolean('tutors_music')->default(1);
             $table->string('highest_math', 50);
             $table->string('highest_science', 50);
             $table->string('highest_socialstudies', 50);
