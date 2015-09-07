@@ -9,6 +9,7 @@
       @include('templates/feedback')
       <div class="page-header">
         <h1>My Music</h1>
+        <button type='button' class='btn btn-danger dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'> I do not teach an instrument </button>
       </div>
       <p class="alert alert-info"><i class="fa fa-info-circle"></i>  This is where you update your music info. Make sure to fill it out as completely as possible and keep it updated.</p>
       <div class="row">
