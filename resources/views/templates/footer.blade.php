@@ -1,6 +1,5 @@
 
 <div class="nav navbar-default navbar-fixed-bottom">
-<hr style="margin-top: 0px; margin-bottom: 0px">
   <div class="container">
 
     <p class="navbar-text text-muted pull-left">Copyright ©  {{ Date("Y") }}. <a href="http://lextutorexchange.com">Lexington Tutor Exchange</a>. All rights reserved.
