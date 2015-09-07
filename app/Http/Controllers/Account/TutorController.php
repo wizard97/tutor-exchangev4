@@ -339,6 +339,9 @@ class TutorController extends Controller
     !$tutor->levels()->get()->isEmpty() ? $checklist['classes'] = true : $checklist['classes'] = false;
     $tutor->tutor_active ? $checklist['active'] = true : $checklist['active'] = false;
 
+    //music check
+    ($tutor->music()->get()->isEmpty() && $tutor->tutors_music) ? $checklist['music'] = false : $checklist['active'] = true;
+
     $days = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun'];
 
     $checklist['schedule'] = false;
