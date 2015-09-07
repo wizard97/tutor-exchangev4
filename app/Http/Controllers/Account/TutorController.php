@@ -336,7 +336,7 @@ class TutorController extends Controller
     'tutors_music' => 'required|boolean',
     ]);
 
-    $tutor_model = \App\Tutor::findOrFail($this->id);
+    $tutor = \App\Tutor::findOrFail($this->id);
     //set the tutor as tutoring music
     if ($request->get('tutors_music'))
     {
