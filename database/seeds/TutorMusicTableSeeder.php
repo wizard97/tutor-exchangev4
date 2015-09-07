@@ -13,6 +13,9 @@ class TutorMusicTableSeeder extends Seeder
     {
       App\Tutor::get()->each(function($u) {
         $rand_num = rand(0, 3);
+        if (!$rand_num) $u->tutors_music = false;
+        else $u->tutors_music = true;
+        $u->save();
         for ($i=0; $i < $rand_num; $i++)
         {
           $rand_instrument = \App\Music::orderBy(\DB::raw('RAND()'))->first();
