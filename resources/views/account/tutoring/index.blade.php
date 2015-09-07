@@ -42,10 +42,10 @@
                         @endif
                       </span>
                     </a>
-                    <a href="#" class="list-group-item disabled" data-toggle="tooltip" data-placement="right" title="Feature coming soon...">
+                    <a href="{{ route('tutoring.music') }}" class="list-group-item">
                       <i class="fa fa-music fa-fw"></i> Your Music
                       <span class="pull-right">
-
+                        
                       </span>
                     </a>
                     <a href="{{ route('tutoring.schedule') }}" class="list-group-item">
