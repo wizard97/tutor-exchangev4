@@ -15,7 +15,7 @@
   <div class="col-md-4">
     <div class="well well">
       <h3>Welcome {{ \Auth::user()->fname }},</h3>
-      <p>This is your account dashboard, use it to help manage your account.</p>
+      <p>This is your account dashboard. Use it to help manage your account.</p>
     </div>
     <div class="panel panel-danger">
       <div class="panel-heading">

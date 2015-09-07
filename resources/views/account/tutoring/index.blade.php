@@ -145,7 +145,7 @@
         <div class="col-lg-5">
           <div class="well well">
             <h3>Welcome {{ Auth::user()->fname }},</h3>
-            <p>This is your tutoring dashboard, use it to help manage your tutoring.</p>
+            <p>This is your tutoring dashboard. Use it to help manage your tutoring.</p>
           </div>
 
           <div class="panel panel-danger">
