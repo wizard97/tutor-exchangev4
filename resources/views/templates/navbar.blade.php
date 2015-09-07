@@ -54,5 +54,4 @@
     </div>
 
   </div>
-<hr style="margin-top: 0px; margin-bottom: 0px">
 </nav>
