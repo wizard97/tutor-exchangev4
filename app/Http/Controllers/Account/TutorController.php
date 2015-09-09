@@ -351,7 +351,7 @@ class TutorController extends Controller
     }
     $tutor->save();
 
-    return response()->json(['tutor_music' => $tutor->tutor_music, 'data' => $tutor->music]);
+    return response()->json(['tutors_music' => $tutor->tutors_music, 'data' => $tutor->music]);
   }
 
   //used to make checklist for tutor
