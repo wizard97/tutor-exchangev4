@@ -341,6 +341,8 @@ class TutorController extends Controller
     if ($request->get('tutors_music'))
     {
       $tutor->tutors_music = true;
+
+      $request->session()->put('feedback_positive', 'You now tutor music!');
     }
     else
     {
@@ -348,6 +350,8 @@ class TutorController extends Controller
       $tutor->music()->detach();
       //the tutuor does not tutor music
       $tutor->tutors_music = false;
+
+      $request->session()->put('feedback_positive', 'You just stopped tutoring music!');
     }
     $tutor->save();
 
