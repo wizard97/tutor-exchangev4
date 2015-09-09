@@ -153,7 +153,7 @@ Route::get('account/tutoring/ajaxgetschools', [
     'as' => 'tutoring.ajaxgetschools', 'uses' => 'Account\TutorController@ajaxgetschools'
 ]);
 Route::post('account/tutoring/ajaxstartstopmusic', [
-    'as' => 'tutoring.ajaxstartstopmusic', 'uses' => 'Account\TutorController@ajaxstopstartmusic'
+    'as' => 'tutoring.ajaxstartstopmusic', 'uses' => 'Account\TutorController@ajaxstartstopmusic'
 ]);
 
 //settings

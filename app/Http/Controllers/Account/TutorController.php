@@ -330,7 +330,7 @@ class TutorController extends Controller
   }
 
   //remove or start music
-  public function ajaxstopstartmusic(Request $request)
+  public function ajaxstartstopmusic(Request $request)
   {
     $this->validate($request, [
     'tutors_music' => 'required|boolean',
