@@ -311,5 +311,10 @@ new Morris.Line({
   parseTime: true,
   hideHover: true
 });
+
+$('#contacts').on('click', function () {
+  var $clicked_row = $(this).closest('tr');
+  var $icon = $clicked_row.find("i.fa");
+  var data = $contacts.DataTable().row($clicked_row).data();
 </script>
 @stop
