@@ -21,8 +21,8 @@
       </div>
 
       <div class="form-group">
-        {!! Form::label('email', 'Your email address') !!}
-        {!! Form::email('email', null, ['class' => 'form-control']) !!}
+        {!! Form::label('email', 'Email address') !!}
+        {!! Form::email('email', null, ['class' => 'form-control', 'placeholder' => 'We will reply to this address']) !!}
       </div>
 
       <div class="form-group">
