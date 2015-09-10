@@ -69,20 +69,20 @@ $("#togglebutton").click(function() {
   var tutors_music;
   if ($("#togglebutton").hasClass("btn-danger"))
   {
-    tutors_music = false;
+    tutors_music = 0;
     $("#togglebutton").removeClass("btn-danger").addClass("btn-success").html("I teach an instrument");
 
   }
   else
   {
-    tutors_music = true;
+    tutors_music = 1;
     $("#togglebutton").removeClass("btn-success").addClass("btn-danger").html("I do not teach an instrument");
   }
 
   $.ajax({
     type: "POST",
     url : "{{route('tutoring.ajaxstartstopmusic')}}",
-    data: {'tutors_music': 1},
+    data: {'tutors_music': tutors_music},
     success : function(data){
       $.ajax({
         type: "GET",
