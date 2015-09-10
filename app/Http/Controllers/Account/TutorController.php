@@ -357,6 +357,12 @@ class TutorController extends Controller
 
     return response()->json(['tutors_music' => $tutor->tutors_music, 'data' => $tutor->music]);
   }
+  
+  public function ajaxgetmusic(Request $request)
+  {
+    $tutor = \App\Tutor::findOrFail($this->id);
+    return response()->json(['data' => $tutor->music]);
+  }
 
   //used to make checklist for tutor
   private function makechecklist($tutor_id)
