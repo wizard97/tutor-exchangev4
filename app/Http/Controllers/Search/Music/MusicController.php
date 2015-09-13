@@ -13,8 +13,9 @@ class MusicController extends Controller
   public function index()
   {
     $instruments = \App\Music::leftjoin('tutor_music', 'tutor_music.music_id', '=', 'music.id')
+    ->leftjoin('tutors', 'tutors.user_id', '=', 'tutor_music.tutor_id')
     ->groupBy('music.id')
-    ->select('music.*', \DB::raw('COUNT(*) AS num_tutors'))
+    ->select('music.*', \DB::raw('SUM(CASE WHEN tutors.tutor_active = 1 THEN 1 ELSE 0 END) AS num_tutors'))
     ->get();
     return view('search/music/index')->with('instruments', $instruments);
   }

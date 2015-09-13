@@ -358,9 +358,9 @@ $select->execute();
 $users = $select->fetchAll();
 echo "User's loaded\n";
 //inserts into new framework
-$insert = $new->prepare("INSERT into users (fname, lname, password, account_type, email,
+$insert = $new->prepare("INSERT into users (fname, lname, password, account_type, email, lat, lon,
     user_active, zip_id, has_picture, last_login, created_at, updated_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 $tutor_insert = $new->prepare("INSERT into tutors (user_id, tutor_active, profile_expiration,
     profile_views, contact_num, age, grade, rate, about_me, created_at, updated_at)
@@ -376,7 +376,7 @@ $lex_zip = $zip_res->id;
     {
         //insert user data
         $insert->execute([$u->fname, $u->lname, $u->user_password_hash, $u->user_account_type,
-            $u->user_email, $u->user_active, $lex_zip, $u->user_has_avatar,
+            $u->user_email, $zip_res->lat, $zip_res->lon, $u->user_active, $lex_zip, $u->user_has_avatar,
             date("Y-m-d H:i:s", $u->user_last_login_timestamp), date("Y-m-d H:i:s", $u->user_creation_timestamp),
             date("Y-m-d H:i:s", $u->user_last_login_timestamp)]);
 
