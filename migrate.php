@@ -2,15 +2,17 @@
 //use this to migrate to new db
 
 $servername = "localhost";
-$username = "username";
-$password = "password";
+$username = "homestead";
+$password = "secret";
 
 try {
-    $old = new PDO("mysql:host=$servername;dbname=myDB", $username, $password);
-    $new = new PDO("mysql:host=$servername;dbname=myDB", $username, $password);
+    $old = new PDO("mysql:host=$servername;dbname=login", $username, $password);
+    $new = new PDO("mysql:host=$servername;dbname=homestead", $username, $password);
     // set the PDO error mode to exception
     $old->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $new->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $old->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+    $new->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
     echo "Connected successfully\n";
 }
 catch(PDOException $e)
@@ -357,27 +359,32 @@ $users = $select->fetchAll();
 echo "User's loaded\n";
 //inserts into new framework
 $insert = $new->prepare("INSERT into users (fname, lname, password, account_type, email,
-    'user_active', 'has_picture', 'last_login', 'created_at', 'updated_at')
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    user_active, zip_id, has_picture, last_login, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 $tutor_insert = $new->prepare("INSERT into tutors (user_id, tutor_active, profile_expiration,
     profile_views, contact_num, age, grade, rate, about_me, created_at, updated_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+$zip_query = $new->prepare("SELECT * FROM zips WHERE zip_code = 02421");
+$zip_query->execute();
+$zip_res = $zip_query->fetch();
+$lex_zip = $zip_res->id;
 
     //migrate user/tutor info
     foreach ($users as $u)
     {
         //insert user data
         $insert->execute([$u->fname, $u->lname, $u->user_password_hash, $u->user_account_type,
-            $u->user_email, $u->user_active, $u->user_has_avatar,
-            date("Y-m-d H:i:s", $u->user_last_login), date("Y-m-d H:i:s", $u->user_creation_timestamp),
-            date("Y-m-d H:i:s", $u->user_last_login)]);
+            $u->user_email, $u->user_active, $lex_zip, $u->user_has_avatar,
+            date("Y-m-d H:i:s", $u->user_last_login_timestamp), date("Y-m-d H:i:s", $u->user_creation_timestamp),
+            date("Y-m-d H:i:s", $u->user_last_login_timestamp)]);
 
         $new_id = $new->lastInsertId();
 
         echo "Migrated user {$u->fname} {$u->lname} ({$u->user_id}->{$new_id})\n";
         //if tutor, insert tutor specific info
-        if ($user->user_account_type >= 2)
+        if ($u->user_account_type >= 2)
         {
             //migrate tutor info
             $tutor_insert->execute([$new_id, $u->tutor_active, date("Y-m-d H:i:s", $u->profile_expiration),
@@ -391,7 +398,6 @@ $tutor_insert = $new->prepare("INSERT into tutors (user_id, tutor_active, profil
             foreach ($subjects as $prefix => $sub_name)
             {
                 //get the subject model for the school
-                $sub_model = $school->subjects()->where('subject_name', $sub_name)->firstOrFail();
                 foreach (${$prefix.'_classes'} as $class_key => $class)
                 {
                     //check if the tutor tutors this class
@@ -401,21 +407,33 @@ $tutor_insert = $new->prepare("INSERT into tutors (user_id, tutor_active, profil
                         $class_search = $new->prepare("SELECT levels.id FROM classes INNER JOIN
                             levels ON classes.id = levels.class_id WHERE
                             class_name = ? AND level_name = ?");
-                        $class_search->execute([$class->name, $class->levels[$u->{$class_key}]]);
-                        $level_object = $class_search->fetch();
-                        if (empty($level_object))
+
+                        echo "Looking for {$class->name}, level_num: {$u->{$class_key}}\n";
+
+
+                        if(array_key_exists($u->{$class_key}, $class->levels))
                         {
-                            //make sure we found the lookup
-                            echo "Unable to find id for '{$class->name} ({$class->levels[$u->{$class_key}]})' \n";
+                          $class_search->execute([$class->name, $class->levels[$u->{$class_key}]]);
+                          $level_object = $class_search->fetch();
+                          if (empty($level_object))
+                          {
+                              //make sure we found the lookup
+                              echo "Unable to find id for '{$class->name} ({$class->levels[$u->{$class_key}]})' \n";
+                          }
+                          else {
+                              $level_id = $level_object->id;
+                              $t_lev = $new->prepare("INSERT INTO tutor_levels
+                                  (user_id, level_id, created_at, updated_at) VALUES (?, ?, ?, ?)");
+                              $t_lev->execute([$new_id, $level_id, date("Y-m-d H:i:s", $u->user_last_login_timestamp),
+                                  date("Y-m-d H:i:s", $u->user_last_login_timestamp)]);
+                              $num_classes++;
+                          }
                         }
+
                         else {
-                            $level_id = $level_object->id;
-                            $t_lev = $new->prepare("INSERT INTO tutor_levels
-                                (user_id, level_id, created_at, updated_at) VALUES (?, ?, ?, ?)");
-                            $t_lev->execute([$new_id, $level_id, date("Y-m-d H:i:s", $u->user_last_login),
-                                date("Y-m-d H:i:s", $u->user_last_login)]);
-                            $num_classes++;
+                          echo "Unable to find corresponding class for: {$class->name} (level: {$u->{$class_key}})\n";
                         }
+
                     }
                 }
             }
@@ -424,7 +442,7 @@ $tutor_insert = $new->prepare("INSERT into tutors (user_id, tutor_active, profil
             $middle_classes = 0;
             foreach($subjects2 as $prefix => $sub_name)
             {
-                foreach(${"{$prefix}2_classes"} as $class_key => $class)
+                foreach(${"{$prefix}_classes2"} as $class_key => $class)
                 {
                     if ($u->{$class_key})
                     {
@@ -432,25 +450,33 @@ $tutor_insert = $new->prepare("INSERT into tutors (user_id, tutor_active, profil
                         $class_search = $new->prepare("SELECT id FROM middle_classes
                             WHERE class_name = ?");
 
-                        $class_search->execute([$class_object->levels[$u->{$class_key}].' '.$class->name]);
-                        $level_object = $class_search->fetch();
-                        if (empty($level_object))
+                        echo "Looking for {$class->name}, level_num: {$u->{$class_key}}\n";
+                        if(array_key_exists($u->{$class_key}, $class->levels))
                         {
-                            //make sure we found the lookup
-                            echo "Unable to find id for '{$class->name} ({$class->levels[$u->{$class_key}]})' \n";
+                          $class_search->execute([$class->levels[$u->{$class_key}].' '.$class->name]);
+                          $level_object = $class_search->fetch();
+                          if (empty($level_object))
+                          {
+                              //make sure we found the lookup
+                              echo "Unable to find id for '{$class->name} ({$class->levels[$u->{$class_key}]})' \n";
+                          }
+                          else {
+                              $class_id = $level_object->id;
+                              $t_mclass = $new->prepare("INSERT INTO tutor_middle_classes
+                                  (tutor_id, middle_classes_id, created_at, updated_at) VALUES (?, ?, ?, ?)");
+                              $t_mclass->execute([$new_id, $class_id, date("Y-m-d H:i:s", $u->user_last_login_timestamp),
+                                  date("Y-m-d H:i:s", $u->user_last_login_timestamp)]);
+                              $middle_classes++;
+                          }
                         }
+
                         else {
-                            $class_id = $level_object->id;
-                            $t_mclass = $new->prepare("INSERT INTO tutor_middle_classes
-                                (tutor_id, middle_classes_id, created_at, updated_at) VALUES (?, ?, ?, ?)");
-                            $t_mclass->execute([$new_id, $class_id, date("Y-m-d H:i:s", $u->user_last_login),
-                                date("Y-m-d H:i:s", $u->user_last_login)]);
-                            $mid_classes++;
+                          echo "Unable to find corresponding class for: {$class->name} (level: {$u->{$class_key}})\n";
                         }
                     }
                 }
             }
-            echo "Migrated {$mid_classes} middle classes for {$u->fname} {$u->lname} ({$u->user_id}->{$new_id})\n";
+            echo "Migrated {$middle_classes} middle classes for {$u->fname} {$u->lname} ({$u->user_id}->{$new_id})\n";
 
             //migrate any instruments
 
@@ -471,9 +497,10 @@ $tutor_insert = $new->prepare("INSERT into tutors (user_id, tutor_active, profil
                     echo "Unable to find id for instrument: '{$u->instrument}'.";
                 }
                 else {
+
                     $music_insert = $new->prepare("INSERT INTO tutor_music (tutor_id,
                         music_id, years_experiance, upto_years) VALUES (?, ?, ?, ?)");
-                    $music_insert->execute([$u->user_id, $music_object->id, $u->music_years, $music_level[$u->music_level]]);
+                    $music_insert->execute([$new_id, $music_object->id, $u->music_years, $music_level[$u->music_level]]);
                 }
                 print "Finished migrating '{$u->instrument}' for {$u->fname} {$u->lname}\n\n";
             }
