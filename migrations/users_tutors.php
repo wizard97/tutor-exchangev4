@@ -391,6 +391,14 @@ $lex_zip = $zip_res->id;
                 $u->profile_views, $u->contact_num, $u->age, $u->grade, $u->rate, $u->about_me,
                 date("Y-m-d H:i:s"), date("Y-m-d H:i:s")]);
 
+            //add LHS
+            $school_insert = $new->prepare("INSERT INTO tutor_schools (tutor_id, school_id,
+              created_at, updated_at) VALUES (?, ?, ?, ?)");
+
+            //assume LHS is id 1
+            $school_insert->execute([$new_id, 1, date("Y-m-d H:i:s", $u->user_last_login_timestamp),
+              date("Y-m-d H:i:s", $u->user_last_login_timestamp)]);
+
             echo "Migrated tutor {$u->fname} {$u->lname} ({$u->user_id}->{$new_id})\n";
 
             //migrate tutor classes info
