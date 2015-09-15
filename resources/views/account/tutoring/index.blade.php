@@ -285,7 +285,7 @@ $( document ).ready(function() {
 
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()
-})
+});
 
 new Morris.Line({
   yLabelFormat: function(y){return y != Math.round(y)?'':y;},
@@ -316,5 +316,6 @@ $('#contacts').on('click', function () {
   var $clicked_row = $(this).closest('tr');
   var $icon = $clicked_row.find("i.fa");
   var data = $contacts.DataTable().row($clicked_row).data();
+});
 </script>
 @stop
