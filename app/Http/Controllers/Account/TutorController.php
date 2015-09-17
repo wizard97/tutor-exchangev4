@@ -147,24 +147,58 @@ class TutorController extends Controller
 
   public function geteditclasses()
   {
-
-    return view('/account/tutoring/editclasses');
+    $tutor = \App\Tutor::findOrFail($this->id);
+    //get tutor schools
+    $schools = $tutor->schools()
+      ->leftJoin('classes', 'classes.school_id', '=', 'schools.id')
+      ->join('levels', 'levels.class_id', '=', 'classes.id')
+      ->join('tutor_levels', 'tutor_levels.level_id', '=', 'levels.id')
+      ->where('tutor_levels.user_id', $tutor->user_id)
+      ->groupBy('schools.id')
+      ->orderBy('num_classes', 'desc')
+      ->select('schools.school_name', 'schools.id', \DB::raw('COUNT(DISTINCT classes.id) AS num_classes'))
+      ->get();
+    return view('/account/tutoring/editclasses')->with('schools', $schools)->with('tutor', $tutor);
 
   }
 
+  //gets the classes for the school
   public function ajaxgetschoolclasses(Request $request)
   {
-    /*
-    $this->validate($request, [
-    'school_id' => 'required|numeric|exists:schools,id',
-    ]);
-    */
+    $hs_id = $request->get('school_id');
+    \App\School::findOrFail($hs_id);
+    //make sure it has at elast one level
+    $classes = \App\SchoolClass::where('classes.school_id', '=', $hs_id)
+    ->join('school_subjects', 'classes.subject_id', '=', 'school_subjects.id')
+    ->select('classes.*', 'school_subjects.subject_name')
+    ->orderBy('class_name', 'asc')->get();
+
+    foreach ($classes as &$class)
+    {
+      $class->levels = \App\Level::
+      where('classes.school_id', '=', $hs_id)
+      ->where('classes.id', '=', $class->id)
+      ->join('classes', 'classes.id', '=', 'levels.class_id')
+      ->leftJoin('tutor_levels', function($join)
+      {
+        $join->on('levels.id', '=', 'tutor_levels.level_id');
+        $join->on('tutor_levels.user_id','=', \DB::raw($this->id));
+      })
+      ->orderBy('level_num', 'desc')
+      ->select('levels.*', \DB::raw("CASE WHEN tutor_levels.user_id IS NULL THEN 'FALSE' ELSE 'TRUE' END AS selected"))
+      ->get();
+    }
+
+    return response()->json(['data' => $classes]);
+  }
+
+  public function ajaxgettutorschoolclasses(Request $request)
+  {
     $school_id = $request->get('school_id');
     $tutor = \App\Tutor::findOrFail($this->id);
 
     //get the tutor classes for the school_id
     //make sure tutor has school
-    $tutor->schools()->findOrFail($school_id);
     $classes = $tutor->levels()
     ->join('classes', 'classes.id', '=', 'levels.class_id')
     ->join('school_subjects', 'classes.subject_id', '=', 'school_subjects.id')
@@ -269,9 +303,15 @@ class TutorController extends Controller
       ->select('schools.school_name', 'schools.id', \DB::raw('COUNT(DISTINCT classes.id) AS num_classes'))
       ->get();
 
+    $reviews = $tutor->reviews()->join('users', 'users.id', '=', 'reviews.tutor_id')
+      ->select('reviews.*', 'users.fname', 'users.lname')
+      ->orderBy('reviews.created_at', 'desc')
+      ->get();
+
     $tutor = \App\Tutor::get_tutor_profile($this->id);
     $saved_tutors = \Auth::user()->saved_tutors()->get()->pluck('tutor_id')->toArray();
-    return view('account/tutoring/myprofile')->with('tutor', $tutor)->with('subjects', $subjects)->with('saved_tutors', $saved_tutors)->with('schools', $schools);
+    return view('account/tutoring/myprofile')->with('tutor', $tutor)->with('subjects', $subjects)->with('saved_tutors', $saved_tutors)->with('schools', $schools)
+      ->with('reviews', $reviews);
   }
 
   public function pauselisting(Request $request)
@@ -357,7 +397,7 @@ class TutorController extends Controller
 
     return response()->json(['tutors_music' => $tutor->tutors_music, 'data' => $tutor->music]);
   }
-  
+
   public function ajaxgetmusic(Request $request)
   {
     $tutor = \App\Tutor::findOrFail($this->id);
