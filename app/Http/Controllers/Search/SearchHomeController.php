@@ -44,9 +44,15 @@ class SearchHomeController extends Controller
       ->select('schools.school_name', 'schools.id', \DB::raw('COUNT(*) AS num_classes'))
       ->get();
 
+      $reviews = $tutor->reviews()->join('users', 'users.id', '=', 'reviews.tutor_id')
+        ->select('reviews.*', 'users.fname', 'users.lname')
+        ->orderBy('reviews.created_at', 'desc')
+        ->get();
+
     $tutor = \App\Tutor::get_tutor_profile($id);
     $saved_tutors = \Auth::user()->saved_tutors()->get()->pluck('tutor_id')->toArray();
-    return view('search/showtutorprofile')->with('tutor', $tutor)->with('subjects', $subjects)->with('saved_tutors', $saved_tutors)->with('schools', $schools);
+    return view('search/showtutorprofile')->with('tutor', $tutor)->with('subjects', $subjects)->with('saved_tutors', $saved_tutors)->with('schools', $schools)
+      ->with('reviews', $reviews);
   }
 
   //ajax stuff

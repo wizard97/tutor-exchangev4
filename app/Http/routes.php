@@ -152,6 +152,14 @@ Route::get('account/tutoring/music', [
 Route::get('account/tutoring/ajaxgetschools', [
     'as' => 'tutoring.ajaxgetschools', 'uses' => 'Account\TutorController@ajaxgetschools'
 ]);
+//get classes for school
+Route::get('account/tutoring/ajaxgetschoolclasses', [
+    'as' => 'tutoring.ajaxgetschoolclasses', 'uses' => 'Account\TutorController@ajaxgetschoolclasses'
+]);
+//get tutor classes for school
+Route::get('account/tutoring/ajaxgettutorschoolclasses', [
+    'as' => 'tutoring.ajaxgettutorschoolclasses', 'uses' => 'Account\TutorController@ajaxgettutorschoolclasses'
+]);
 Route::post('account/tutoring/ajaxstartstopmusic', [
     'as' => 'tutoring.ajaxstartstopmusic', 'uses' => 'Account\TutorController@ajaxstartstopmusic'
 ]);
