@@ -124,7 +124,7 @@ Route::post('account/tutoring/editinfo', [
 Route::get('account/tutoring/classes', [
     'as' => 'tutoring.classes', 'uses' => 'Account\TutorController@geteditclasses'
 ]);
-Route::post('account/tutoring/classes', [
+Route::post('account/tutoring/editclasses', [
     'as' => 'tutoring.editclasses', 'uses' => 'Account\TutorController@posteditclasses'
 ]);
 Route::get('account/tutoring/myprofile', [
