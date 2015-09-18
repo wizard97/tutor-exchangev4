@@ -2,6 +2,15 @@
 @extends('app')
 
 @section('content')
+<style>
+.table > tbody > tr > td {
+  vertical-align: middle;
+}
+.table-text-center {
+  text-align: center;
+}
+</style>
+
 <div class="container-fluid">
   <div class="row">
     @include('/account/tutoring/sidebar')
@@ -51,6 +60,8 @@
           </div>
         </div>
       </div>
+
+      <button class="btn btn-default" id="submit-button">Submit</button>
     </div>
   </div>
 
@@ -84,7 +95,7 @@ $( document ).ready(function() {
     $first_a.closest('li').addClass('active');
     $('#school-dropdown').find('#school-dropdown-text').html($first_a.html());
 
-    //initialize datatable
+    //initialize datatable for tutors classes
     $tutor_classes.dataTable({
       ajax: {
         url: tutor_class_url,
@@ -96,6 +107,7 @@ $( document ).ready(function() {
       "order": [[0, 'asc']],
       pageLength: 10,
       columns: [
+        { "visible": false, "title": 'Level ID', "data": 'id'},
         { "title": 'Class Name', "data": 'class_name'},
         { "title": 'Highest Level', "data": 'level_name'},
         { "title": 'Subject', "data": 'subject_name'},
@@ -107,6 +119,7 @@ $( document ).ready(function() {
       ]
     });
 
+    //datatable for schools classes
     $school_classes.dataTable( {
       ajax: {
         url: school_class_url,
@@ -142,13 +155,52 @@ $( document ).ready(function() {
           {
             $row = $(td).closest('tr');
             $(td).find('select').val(val).prop("disabled", true);
-            console.log($(row));
             $row.find('i.fa').replaceWith('<i style="font-size: 20px;" class="fa fa-minus"></i>');
             $row.addClass('success');
           }
         }
       }]
     });
+
+    //remove row when clicked_row
+    $tutor_classes.on( 'draw.dt', function () {
+      $rows = $tutor_classes.find('tr');
+      $rows.on( "click", function() {
+        $tutor_classes.DataTable().row(this).remove().draw();
+      });
+    });
+
+
+    //post update classes
+    $('#submit-button').click( function () {
+      //start the pretty spinner
+      var btn = $(this);
+      btn.find('#search-spinner').show();
+      var level_ids = [];
+      var url = "{{ route('tutoring.editclasses') }}";
+      $.each($tutor_classes.DataTable().rows().data(), function(key, value)
+      {
+        level_ids.push(value.id);
+      });
+
+      $.ajax({
+        type: "POST",
+        data: {'level_ids': level_ids, 'school_id': $('#school-dropdown').find('li.active').find('.school-anchor').data('schoolid')},
+        url: url,
+        success: function (data){
+          $tutor_classes.DataTable().ajax.reload();
+          $school_classes.DataTable().ajax.reload();
+          btn.find('#search-spinner').hide();
+        },
+        error: function ()
+        {
+          btn.find('#search-spinner').hide();
+        }
+      });
+    });
+
+    //remove selected classes
+
 
   }
 
