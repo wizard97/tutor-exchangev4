@@ -18,7 +18,7 @@
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
       <div class="page-header">
-        <h1>Step 3. Select Your Classes</h1>
+        <h1>Edit Your Classes</h1>
       </div>
       <p class="alert alert-info"><i class="fa fa-info-circle"></i>  This is where you update the classes you can tutor. It is in your best interest to only select classes you can truly tutor, rather than risk negative feedback.</p>
 
@@ -51,7 +51,7 @@
 
         <div class="col-xs-12 col-sm-6 col-md-6">
           <div class="panel panel-primary">
-            <div class="panel-heading"><i class="fa fa-bars"></i> Your Classes: Lexington High School</div>
+            <div class="panel-heading"><i class="fa fa-bars fa-fw"></i> Your Classes: <span id="current-school"></span></div>
             <div class="panel-body">
               <div class="table-responsive">
                 <table id="tutor-classes" class="table table-striped table-bordered table-hover"></table>
@@ -84,6 +84,7 @@ $( document ).ready(function() {
     $li_parent.addClass('active');
     //update dropdown
     $('#school-dropdown').find('#school-dropdown-text').html($clicked.html());
+    $('#current-school').text($clicked.children().remove().end().text());
     $tutor_classes.DataTable().ajax.reload();
     $school_classes.DataTable().ajax.reload();
   });
@@ -94,6 +95,7 @@ $( document ).ready(function() {
   {
     $first_a.closest('li').addClass('active');
     $('#school-dropdown').find('#school-dropdown-text').html($first_a.html());
+    $('#current-school').text($first_a.clone().children().remove().end().text());
 
     //initialize datatable for tutors classes
     $tutor_classes.dataTable({
