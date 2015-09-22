@@ -87,19 +87,22 @@
 }
 .clockpicker-button {
 	background-image: none;
-	background-color: #fff;
+	background-color: white;
 	border-width: 1px 0 0;
 	border-top-left-radius: 0;
 	border-top-right-radius: 0;
 	margin: 0;
 	padding: 10px 0;
+	color: #666666;
 }
 .clockpicker-button:hover {
 	background-image: none;
-	background-color: #ebebeb;
+	background-color: #2B3E51;
+
 }
 .clockpicker-button:focus {
 	outline: none!important;
+
 }
 .clockpicker-dial {
 	-webkit-transition: -webkit-transform 350ms, opacity 350ms;
@@ -158,7 +161,7 @@
 	padding: 5px;
 	border: 1px solid rgba(0, 0, 0, .2);
 	border-radius: 4px;
-	
+
 }
 .clockpicker-button.pm-button {
 	margin: 1px 1px 1px 136px;
