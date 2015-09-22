@@ -172,13 +172,13 @@ $( document ).ready(function() {
     //remove row when clicked_row
     $tutor_classes.on( 'draw.dt', function () {
       $rows = $tutor_classes.find('tr');
+      //unhook any events
+      $rows.off( "click", 'i.fa-times');
       //set up remove class event
       $rows.on( "click", 'i.fa-times', function() {
         var $clicked_row = $(this).closest('tr');
         var data = $tutor_classes.DataTable().row($clicked_row).data();
 
-        //remove this row, and draw
-        $tutor_classes.DataTable().row($clicked_row).remove().draw();
         //update school classes table
         $school_classes.DataTable().rows().every( function () {
           var rowdata = this.data();
@@ -192,6 +192,9 @@ $( document ).ready(function() {
             return false;
           }
         });
+
+        //remove this row, and draw
+        $tutor_classes.DataTable().row($clicked_row).remove().draw();
       });
     });
 
