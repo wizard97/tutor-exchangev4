@@ -104,10 +104,17 @@ $( document ).ready(function() {
           }
       },
       processing: true,
-      "order": [[0, 'asc']],
+      "order": [],
       pageLength: 10,
       columns: [
+        {
+          "orderable":      false,
+          "className":      'details-control table-text-center',
+          "data":           null,
+          "defaultContent": '<a href="javascript:void(0)"><i style="font-size: 20px;" class="fa fa-times text-danger"></i></a>'
+        },
         { "visible": false, "title": 'Level ID', "data": 'id'},
+        { "visible": false, "title": 'Class ID', "data": 'class_id'},
         { "title": 'Class Name', "data": 'class_name'},
         { "title": 'Highest Level', "data": 'level_name'},
         { "title": 'Subject', "data": 'subject_name'},
@@ -146,16 +153,16 @@ $( document ).ready(function() {
           var sel = $('<select class="form-control class-level"></select>').attr("id", 'class-' + rowData.id).attr("name", 'class-' + rowData.id);
           var val = null;
           $(rowData.levels).each(function() {
-            sel.append($("<option>").attr('value',this.level_num).text(this.level_name));
+            sel.append($("<option>").attr('value',this.id).text(this.level_name));
             //check if tutor has this
-            if (this.selected == 'TRUE') val = this.level_num;
+            if (this.selected == 'TRUE') val = this.id;
           });
           $(td).html(sel.wrap('<div class="form-group"></div>').prop('outerHTML'));
           if (val != null)
           {
             $row = $(td).closest('tr');
             $(td).find('select').val(val).prop("disabled", true);
-            $row.find('i.fa').replaceWith('<i style="font-size: 20px;" class="fa fa-minus"></i>');
+            $row.find('i.fa').replaceWith('<i style="font-size: 20px;" class="fa fa-times text-danger"></i>');
             $row.addClass('success');
           }
         }
@@ -165,8 +172,26 @@ $( document ).ready(function() {
     //remove row when clicked_row
     $tutor_classes.on( 'draw.dt', function () {
       $rows = $tutor_classes.find('tr');
-      $rows.on( "click", function() {
-        $tutor_classes.DataTable().row(this).remove().draw();
+      //set up remove class event
+      $rows.on( "click", 'i.fa-times', function() {
+        var $clicked_row = $(this).closest('tr');
+        var data = $tutor_classes.DataTable().row($clicked_row).data();
+
+        //remove this row, and draw
+        $tutor_classes.DataTable().row($clicked_row).remove().draw();
+        //update school classes table
+        $school_classes.DataTable().rows().every( function () {
+          var rowdata = this.data();
+          if (rowdata.id == data.class_id)
+          {
+            //reset it
+            $(this.node()).removeClass('success');
+            $(this.node()).find('select.class-level').prop('selectedIndex',0).prop("disabled", false);
+            $(this.node()).find('td a').first().html('<i style="font-size: 20px;" class="fa fa-plus"></i>');
+            //break out of loop
+            return false;
+          }
+        });
       });
     });
 
@@ -199,13 +224,60 @@ $( document ).ready(function() {
       });
     });
 
-    //remove selected classes
+    //add class event
+    $school_classes.on( 'click', '.table-text-center i.fa', function () {
+      var $clicked_row = $(this).closest('tr');
+      var $icon = $(this);
+      var data = $school_classes.DataTable().row($clicked_row).data();
+
+      //removing row
+      if ($clicked_row.hasClass('success'))
+      {
+        //update current row
+        $clicked_row.find('select.class-level').prop("disabled", false);
+        $icon.replaceWith('<i style="font-size: 20px;" class="fa fa-plus"></i>');
+        $clicked_row.removeClass('success');
+        //remove it from the tutor classes table
+        var $to_remove;
+        var level_id = $clicked_row.find('select option:selected').val();
+        $tutor_classes.DataTable().rows().every( function () {
+          var rowdata = this.data();
+          if (rowdata.id == level_id)
+          {
+            //save the row
+            $to_remove = this;
+            //break out of loop
+            return false;
+          }
+        });
+        $to_remove.remove().draw();
+
+      }
+      else
+      {
+        //update current row
+        $clicked_row.find('select.class-level').prop("disabled", true);
+        $icon.replaceWith('<i style="font-size: 20px;" class="fa fa-times text-danger"></i>');
+        $clicked_row.addClass('success');
+        //add it to the tutor classes table
+        var clicked_class = new Object();
+        clicked_class.class_id = data.id;
+        clicked_class.class_name = data.class_name;
+        clicked_class.subject_name = data.subject_name;
+        clicked_class.id = $clicked_row.find('select.class-level').val();
+        clicked_class.level_name = $clicked_row.find('select.class-level option:selected').text();
+        //insert created at date
+        var date = new Date();
+        clicked_class.pivot = new Object();
+        clicked_class.pivot.created_at = date.toString();
+        $tutor_classes.DataTable().row.add(clicked_class).draw();
+      }
+    });
 
 
   }
 
 });
 </script>
-{!! Form::close() !!}
 
 @stop
