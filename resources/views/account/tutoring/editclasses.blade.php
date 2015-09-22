@@ -84,7 +84,7 @@ $( document ).ready(function() {
     $li_parent.addClass('active');
     //update dropdown
     $('#school-dropdown').find('#school-dropdown-text').html($clicked.html());
-    $('#current-school').text($clicked.children().remove().end().text());
+    $('#current-school').text($clicked.clone().children().remove().end().text());
     $tutor_classes.DataTable().ajax.reload();
     $school_classes.DataTable().ajax.reload();
   });
