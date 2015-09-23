@@ -215,8 +215,8 @@ class TutorController extends Controller
   public function posteditclasses(Request $request)
   {
     $this->validate($request, [
-    'level_ids' => 'required|array',
     'school_id' => 'required|exists:schools,id',
+    'level_ids' => 'required|array',
     ]);
 
     $tutor = \App\Tutor::findOrFail($this->id);
