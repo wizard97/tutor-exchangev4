@@ -124,7 +124,7 @@ class TutorController extends Controller
           //second timespan only one set, so move it to first one
           $ts_start = \DateTime::createFromFormat( 'H:iA', $request->get($day.'2_start'));
           $ts_end = \DateTime::createFromFormat( 'H:iA', $request->get($day.'2_end'));
-          if (intval($ts_start->format( 'U')) >= intval($ts_end->format( 'U')))
+          if (intval($ts_start->format('U')) >= intval($ts_end->format('U')))
           {
             //invalid timestamp
             $request->session()->put('feedback_negative', "The start time can't be after the end time for {$feedback_day}!");
@@ -216,17 +216,18 @@ class TutorController extends Controller
   {
     $this->validate($request, [
     'school_id' => 'required|exists:schools,id',
-    'level_ids' => 'required|array',
+    'level_ids' => 'array',
     ]);
 
     $tutor = \App\Tutor::findOrFail($this->id);
-    $school_id = $request->get('school_id');
-    $school = \App\School::findOrFail($school_id);
+    $school_id = $request->input('school_id');
+
+    $school = \App\School::findOrFail(intval($school_id));
 
     //make sure tutor tutors that school
     $tutor->schools()->findOrFail($school_id);
 
-    $level_ids = $request->get('level_ids');
+    $level_ids = $request->input('level_ids');
     //remove old classes
     \App\Tutor::findOrFail($this->id)->levels()
       ->join('classes', 'classes.id', '=', 'levels.class_id')
@@ -234,24 +235,30 @@ class TutorController extends Controller
       ->detach();
 
     //insert new levels
-
-    foreach ($level_ids as $level_id)
+    if (!empty($level_ids))
     {
-      //make sure not to insert redundant level for a class
+      foreach ($level_ids as $level_id)
+      {
+        //make sure not to insert redundant level for a class
 
-      //find class_id for level
-      $class_id = \App\Level::findOrFail($level_id)->class_id;
-      //make sure it is for right school
-      $school->classes()->findOrFail($class_id);
+        //find class_id for level
+        $class_id = \App\Level::findOrFail($level_id)->class_id;
+        //make sure it is for right school
+        $school->classes()->findOrFail($class_id);
 
-      if ($tutor->levels()->where('levels.class_id', '=', $class_id)
-            ->get()->isEmpty())
-          {
-            //there is no duplicate class, so do the insert
-            $tutor->levels()->attach($level_id);
-          }
+        if ($tutor->levels()->where('levels.class_id', '=', $class_id)
+              ->get()->isEmpty())
+            {
+              //there is no duplicate class, so do the insert
+              $tutor->levels()->attach($level_id);
+            }
 
+      }
+      $num_classes = $tutor->levels()->join('classes', 'classes.id', '=', 'levels.class_id')->where('school_id', $school_id)->count();
+      $request->session()
+        ->put('feedback_positive', "You have successfully updated the classes you tutor for {$school->school_name}. You currently are tutoring {$num_classes} class/classes.");
     }
+    else $request->session()->put('feedback_positive', "You have successfully removed all your classes for {$school->school_name}.");
 
     return response()->json([]);
   }
