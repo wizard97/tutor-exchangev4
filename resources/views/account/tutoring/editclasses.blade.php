@@ -18,7 +18,7 @@
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
       <div class="page-header">
-        <h1>Step 3. Select Your Classes</h1>
+        <h1>Edit Your Classes</h1>
       </div>
       <p class="alert alert-info"><i class="fa fa-info-circle"></i>  This is where you update the classes you can tutor. It is in your best interest to only select classes you can truly tutor, rather than risk negative feedback.</p>
 
@@ -51,7 +51,7 @@
 
         <div class="col-xs-12 col-sm-6 col-md-6">
           <div class="panel panel-primary">
-            <div class="panel-heading"><i class="fa fa-bars"></i> Your Classes: Lexington High School</div>
+            <div class="panel-heading"><i class="fa fa-bars fa-fw"></i> Your Classes: <span id="current-school"></span></div>
             <div class="panel-body">
               <div class="table-responsive">
                 <table id="tutor-classes" class="table table-striped table-bordered table-hover"></table>
@@ -84,6 +84,7 @@ $( document ).ready(function() {
     $li_parent.addClass('active');
     //update dropdown
     $('#school-dropdown').find('#school-dropdown-text').html($clicked.html());
+    $('#current-school').text($clicked.clone().children().remove().end().text());
     $tutor_classes.DataTable().ajax.reload();
     $school_classes.DataTable().ajax.reload();
   });
@@ -94,6 +95,7 @@ $( document ).ready(function() {
   {
     $first_a.closest('li').addClass('active');
     $('#school-dropdown').find('#school-dropdown-text').html($first_a.html());
+    $('#current-school').text($first_a.clone().children().remove().end().text());
 
     //initialize datatable for tutors classes
     $tutor_classes.dataTable({
@@ -172,13 +174,13 @@ $( document ).ready(function() {
     //remove row when clicked_row
     $tutor_classes.on( 'draw.dt', function () {
       $rows = $tutor_classes.find('tr');
+      //unhook any events
+      $rows.off( "click", 'i.fa-times');
       //set up remove class event
       $rows.on( "click", 'i.fa-times', function() {
         var $clicked_row = $(this).closest('tr');
         var data = $tutor_classes.DataTable().row($clicked_row).data();
 
-        //remove this row, and draw
-        $tutor_classes.DataTable().row($clicked_row).remove().draw();
         //update school classes table
         $school_classes.DataTable().rows().every( function () {
           var rowdata = this.data();
@@ -192,25 +194,30 @@ $( document ).ready(function() {
             return false;
           }
         });
+
+        //remove this row, and draw
+        $tutor_classes.DataTable().row($clicked_row).remove().draw();
       });
     });
 
 
     //post update classes
     $('#submit-button').click( function () {
+      var url = "{{ route('tutoring.editclasses') }}";
       //start the pretty spinner
       var btn = $(this);
       btn.find('#search-spinner').show();
-      var level_ids = [];
-      var url = "{{ route('tutoring.editclasses') }}";
+      var data = new Object();
+      data.school_id = $('#school-dropdown').find('li.active').find('.school-anchor').data('schoolid');
+      data.level_ids = [];
       $.each($tutor_classes.DataTable().rows().data(), function(key, value)
       {
-        level_ids.push(value.id);
+        data.level_ids.push(value.id);
       });
 
       $.ajax({
         type: "POST",
-        data: {'level_ids': level_ids, 'school_id': $('#school-dropdown').find('li.active').find('.school-anchor').data('schoolid')},
+        data: JSON.stringify(data),
         url: url,
         success: function (data){
           $tutor_classes.DataTable().ajax.reload();
