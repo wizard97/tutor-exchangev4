@@ -101,6 +101,24 @@
       </style>
 
 <script>
+//lextutor functions
+var lte = {
+    feedback: function() {
+      //to advoid race conditions
+      setTimeout( function(){
+        $.ajax({
+          type: "GET",
+          url : "{{ route('feedback') }}",
+          success: function (data){
+            $("#feedback").replaceWith(function() {
+              return $(data).hide().fadeIn('slow');
+            });
+          }
+        });
+      }, 100);
+    },
+};
+
 
 //for spitting out validation errors
 function validation_errors(response, selector)
@@ -158,16 +176,7 @@ $(".tutor-save-btn").on("click", function(){
           button.hide().html('<i class="fa fa-plus" aria-hidden="true"></i> Save').fadeIn('slow');
         }
 //get feedback messages
-        $.ajax({
-          type: "GET",
-          url : "{{ route('feedback') }}",
-          success: function (data){
-            $("#feedback").replaceWith(function() {
-              return $(data).hide().fadeIn('slow');
-            });
-
-          }
-        });
+        lte.feedback();
       }
 
     });
