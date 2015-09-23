@@ -203,19 +203,21 @@ $( document ).ready(function() {
 
     //post update classes
     $('#submit-button').click( function () {
+      var url = "{{ route('tutoring.editclasses') }}";
       //start the pretty spinner
       var btn = $(this);
       btn.find('#search-spinner').show();
-      var level_ids = [];
-      var url = "{{ route('tutoring.editclasses') }}";
+      var data = new Object();
+      data.school_id = $('#school-dropdown').find('li.active').find('.school-anchor').data('schoolid');
+      data.level_ids = [];
       $.each($tutor_classes.DataTable().rows().data(), function(key, value)
       {
-        level_ids.push(value.id);
+        data.level_ids.push(value.id);
       });
 
       $.ajax({
         type: "POST",
-        data: {'level_ids': level_ids, 'school_id': $('#school-dropdown').find('li.active').find('.school-anchor').data('schoolid')},
+        data: JSON.stringify(data),
         url: url,
         success: function (data){
           $tutor_classes.DataTable().ajax.reload();
