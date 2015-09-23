@@ -14,9 +14,9 @@
 <div class="container-fluid">
   <div class="row">
     @include('/account/tutoring/sidebar')
-    @include('templates/feedback')
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+      @include('templates/feedback')
       <div class="page-header">
         <h1>Edit Your Classes</h1>
       </div>
@@ -176,6 +176,7 @@ $( document ).ready(function() {
       $rows = $tutor_classes.find('tr');
       //unhook any events
       $rows.off( "click", 'i.fa-times');
+
       //set up remove class event
       $rows.on( "click", 'i.fa-times', function() {
         var $clicked_row = $(this).closest('tr');
@@ -217,17 +218,19 @@ $( document ).ready(function() {
 
       $.ajax({
         type: "POST",
-        data: JSON.stringify(data),
+        data: data,
         url: url,
         success: function (data){
           $tutor_classes.DataTable().ajax.reload();
           $school_classes.DataTable().ajax.reload();
           btn.find('#search-spinner').hide();
         },
-        error: function ()
+        complete: function()
         {
-          btn.find('#search-spinner').hide();
+          //render feedback
+          lte.feedback();
         }
+
       });
     });
 
