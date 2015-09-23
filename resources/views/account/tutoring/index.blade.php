@@ -5,6 +5,10 @@
 .table-text-center {
   text-align: center;
 }
+.table > tbody > tr > td {
+  vertical-align: middle;
+}
+
 </style>
 <div class="container-fluid">
   <div class="row">
