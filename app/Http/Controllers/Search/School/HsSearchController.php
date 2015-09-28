@@ -185,6 +185,20 @@ class HsSearchController extends Controller
       }
     });
 
+    //tutor type
+    switch ($form_inputs['tutor_type'])
+    {
+      case 'standard':
+        $search->where('users.account_type', '2');
+        break;
+      case 'professional':
+        $search->where('users.account_type', '3');
+        break;
+      case 'all':
+        $search->where('users.account_type', '>=', '2');
+        break;
+    }
+
     //count and search query diverge here
     $count_query = clone $search;
 
@@ -238,7 +252,6 @@ class HsSearchController extends Controller
     ->join('users', 'users.id', '=', 'tutor_levels.user_id')
     ->join('tutors', 'tutors.user_id', '=', 'tutor_levels.user_id')
     ->join('zips', 'users.zip_id', '=', 'zips.id')
-    ->where('account_type', '>=', '2')
     ->where('tutors.tutor_active', '=', '1')
     ->where('tutors.profile_expiration', '>=', date('Y-m-d H:i:s'))
     ->select(\DB::raw($dist_select), 'tutor_levels.user_id', \DB::raw('COUNT(DISTINCT tutor_levels.user_id) AS num_rows'))->get();
@@ -253,7 +266,6 @@ class HsSearchController extends Controller
     ->leftjoin('grades', 'tutors.grade', '=', 'grades.id')
     ->leftjoin('reviews', 'reviews.tutor_id', '=', 'tutor_levels.user_id')
     ->join('zips', 'users.zip_id', '=', 'zips.id')
-    ->where('account_type', '>=', '2')
     ->where('tutors.tutor_active', '=', '1')
     ->where('tutors.profile_expiration', '>=', date('Y-m-d H:i:s'))
     ->select(\DB::raw($dist_select), \DB::raw($dist_select2), \DB::raw($class_select), \DB::raw($class_select2), \DB::raw($time_select), \DB::raw($time_select2), \DB::raw('AVG(reviews.rating) AS avg_rating'), 'users.account_type', 'tutor_levels.user_id', 'users.id',
