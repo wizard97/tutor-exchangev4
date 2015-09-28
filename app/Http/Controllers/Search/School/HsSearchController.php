@@ -116,9 +116,11 @@ class HsSearchController extends Controller
       $hs_id = $request->session()->get('hs_id');
       if (empty($hs_id)) return redirect()->route('hs.index');
 
-      //get array of objects for selected classes
       $classes = $request->session()->get('school_search_classes');
-      if (is_null($classes)) return redirect()->route('hs.classes');
+      if (empty($hs_id)) return redirect()->route('hs.classes');
+
+      //get array of selected classes
+      if (!empty($form_inputs['classes'])) $classes = $form_inputs['classes'];
 
       //get long and lat
       if (\Auth::check())
@@ -178,7 +180,7 @@ class HsSearchController extends Controller
         {
           $query->orWhereRaw("(({$time_alias[$day]} BETWEEN {$day}1_start AND {$day}1_end) OR ({$time_alias[$day]} BETWEEN {$day}2_start AND {$day}2_end))");
           //create array of boolean mysql checks
-          $time_array[] = "(({$time_alias[$day]} BETWEEN tutors.{$day}1_start AND tutors.{$day}1_end) OR ({$time_alias[$day]} BETWEEN tutors.{$day}2_start AND tutors.{$day}2_end))";
+          $time_array[] = "COALESCE((({$time_alias[$day]} BETWEEN tutors.{$day}1_start AND tutors.{$day}1_end) OR ({$time_alias[$day]} BETWEEN tutors.{$day}2_start AND tutors.{$day}2_end)), 0)";
         }
       }
     });
