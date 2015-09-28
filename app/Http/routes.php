@@ -79,6 +79,17 @@ Route::get('search/school/hsorabove/find/prefetch', [
     'as' => 'hs.prefetch', 'uses' => 'Search\School\HsSearchController@prefetch'
 ]);
 
+//ms tutoring
+Route::get('search/school/middleorbelow/classes', [
+    'as' => 'middle.classes', 'uses' => 'Search\School\MiddleSearchController@classes'
+]);
+Route::post('search/school/middleorbelow/submitclasses', [
+    'as' => 'middle.submitclasses', 'uses' => 'Search\School\MiddleSearchController@submit_classes'
+]);
+Route::get('search/school/middleorbelow/showresults', [
+    'as' => 'middle.showresults', 'uses' => 'Search\School\MiddleSearchController@run_search'
+]);
+
 //music
 Route::get('search/music/index', [
     'as' => 'music.index', 'uses' => 'Search\Music\MusicController@index'
