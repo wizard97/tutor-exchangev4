@@ -21,7 +21,7 @@ class SchoolSearchHomeController extends Controller
     {
       $this->validate($request, [
       'school_type' => 'required|in:middle,high',
-      'tutor_type' => 'required|in:standard,professional',
+      'tutor_type' => 'required|in:standard,professional,all',
       'start_rate' => 'numeric|between:0,200',
       'end_rate' => 'numeric|between:0,200',
       'max_dist' => 'numeric|between:1,200',
@@ -31,7 +31,7 @@ class SchoolSearchHomeController extends Controller
       $this->validate($request, [
       'zip' => 'required|digits:5|numeric|exists:zips,zip_code',
       'school_type' => 'required|in:middle,high',
-      'tutor_type' => 'required|in:standard,professional',
+      'tutor_type' => 'required|in:standard,professional,all',
       'start_rate' => 'numeric|between:0,200',
       'end_rate' => 'numeric|between:0,200',
       'max_dist' => 'numeric|between:1,200',
