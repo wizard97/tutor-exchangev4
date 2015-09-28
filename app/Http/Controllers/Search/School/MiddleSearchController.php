@@ -54,6 +54,7 @@ class MiddleSearchController extends Controller
     {
       $search = new \App\MiddleClass;
 
+
       //get the search inputs from the session
       $form_inputs = $request->session()->get('school_search_inputs');
       if(empty($form_inputs)) return redirect()->route('school.index');
@@ -116,6 +117,20 @@ class MiddleSearchController extends Controller
       }
     });
 
+    //tutor type
+    switch ($form_inputs['tutor_type'])
+    {
+      case 'standard':
+        $search->where('users.account_type', '2');
+        break;
+      case 'professional':
+        $search->where('users.account_type', '3');
+        break;
+      case 'all':
+        $search->where('users.account_type', '>=', '2');
+        break;
+    }
+
     //count and search query diverge here
     $count_query = clone $search;
 
@@ -168,7 +183,6 @@ class MiddleSearchController extends Controller
     ->join('users', 'users.id', '=', 'tutor_middle_classes.tutor_id')
     ->join('tutors', 'tutors.user_id', '=', 'tutor_middle_classes.tutor_id')
     ->join('zips', 'users.zip_id', '=', 'zips.id')
-    ->where('account_type', '>=', '2')
     ->where('tutors.tutor_active', '=', '1')
     ->where('tutors.profile_expiration', '>=', date('Y-m-d H:i:s'))
     ->select(\DB::raw($dist_select), 'tutor_middle_classes.tutor_id', \DB::raw('COUNT(DISTINCT tutor_middle_classes.tutor_id) AS num_rows'))->get();
@@ -182,7 +196,6 @@ class MiddleSearchController extends Controller
     ->leftjoin('grades', 'tutors.grade', '=', 'grades.id')
     ->leftjoin('reviews', 'reviews.tutor_id', '=', 'tutor_middle_classes.tutor_id')
     ->join('zips', 'users.zip_id', '=', 'zips.id')
-    ->where('account_type', '>=', '2')
     ->where('tutors.tutor_active', '=', '1')
     ->where('tutors.profile_expiration', '>=', date('Y-m-d H:i:s'))
     ->select(\DB::raw($dist_select), \DB::raw($dist_select2), \DB::raw($class_select), \DB::raw($class_select2), \DB::raw($time_select), \DB::raw($time_select2), \DB::raw('AVG(reviews.rating) AS avg_rating'), 'users.account_type', 'users.id',
