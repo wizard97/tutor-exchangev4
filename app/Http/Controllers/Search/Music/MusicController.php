@@ -28,7 +28,7 @@ class MusicController extends Controller
         'instrument' => 'required|exists:music,id',
         'years_playing' => 'required|numeric|min:0',
         'school_type' => 'required|in:middle,high',
-        'tutor_type' => 'required|in:standard,professional',
+        'tutor_type' => 'required|in:standard,professional,all',
         'start_rate' => 'numeric|between:0,200',
         'end_rate' => 'numeric|between:0,200',
         'max_dist' => 'numeric|between:1,200',
@@ -120,7 +120,7 @@ class MusicController extends Controller
         {
           $query->orWhereRaw("(({$time_alias[$day]} BETWEEN {$day}1_start AND {$day}1_end) OR ({$time_alias[$day]} BETWEEN {$day}2_start AND {$day}2_end))");
           //create array of boolean mysql checks
-          $time_array[] = "(({$time_alias[$day]} BETWEEN tutors.{$day}1_start AND tutors.{$day}1_end) OR ({$time_alias[$day]} BETWEEN tutors.{$day}2_start AND tutors.{$day}2_end))";
+          $time_array[] = "COALESCE((({$time_alias[$day]} BETWEEN tutors.{$day}1_start AND tutors.{$day}1_end) OR ({$time_alias[$day]} BETWEEN tutors.{$day}2_start AND tutors.{$day}2_end)), 0)";
         }
       }
     });
@@ -133,6 +133,19 @@ class MusicController extends Controller
       ->whereRaw("users.lon BETWEEN (? - (? / (69.0 * COS(RADIANS(?))))) AND (? + (? / (69.0 * COS(RADIANS(?)))))", [$u_lon, $max_dist, $u_lon, $u_lon, $max_dist, $u_lon]);
     }
 
+    //tutor type
+    switch ($form_inputs['tutor_type'])
+    {
+      case 'standard':
+        $search->where('users.account_type', '2');
+        break;
+      case 'professional':
+        $search->where('users.account_type', '3');
+        break;
+      case 'all':
+        $search->where('users.account_type', '>=', '2');
+        break;
+    }
 
     //finish building search
     $search
@@ -140,7 +153,6 @@ class MusicController extends Controller
     ->join('users', 'users.id', '=', 'tutor_music.tutor_id')
     ->leftjoin('grades', 'tutors.grade', '=', 'grades.id')
     ->join('zips', 'users.zip_id', '=', 'zips.id')
-    ->where('account_type', '>=', '2')
     ->where('tutors.tutor_active', '=', '1')
     ->where('tutors.profile_expiration', '>=', date('Y-m-d H:i:s'))
     ->wherePivot('upto_years', '>=', $form_inputs['years_playing']);

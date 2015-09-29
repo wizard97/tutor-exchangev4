@@ -48,7 +48,7 @@ $( document ).ready(function() {
         error: function(data)
         {
           //print validation errors
-          validation_errors(data, '#error-messages');
+          lte.validation_errors(data, '#error-messages');
         }
     });
     // stop the form from submitting the normal way and refreshing the page
