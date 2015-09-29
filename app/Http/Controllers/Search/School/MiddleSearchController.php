@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Search\School;
 
 use Illuminate\Http\Request;
@@ -6,77 +7,23 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class HsSearchController extends Controller
+class MiddleSearchController extends Controller
 {
-
-  //pick hs
-  public function index()
-  {
-    return view('search/school/schools');
-  }
-
-  public function submit_school(Request $request)
-  {
-    //if school_search_inputs not set redirect back
-    if(!$request->session()->has('school_search_inputs'))
-    {
-      return redirect()->route('school.index');
-    }
-
-    $this->validate($request, [
-      'school_name' => 'required|string'
-      ]);
-
-    //figure out their school
-    $school_name = $request->input('school_name');
-    $results = $this->query($school_name);
-    if(empty($results)) return redirect()->back();
-    $school_id = json_decode($results)[0]->school_id;
-
-    $inputs = $request->session()->pull('hs_id');
-
-    $request->session()->put('hs_id', $school_id);
-
-    return redirect()->route('hs.classes');
-  }
-
   public function classes(Request $request)
   {
-    //if hs_id not set redirect back
-
-    if(!$request->session()->has('hs_id') && !is_int($request->session()->get('hs_id')))
-    {
-      return redirect()->route('hs.index');
-    }
-
-
     $inputs = $request->session()->get('school_search_inputs');
-    $hs_id = $request->session()->get('hs_id');
 
     //make sure it has at elast one level
-    $classes = \App\SchoolClass::where('classes.school_id', '=', $hs_id)
-    ->join('school_subjects', 'classes.subject_id', '=', 'school_subjects.id')
-    ->select('classes.*', 'school_subjects.subject_name')
+    $classes = \App\MiddleClass::join('middle_subjects', 'middle_classes.middle_subject_id', '=', 'middle_subjects.id')
+    ->select('middle_classes.*', 'middle_subjects.subject_name')
     ->orderBy('class_name', 'asc')->get();
 
-    //return (\App\SchoolClass::where('school_id', '=', $hs_id)->orderBy('class_name', 'asc')->toSql());
-    $levels = \App\Level::where('classes.school_id', '=', $hs_id)
-    ->join('classes', 'classes.id', '=', 'levels.class_id')
-    ->orderBy('level_num', 'desc')
-    ->select('levels.*')
-    ->get()
-    ->groupBy('class_id');
-
-    //  $classes->merge($levels);
-    $subjects = \App\SchoolSubject::where('school_id', '=', $hs_id)->orderBy('subject_name', 'asc')->get()->pluck('subject_name');
-    $grades = \App\Grade::all();
 
     \JavaScript::put([
       'classes' => $classes,
-      'levels' => $levels,
       ]);
 
-      return view('search/school/classes')->with('classes', $classes)->with('subjects', $subjects)->with('grades', $grades);
+      return view('search/school/middleclasses')->with('classes', $classes);
     }
 
     public function submit_classes(Request $request)
@@ -85,42 +32,36 @@ class HsSearchController extends Controller
       {
         return response()->json(route('school.index'));
       }
-      if(!$request->session()->has('hs_id') && !is_int($request->session()->get('hs_id')))
-      {
-        return response()->json(route('hs.index'));
-      }
 
-      $input = $request->all();
-      $request->session()->forget('school_search_classes');
+      if (isset($request->all()['class_ids'])) $input = $request->all()['class_ids'];
+      else $input = [];
+      $request->session()->forget('middle_search_classes');
+
 
       //make sure user input isnt garbage
       foreach($input as $class_id => $class)
       {
-        \App\SchoolClass::findOrFail($class_id)->levels()->where('level_num', '=', $class['level_num']);
+        \App\MiddleClass::findOrFail($class);
       }
 
-      $request->session()->put('school_search_classes', $input);
+      $request->session()->put('middle_search_classes', $input);
 
       //otherwise everything is good
-      return response()->json(route('hs.showresults'));
+      return response()->json(route('middle.showresults'));
     }
 
-    public function run_hs_search(Request $request)
+    public function run_search(Request $request)
     {
-      $search = new \App\Level;
+      $search = new \App\MiddleClass;
+
 
       //get the search inputs from the session
       $form_inputs = $request->session()->get('school_search_inputs');
       if(empty($form_inputs)) return redirect()->route('school.index');
 
-      $hs_id = $request->session()->get('hs_id');
-      if (empty($hs_id)) return redirect()->route('hs.index');
+      $classes = $request->session()->get('middle_search_classes');
+      if (is_null($classes)) return redirect()->route('middle.classes');
 
-      $classes = $request->session()->get('school_search_classes');
-      if (empty($hs_id)) return redirect()->route('hs.classes');
-
-      //get array of selected classes
-      if (!empty($form_inputs['classes'])) $classes = $form_inputs['classes'];
 
       //get long and lat
       if (\Auth::check())
@@ -160,16 +101,7 @@ class HsSearchController extends Controller
     if (!empty($hs_id)) $search->where('classes.school_id', '=', $hs_id);
 
     //handle user classes
-    $search->where(function ($query) use($form_inputs, $classes){
-      //build query for classes the user selects
-      foreach($classes as $class_id => $class)
-      {
-        $query->orWhere(function ($query) use($class_id, $class, $form_inputs){
-          $query->where('levels.class_id', $class_id);
-          $query->where('levels.level_num', '>=', $class['level_num']);
-        });
-      }
-    });
+    if (!empty($classes)) $search->whereIn('middle_classes.id', $classes);
       //handle times
     $time_array = array();
     $search->where(function ($query) use($form_inputs, $time_alias, &$time_array){
@@ -218,12 +150,12 @@ class HsSearchController extends Controller
     //default to 100 if empty
     if($num_classes)
     {
-      $class_select = "ROUND((COUNT(DISTINCT levels.class_id)/{$num_classes})*100, 0) as 'classes_match'";
+      $class_select = "ROUND((COUNT(DISTINCT tutor_middle_classes.middle_classes_id)/{$num_classes})*100, 0) as 'classes_match'";
     } else {
       $class_select = "100 AS 'classes_match'";
     }
 
-    $class_select2 = "COUNT(DISTINCT levels.class_id) AS classes_count";
+    $class_select2 = "COUNT(DISTINCT tutor_middle_classes.middle_classes_id) AS classes_count";
 
 
     $dist_select = sprintf("ROUND(3959*ACOS(COS(RADIANS(users.lat)) * COS(RADIANS('%s')) * COS(RADIANS(users.lon) - RADIANS('%s')) + SIN(RADIANS(users.lat)) * SIN(RADIANS('%s'))), 0) AS '%s'", $u_lat, $u_lon, $u_lat, 'distance');
@@ -247,30 +179,28 @@ class HsSearchController extends Controller
     ->whereRaw("users.lon BETWEEN (? - (? / (69.0 * COS(RADIANS(?))))) AND (? + (? / (69.0 * COS(RADIANS(?)))))", [$u_lon, $max_dist, $u_lon, $u_lon, $max_dist, $u_lon]);
 
     $res_count = $count_query
-    ->join('tutor_levels', 'levels.id', '=', 'tutor_levels.level_id')
-    ->join('classes', 'classes.id', '=', 'levels.class_id')
-    ->join('users', 'users.id', '=', 'tutor_levels.user_id')
-    ->join('tutors', 'tutors.user_id', '=', 'tutor_levels.user_id')
+    ->join('tutor_middle_classes', 'middle_classes.id', '=', 'tutor_middle_classes.middle_classes_id')
+    ->join('users', 'users.id', '=', 'tutor_middle_classes.tutor_id')
+    ->join('tutors', 'tutors.user_id', '=', 'tutor_middle_classes.tutor_id')
     ->join('zips', 'users.zip_id', '=', 'zips.id')
     ->where('tutors.tutor_active', '=', '1')
     ->where('tutors.profile_expiration', '>=', date('Y-m-d H:i:s'))
-    ->select(\DB::raw($dist_select), 'tutor_levels.user_id', \DB::raw('COUNT(DISTINCT tutor_levels.user_id) AS num_rows'))->get();
+    ->select(\DB::raw($dist_select), 'tutor_middle_classes.tutor_id', \DB::raw('COUNT(DISTINCT tutor_middle_classes.tutor_id) AS num_rows'))->get();
     //figure out num of rows
     $num_rows = $res_count->first()->toArray()['num_rows'];
 
     //finish building search
-    $search->join('tutor_levels', 'levels.id', '=', 'tutor_levels.level_id')
-    ->join('classes', 'classes.id', '=', 'levels.class_id')
-    ->join('users', 'users.id', '=', 'tutor_levels.user_id')
-    ->join('tutors', 'tutors.user_id', '=', 'tutor_levels.user_id')
+    $search->join('tutor_middle_classes', 'middle_classes.id', '=', 'tutor_middle_classes.middle_classes_id')
+    ->join('users', 'users.id', '=', 'tutor_middle_classes.tutor_id')
+    ->join('tutors', 'tutors.user_id', '=', 'tutor_middle_classes.tutor_id')
     ->leftjoin('grades', 'tutors.grade', '=', 'grades.id')
-    ->leftjoin('reviews', 'reviews.tutor_id', '=', 'tutor_levels.user_id')
+    ->leftjoin('reviews', 'reviews.tutor_id', '=', 'tutor_middle_classes.tutor_id')
     ->join('zips', 'users.zip_id', '=', 'zips.id')
     ->where('tutors.tutor_active', '=', '1')
     ->where('tutors.profile_expiration', '>=', date('Y-m-d H:i:s'))
-    ->select(\DB::raw($dist_select), \DB::raw($dist_select2), \DB::raw($class_select), \DB::raw($class_select2), \DB::raw($time_select), \DB::raw($time_select2), \DB::raw('AVG(reviews.rating) AS avg_rating'), 'users.account_type', 'tutor_levels.user_id', 'users.id',
+    ->select(\DB::raw($dist_select), \DB::raw($dist_select2), \DB::raw($class_select), \DB::raw($class_select2), \DB::raw($time_select), \DB::raw($time_select2), \DB::raw('AVG(reviews.rating) AS avg_rating'), 'users.account_type', 'users.id',
     'users.fname', 'users.lname', 'users.last_login', 'users.created_at', 'users.account_type', 'tutors.*', 'grades.*', 'zips.*')
-    ->groupBy('tutor_levels.user_id')
+    ->groupBy('tutor_middle_classes.tutor_id')
     ->take($per_page);
 
     //figure out how to sort it by
@@ -352,7 +282,6 @@ class HsSearchController extends Controller
         break;
     }
 
-
     if ($request->get('page') > 1)
     {
       $search->skip(($request->get('page')-1)*$per_page);
@@ -363,7 +292,7 @@ class HsSearchController extends Controller
     $paginator = new \Illuminate\Pagination\LengthAwarePaginator($results, $num_rows, $per_page, $request->get('page'));
     $paginator->setPath($request->url());
     $paginator->appends('sort', $sort_by);
-    //return var_dump($paginator->toArray());
+
 
     if (\Auth::check())
     {
@@ -378,47 +307,4 @@ class HsSearchController extends Controller
     return view('search/showresultsplain', ['results' => $results, 'num_results' => $num_rows, 'paginator' => $paginator, 'sort_options' => $sort_options, 'sort_by' => $sort_by]);
 
   }
-
-  public function query($query)
-  {
-    $keys = preg_split("/[\s,.]+/", trim(urldecode($query)));
-    $num_keys = count($keys);
-
-    $search = \App\School::join('zips', 'schools.zip_id', '=', 'zips.id');
-    //make queries more complex until we stop getting results, then back up one
-    for ($i = 0; $i < $num_keys; $i++)
-    {
-        $previous = clone $search;
-
-        $search->where(function ($query) use ($keys, $i){
-          $query->orWhere('school_name', 'LIKE', '%'.$keys[$i].'%')
-          ->orWhere('zips.zip_code', 'LIKE', '%'.$keys[$i].'%')
-          ->orWhere('zips.city', 'LIKE', '%'.$keys[$i].'%')
-          ->orWhere('zips.state_prefix', 'LIKE', '%'.$keys[$i].'%');
-        });
-
-          if ($search->count() == 0) break;
-    }
-    $matches = $previous->select('zips.*', 'schools.school_name', 'schools.id AS school_id', \DB::raw("CONCAT_WS(', ', school_name, CONCAT(UCASE(LEFT(city, 1)),LCASE(SUBSTRING(city, 2))), CONCAT_WS(' ',state_prefix, zips.zip_code)) as response"))
-    ->take(10)
-    ->get();
-
-    return $matches->toJson();
-  }
-
-  public function prefetch()
-  {
-    //get most popular schools, choose based on most tutors
-    $prefetch = \App\School::join('zips', 'schools.zip_id', '=', 'zips.id')
-    ->join('tutor_schools', 'schools.id', '=', 'tutor_schools.school_id')
-    ->select('zips.*', 'schools.school_name', 'schools.id AS school_id', \DB::raw("COUNT(*) as count"), \DB::raw("CONCAT_WS(', ', school_name, CONCAT(UCASE(LEFT(city, 1)),LCASE(SUBSTRING(city, 2))), CONCAT_WS(' ',state_prefix, zips.zip_code)) as response"))
-    ->groupBy('schools.id')
-    ->orderBy('count', 'desc')
-    ->take(20)
-    ->get();
-
-
-    return $prefetch->toJson();
-  }
-
 }

@@ -39,6 +39,7 @@ class Authenticate
             if ($request->ajax()) {
                 return response('Unauthorized.', 401);
             } else {
+                \Session::put('feedback_warning', 'You must be logged in to view that page.');
                 return redirect()->guest('auth/login');
             }
         }
