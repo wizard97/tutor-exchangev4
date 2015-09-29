@@ -388,9 +388,9 @@ class HsSearchController extends Controller
     //make queries more complex until we stop getting results, then back up one
     for ($i = 0; $i < $num_keys; $i++)
     {
-        $previous = $search;
+        $previous = clone $search;
 
-        $search = $search->where(function ($query) use ($keys, $i){
+        $search->where(function ($query) use ($keys, $i){
           $query->orWhere('school_name', 'LIKE', '%'.$keys[$i].'%')
           ->orWhere('zips.zip_code', 'LIKE', '%'.$keys[$i].'%')
           ->orWhere('zips.city', 'LIKE', '%'.$keys[$i].'%')
