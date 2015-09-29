@@ -61,8 +61,6 @@ $(document).ready(function() {
       { "visible": false, "title": 'Class ID', "data": 'id'},
       { "title": 'Class Name', "data": 'class_name'},
       { "title": 'Subject', "data": 'subject_name'},
-      { "visible": false, "title": 'Level Num', "data": 'level_num'},
-      { "title": 'Level', "data": 'level_name'},
       {
         "orderable":      false,
         "className":      'details-control table-text-center',
@@ -99,15 +97,7 @@ $(document).ready(function() {
       { "visible": false, "title": 'Class ID', "data": 'id'},
       { "title": 'Class Name', "data": 'class_name'},
       { "title": 'Class Subject', "data": 'subject_name'},
-      { "title": 'Class Level', "data": null, orderable: false, createdCell: function (td, cellData, rowData, row, col) {
-        var sel = $('<select class="form-control class-level"></select>').attr("id", 'class-' + rowData.id).attr("name", 'class-' + rowData.id);
-
-        $(levels[rowData.id]).each(function() {
-          sel.append($("<option>").attr('value',this.level_num).text(this.level_name));
-        });
-        $(td).html(sel.wrap('<div class="form-group"></div>').prop('outerHTML'));
-      }
-    }]
+    ]
   });
 
 
@@ -122,8 +112,6 @@ $(document).ready(function() {
       search_class.id = data.id;
       search_class.class_name = data.class_name;
       search_class.subject_name = data.subject_name;
-      search_class.level_num = $clicked_row.find(".class-level").val();
-      search_class.level_name = $clicked_row.find(".class-level option[value=" + search_class.level_num +"]").text();
       $button = $($selected.DataTable().row.add(search_class).draw().node()).find('.class-remove-btn');
       $button.on( "click", function() {
         var $clicked_row = $(this).closest('tr');
@@ -174,16 +162,16 @@ $(document).ready(function() {
     //start the pretty spinner
     var btn = $(this);
     btn.find('#search-spinner').show();
-    var class_ids = {};
-    var url = "{{ route('hs.submitclasses') }}";
+    var class_ids = [];
+    var url = "{{ route('middle.submitclasses') }}";
     $.each($selected.DataTable().rows().data(), function(key, value)
     {
-      class_ids[value.id] = {level_num: value.level_num};
+      class_ids.push(value.id);
     });
-
+          console.log(class_ids);
     $.ajax({
       type: "POST",
-      data: class_ids,
+      data: {'class_ids': class_ids},
       url: url,
       success: function (data){
         location.href= data;

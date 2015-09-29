@@ -79,6 +79,17 @@ Route::get('search/school/hsorabove/find/prefetch', [
     'as' => 'hs.prefetch', 'uses' => 'Search\School\HsSearchController@prefetch'
 ]);
 
+//ms tutoring
+Route::get('search/school/middleorbelow/classes', [
+    'as' => 'middle.classes', 'uses' => 'Search\School\MiddleSearchController@classes'
+]);
+Route::post('search/school/middleorbelow/submitclasses', [
+    'as' => 'middle.submitclasses', 'uses' => 'Search\School\MiddleSearchController@submit_classes'
+]);
+Route::get('search/school/middleorbelow/showresults', [
+    'as' => 'middle.showresults', 'uses' => 'Search\School\MiddleSearchController@run_search'
+]);
+
 //music
 Route::get('search/music/index', [
     'as' => 'music.index', 'uses' => 'Search\Music\MusicController@index'
@@ -124,7 +135,7 @@ Route::post('account/tutoring/editinfo', [
 Route::get('account/tutoring/classes', [
     'as' => 'tutoring.classes', 'uses' => 'Account\TutorController@geteditclasses'
 ]);
-Route::post('account/tutoring/classes', [
+Route::post('account/tutoring/editclasses', [
     'as' => 'tutoring.editclasses', 'uses' => 'Account\TutorController@posteditclasses'
 ]);
 Route::get('account/tutoring/myprofile', [
@@ -151,6 +162,14 @@ Route::get('account/tutoring/music', [
 //ajax
 Route::get('account/tutoring/ajaxgetschools', [
     'as' => 'tutoring.ajaxgetschools', 'uses' => 'Account\TutorController@ajaxgetschools'
+]);
+//get classes for school
+Route::get('account/tutoring/ajaxgetschoolclasses', [
+    'as' => 'tutoring.ajaxgetschoolclasses', 'uses' => 'Account\TutorController@ajaxgetschoolclasses'
+]);
+//get tutor classes for school
+Route::get('account/tutoring/ajaxgettutorschoolclasses', [
+    'as' => 'tutoring.ajaxgettutorschoolclasses', 'uses' => 'Account\TutorController@ajaxgettutorschoolclasses'
 ]);
 Route::post('account/tutoring/ajaxstartstopmusic', [
     'as' => 'tutoring.ajaxstartstopmusic', 'uses' => 'Account\TutorController@ajaxstartstopmusic'

@@ -134,7 +134,7 @@
         </div>
         <hr style="height:1px;border:none;color:#333;background-color:#333;">
 
-        @foreach($tutor->reviews()->join('users', 'users.id', '=', 'reviews.tutor_id')->get() as $review)
+        @foreach($reviews as $review)
         <div class="row">
           <div class="col-md-12">
             <span style="font-size: 20px" class="text-nowrap">
@@ -155,9 +155,6 @@
             <hr>
             @endforeach
 
-            @if(!empty($tutor->all_reviews))
-            {!! $tutor->all_reviews->render() !!}
-            @endif
           </div>
         </div>
       </div>
