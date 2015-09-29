@@ -21,7 +21,7 @@ class SchoolSearchHomeController extends Controller
     {
       $this->validate($request, [
       'school_type' => 'required|in:middle,high',
-      'tutor_type' => 'required|in:standard,professional',
+      'tutor_type' => 'required|in:standard,professional,all',
       'start_rate' => 'numeric|between:0,200',
       'end_rate' => 'numeric|between:0,200',
       'max_dist' => 'numeric|between:1,200',
@@ -29,9 +29,9 @@ class SchoolSearchHomeController extends Controller
     }
     else {
       $this->validate($request, [
-      'zip' => 'digits:5|numeric|exists:zips,zip_code',
+      'zip' => 'required|digits:5|numeric|exists:zips,zip_code',
       'school_type' => 'required|in:middle,high',
-      'tutor_type' => 'required|in:standard,professional',
+      'tutor_type' => 'required|in:standard,professional,all',
       'start_rate' => 'numeric|between:0,200',
       'end_rate' => 'numeric|between:0,200',
       'max_dist' => 'numeric|between:1,200',
@@ -44,13 +44,13 @@ class SchoolSearchHomeController extends Controller
     $request->session()->put('school_search_inputs', $input);
 
     //high school or above for standard tutors
-    if ($request->input('school_type') == 'high' && $request->input('tutor_type') == 'standard')
+    if ($request->input('school_type') == 'high')
     {
       return redirect(route('hs.index'));
     }
     else //middle school or below
     {
-      return redirect(route('hs.classes'));
+      return redirect(route('middle.classes'));
     }
     return view('search/school/searchform');
   }

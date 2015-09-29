@@ -87,8 +87,10 @@
             <br>
             <div class="row">
               <div class="col-md-offset-2 col-md-8">
-                <button class="btn btn-default btn-lg btn-block tutor-selection" type="button" value="standard"><i class="fa fa-user fa-fw"></i> Standard</button>
+                <button class="btn btn-info btn-lg btn-block tutor-selection" type="button" value="standard"><i class="fa fa-user fa-fw"></i> Standard</button>
                 <button class="btn btn-success btn-lg btn-block tutor-selection" type="button" value="professional"><i class="fa fa-user-plus fa-fw"></i> Professional</button>
+                <h4 class="text-center">Or</h4>
+                <button class="btn btn-default btn-lg btn-block tutor-selection" type="button" value="all"><i class="fa fa-users fa-fw"></i> Show Both</button>
                 <input type="hidden" name="tutor_type">
               </div>
             </div>
