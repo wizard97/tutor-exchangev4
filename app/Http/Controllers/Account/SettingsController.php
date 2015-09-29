@@ -124,10 +124,19 @@ class SettingsController extends Controller
     if ($request->input('account_type') == 1)
     {
       //delete tutors classes
-      \App\TutorLevel::where('user_id', $user->id)->delete();
+      $tutor = \App\Tutor::findOrFail($this->id);
+      $tutor->levels()->detach();
+      $tutor->middle_classes()->detach();
+      $tutor->music()->detach();
+      $tutor->schools()->detach();
+
+      $tutor->tutor_active = 0;
+      $tutor->save();
+
       //delete any refrence to SavedTutor
       \App\SavedTutor::where('tutor_id', $user->id)->delete();
-      $user->tutor()->delete();
+
+      //$user->tutor()->delete();
       $user->account_type = $request->input('account_type');
       $user->save();
       \Session::put('feedback_positive', 'You have successfully downgraded your account, your tutoring info has been deleted.');
@@ -135,9 +144,13 @@ class SettingsController extends Controller
     //if upgrading from standard user
     elseif($user->account_type == 1)
     {
-      $user->tutor()->firstOrCreate([]);
+      $tutor = $user->tutor()->firstOrCreate([]);
       $user->account_type = $request->input('account_type');
       $user->save();
+
+      //temporarily add LHS
+      $tutor->schools()->attach(1);
+
       \Session::put('feedback_positive', 'You have successfully upgraded your account.');
     }
     //if only changing tutoring type
