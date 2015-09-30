@@ -13,6 +13,7 @@ class HomeController extends Controller
 {
   public function index()
   {
+    \App\Stat::incr_visitors()
     $stats = Stat::firstOrFail();
     $stats->std_members = User::where('account_type', 1)->count();
     $stats->tutor_members = User::where('account_type', '>=', 2)->count();
