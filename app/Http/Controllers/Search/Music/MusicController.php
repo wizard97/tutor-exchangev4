@@ -53,6 +53,7 @@ class MusicController extends Controller
     $request->session()->forget('music_search_inputs');
     $request->session()->put('music_search_inputs', $input);
 
+    \App\Stat::incr_search();
     //high school or above for standard tutors
     if ($request->input('school_type') == 'high' && $request->input('tutor_type') == 'standard')
     {

@@ -101,6 +101,7 @@ class HsSearchController extends Controller
 
       $request->session()->put('school_search_classes', $input);
 
+      \App\Stat::incr_search();
       //otherwise everything is good
       return response()->json(route('hs.showresults'));
     }
