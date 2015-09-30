@@ -29,7 +29,7 @@ class AuthenticateTutors
               return redirect()->guest(route('auth.login'));
           }
       }
-      elseif($request->user()->account_type < 2)
+      elseif($this->auth->user()->account_type < 2)
       {
         \Session::put('feedback_negative', "You must be a tutor to view that page, you can change your account type here.");
         return redirect()->guest(route('accountsettings.index'));
