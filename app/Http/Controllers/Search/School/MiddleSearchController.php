@@ -46,6 +46,8 @@ class MiddleSearchController extends Controller
 
       $request->session()->put('middle_search_classes', $input);
 
+      \App\Stat::incr_search();
+
       //otherwise everything is good
       return response()->json(route('middle.showresults'));
     }
