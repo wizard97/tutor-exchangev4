@@ -50,15 +50,20 @@ class TutorController extends Controller
     return view('/account/tutoring/index')->with('contacts', $contacts)->with('tutor', $tutor)->with('contacts_array', $contacts_array)->with('checklist', $checklist);
   }
 
+
   public function geteditschedule()
   {
     $tutor = \App\Tutor::get_tutor_profile($this->id);
     return view('/account/tutoring/editschedule')->with('tutor', $tutor);
   }
+
+
   public function getmusic()
   {
     return view('/account/tutoring/music');
   }
+
+
   public function posteditschedule(Request $request)
   {
     $tutor = \App\Tutor::findOrFail($this->id);
@@ -144,6 +149,7 @@ class TutorController extends Controller
 
     return redirect(route('tutoring.schedule'));
   }
+
 
   public function geteditclasses()
   {
@@ -255,6 +261,72 @@ class TutorController extends Controller
 
       }
       $num_classes = $tutor->levels()->join('classes', 'classes.id', '=', 'levels.class_id')->where('school_id', $school_id)->count();
+      $request->session()
+        ->put('feedback_positive', "You have successfully updated the classes you tutor for {$school->school_name}. You currently are tutoring {$num_classes} class/classes.");
+    }
+    else $request->session()->put('feedback_positive', "You have successfully removed all your classes for {$school->school_name}.");
+
+    return response()->json([]);
+  }
+  //gets the classes for the school
+  public function ajaxgetmiddleclasses(Request $request)
+  {
+    //make sure it has at elast one level
+    $classes = \App\MiddleClass::join('middle_subjects', 'middle_subjects.id', '=', 'middle_classes.middle_subject_id')
+    ->leftJoin('tutor_middle_classes', function($join)
+    {
+      $join->on('tutor_middle_classes.middle_classes_id', '=', 'middle_classes.id');
+      $join->on('tutor_middle_classes.tutor_id','=', \DB::raw($this->id));
+    })
+    ->select('middle_classes.*', 'middle_subjects.subject_name', \DB::raw("CASE WHEN tutor_middle_classes.tutor_id IS NULL THEN 'FALSE' ELSE 'TRUE' END AS selected"))
+    ->orderBy('class_name', 'asc')->get();
+
+    return response()->json(['data' => $classes]);
+  }
+  public function ajaxgettutormiddleclasses(Request $request)
+  {
+    $tutor = \App\Tutor::findOrFail($this->id);
+
+    //get the tutor classes for the school_id
+    //make sure tutor has school
+    $classes = $tutor->middle_classes()
+    ->join('middle_subjects', 'middle_classes.middle_subject_id', '=', 'middle_subjects.id')
+    ->select('middle_classes.class_name', 'middle_subjects.subject_name')
+    ->get();
+
+    return response()->json(['data' => $classes]);
+  }
+
+  public function posteditmiddleclasses(Request $request)
+  {
+    $this->validate($request, [
+    'level_ids' => 'array',
+    ]);
+
+    $tutor = \App\Tutor::findOrFail($this->id);
+
+    $class_ids = $request->input('level_ids');
+    //remove old classes
+    \App\Tutor::findOrFail($this->id)->middle_classes()->detach();
+
+    //insert new levels
+    if (!empty($class_ids))
+    {
+      foreach ($class_ids as $cid)
+      {
+        //make sure not to insert redundant level for a class
+
+        //find class for class_id
+        $class = \App\MiddleClass::findOrFail($cid);
+
+        if ($tutor->middle_classes()->where('middle_classes.id', '=', $cid)->get()->isEmpty())
+        {
+          //there is no duplicate class, so do the insert
+          $tutor->middle_classes()->attach($cid);
+        }
+
+      }
+      $num_classes = $tutor->middle_classes()->count();
       $request->session()
         ->put('feedback_positive', "You have successfully updated the classes you tutor for {$school->school_name}. You currently are tutoring {$num_classes} class/classes.");
     }
