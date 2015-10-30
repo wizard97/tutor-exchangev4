@@ -26,9 +26,9 @@
 
       <div class="row">
         <h2>Middle School and Below Classes</h2>
-        <div class="col-xs-12 col-sm-6 col-md-6">
+        <div class="col-md-6">
           <div class="panel panel-default">
-            <div class="panel-heading"> <!-- <i class="fa fa-bars"></i> School Classes -->
+            <div class="panel-heading"><i class="fa fa-bars"></i> All Classes
             </div>
             <div class="panel-body">
 
@@ -40,7 +40,7 @@
           </div>
         </div>
 
-        <div class="col-xs-12 col-sm-6 col-md-6">
+        <div class="col-md-6">
           <div class="panel panel-primary">
             <div class="panel-heading">
               <div class="row">
@@ -48,7 +48,7 @@
                   <i class="fa fa-bars fa-fw"></i> Your Classes:
                 </div>
                 <div class="col-md-offset-2 col-md-4">
-                  <button class="btn btn-danger pull-right" id=""><i class="fa fa-floppy-o"></i> Save Changes</button>
+                  <button class="btn btn-success pull-right" id="submit-button-md" disabled><i class="fa fa-floppy-o"></i> Save Changes</button>
                 </div>
               </div>
             </div>
@@ -65,7 +65,7 @@
 
       <div class="row">
         <h2>High School and Above Classes</h2>
-        <div class="col-xs-12 col-sm-6 col-md-6">
+        <div class="col-md-6">
           <div class="panel panel-default">
             <div class="panel-heading"> <!-- <i class="fa fa-bars"></i> School Classes -->
               <div class="row">
@@ -92,14 +92,14 @@
           </div>
         </div>
 
-        <div class="col-xs-12 col-sm-6 col-md-6">
+        <div class="col-md-6">
           <div class="panel panel-primary">
             <div class="panel-heading">
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-8">
                   <i class="fa fa-bars fa-fw"></i> Your Classes: <span id="current-school"></span>
                 </div>
-                <div class="col-md-offset-2 col-md-4">
+                <div class="col-md-4">
                   <button class="btn btn-success pull-right" id="submit-button" disabled><i class="fa fa-floppy-o"></i> Save Changes</button>
                 </div>
               </div>
@@ -136,6 +136,8 @@ $( document ).ready(function() {
   var $middle_classes = $('#middle-classes');
 
   //middle school and below
+
+  //classes availible
   $middle_classes.dataTable( {
     "lengthMenu": [ 5, 10, 25, 50, 75, 100 ],
     ajax: {
@@ -153,9 +155,122 @@ $( document ).ready(function() {
         "defaultContent": '<a href="javascript:void(0)"><i style="font-size: 20px;" class="fa fa-plus"></i></a>'
       },
       { "visible": false, "title": 'Class ID', "data": 'id'},
-      { "title": 'Class Name', "data": 'class_name'},
-      { "title": 'Class Subject', "data": 'subject_name'},
-      ]
+      { "title": 'Name', "data": 'class_name'},
+      { "title": 'Subject', "data": 'subject_name'},
+    ],
+    createdRow: function( row, data, dataIndex ) {
+      //if selected
+      if ( data.selected == "TRUE" ) {
+        $row = $(row);
+        $row.find('i.fa').replaceWith('<i style="font-size: 20px;" class="fa fa-times text-danger"></i>');
+        $row.addClass('success');
+      }
+    },
+  });
+
+  //tutors classes
+  $tutor_middle_classes.dataTable({
+    ajax: {
+      url: t_middle_class_url,
+    },
+    processing: true,
+    "order": [],
+    pageLength: 10,
+    columns: [
+      {
+        "orderable":      false,
+        "className":      'details-control table-text-center',
+        "data":           null,
+        "defaultContent": '<a href="javascript:void(0)"><i style="font-size: 20px;" class="fa fa-times text-danger"></i></a>'
+      },
+      { "visible": false, "title": 'Class ID', "data": 'id'},
+      { "title": 'Name', "data": 'class_name'},
+      { "title": 'Subject', "data": 'subject_name'},
+      { "title": 'Added On', "data": 'pivot.created_at', createdCell: function (td, cellData, rowData, row, col) {
+        var date = new Date(rowData.pivot.created_at);
+        $(td).text(date.toLocaleDateString());
+        }
+      },
+    ]
+  });
+
+  //remove row when clicked_row
+  $tutor_middle_classes.on( 'draw.dt', function () {
+    $rows = $tutor_middle_classes.find('tr');
+    //unhook any events
+    $rows.off( "click", 'i.fa-times');
+
+    //set up remove class event
+    $rows.on( "click", 'i.fa-times', function() {
+      var $clicked_row = $(this).closest('tr');
+      var data = $tutor_middle_classes.DataTable().row($clicked_row).data();
+
+      //update school classes table
+      $middle_classes.DataTable().rows().every( function () {
+        var rowdata = this.data();
+        if (rowdata.id == data.id)
+        {
+          //reset it
+          $(this.node()).removeClass('success');
+          $(this.node()).find('td a').first().html('<i style="font-size: 20px;" class="fa fa-plus"></i>');
+          //break out of loop
+          return false;
+        }
+      });
+      //enable save button
+      $('#submit-button-md').prop("disabled", false).removeClass('btn-success').addClass('btn-danger');
+      //remove this row, and draw
+      $tutor_middle_classes.DataTable().row($clicked_row).remove().draw();
+    });
+  });
+
+
+  //add class event
+  $middle_classes.on( 'click', '.table-text-center i.fa', function () {
+    var $clicked_row = $(this).closest('tr');
+    var $icon = $(this);
+    var data = $middle_classes.DataTable().row($clicked_row).data();
+
+    //removing row
+    if ($clicked_row.hasClass('success'))
+    {
+      //update current row
+      $icon.replaceWith('<i style="font-size: 20px;" class="fa fa-plus"></i>');
+      $clicked_row.removeClass('success');
+      //remove it from the tutor classes table
+      var $to_remove;
+      $tutor_middle_classes.DataTable().rows().every( function () {
+        var rowdata = this.data();
+        if (rowdata.id == data.id)
+        {
+          //save the row
+          $to_remove = this;
+          //break out of loop
+          return false;
+        }
+      });
+
+      $to_remove.remove().draw();
+
+    }
+    else
+    {
+      //update current row
+      $icon.replaceWith('<i style="font-size: 20px;" class="fa fa-times text-danger"></i>');
+      $clicked_row.addClass('success');
+      //add it to the tutor classes table
+      var clicked_class = new Object();
+      clicked_class.id = data.id;
+      clicked_class.class_name = data.class_name;
+      clicked_class.subject_name = data.subject_name;
+      //insert created at date
+      var date = new Date();
+      clicked_class.pivot = new Object();
+      clicked_class.pivot.created_at = date.toString();
+      $tutor_middle_classes.DataTable().row.add(clicked_class).draw();
+    }
+    //enable save button
+    $('#submit-button-md').prop("disabled", false).removeClass('btn-success').addClass('btn-danger');
   });
 
 
@@ -237,7 +352,7 @@ $( document ).ready(function() {
         },
         { "visible": false, "title": 'Class ID', "data": 'id'},
         { "title": 'Class Name', "data": 'class_name'},
-        { "title": 'Class Subject', "data": 'subject_name'},
+        { "title": 'Subject', "data": 'subject_name'},
         { "title": 'Class Level', "data": null, orderable: false, createdCell: function (td, cellData, rowData, row, col) {
 
           var sel = $('<select class="form-control class-level"></select>').attr("id", 'class-' + rowData.id).attr("name", 'class-' + rowData.id);
