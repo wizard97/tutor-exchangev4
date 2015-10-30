@@ -291,7 +291,7 @@ class TutorController extends Controller
     //make sure tutor has school
     $classes = $tutor->middle_classes()
     ->join('middle_subjects', 'middle_classes.middle_subject_id', '=', 'middle_subjects.id')
-    ->select('middle_classes.class_name', 'middle_subjects.subject_name')
+    ->select('middle_classes.class_name', 'middle_subjects.subject_name', 'middle_classes.id')
     ->get();
 
     return response()->json(['data' => $classes]);
