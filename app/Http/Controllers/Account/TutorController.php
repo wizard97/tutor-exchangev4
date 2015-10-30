@@ -300,12 +300,12 @@ class TutorController extends Controller
   public function posteditmiddleclasses(Request $request)
   {
     $this->validate($request, [
-    'level_ids' => 'array',
+    'class_ids' => 'array',
     ]);
 
     $tutor = \App\Tutor::findOrFail($this->id);
 
-    $class_ids = $request->input('level_ids');
+    $class_ids = $request->input('class_ids');
     //remove old classes
     \App\Tutor::findOrFail($this->id)->middle_classes()->detach();
 
@@ -328,9 +328,9 @@ class TutorController extends Controller
       }
       $num_classes = $tutor->middle_classes()->count();
       $request->session()
-        ->put('feedback_positive', "You have successfully updated the classes you tutor for {$school->school_name}. You currently are tutoring {$num_classes} class/classes.");
+        ->put('feedback_positive', "You have successfully updated the middle school and below classes you tutor. You currently are tutoring {$num_classes} class/classes.");
     }
-    else $request->session()->put('feedback_positive', "You have successfully removed all your classes for {$school->school_name}.");
+    else $request->session()->put('feedback_positive', "You have successfully removed all your middle school and below classes.");
 
     return response()->json([]);
   }
