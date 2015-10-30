@@ -136,6 +136,8 @@ $( document ).ready(function() {
   var $middle_classes = $('#middle-classes');
 
   //middle school and below
+
+  //classes availible
   $middle_classes.dataTable( {
     "lengthMenu": [ 5, 10, 25, 50, 75, 100 ],
     ajax: {
@@ -156,6 +158,32 @@ $( document ).ready(function() {
       { "title": 'Class Name', "data": 'class_name'},
       { "title": 'Class Subject', "data": 'subject_name'},
       ]
+  });
+
+  //tutors classes
+  $tutor_middle_classes.dataTable({
+    ajax: {
+      url: t_middle_class_url,
+    },
+    processing: true,
+    "order": [],
+    pageLength: 10,
+    columns: [
+      {
+        "orderable":      false,
+        "className":      'details-control table-text-center',
+        "data":           null,
+        "defaultContent": '<a href="javascript:void(0)"><i style="font-size: 20px;" class="fa fa-times text-danger"></i></a>'
+      },
+      { "visible": false, "title": 'Class ID', "data": 'id'},
+      { "title": 'Class Name', "data": 'class_name'},
+      { "title": 'Subject', "data": 'subject_name'},
+      { "title": 'Added On', "data": 'pivot.created_at', createdCell: function (td, cellData, rowData, row, col) {
+        var date = new Date(rowData.pivot.created_at);
+        $(td).text(date.toLocaleDateString());
+        }
+      },
+    ]
   });
 
 
