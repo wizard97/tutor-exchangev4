@@ -274,6 +274,38 @@ $( document ).ready(function() {
   });
 
 
+  //post update classes
+  $('#submit-button-md').click( function () {
+    //start the pretty spinner
+    var $btn = $(this);
+    //$btn.find('#search-spinner').show();
+    var data = new Object();
+    data.class_ids = [];
+    $.each($tutor_middle_classes.DataTable().rows().data(), function(key, value)
+    {
+      data.class_ids.push(value.id);
+    });
+
+    $.ajax({
+      type: "POST",
+      data: data,
+      url: edit_middle_classes_url,
+      success: function (data){
+        $tutor_middle_classes.DataTable().ajax.reload();
+        $middle_classes.DataTable().ajax.reload();
+        //$btn.find('#search-spinner').hide();
+
+        $('#submit-button-md').removeClass('btn-danger').addClass('btn-success').prop("disabled", true);
+      },
+      complete: function()
+      {
+        //render feedback
+        lte.feedback();
+      }
+
+    });
+  });
+
 
   //high school and above
 
