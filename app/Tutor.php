@@ -26,7 +26,7 @@ class Tutor extends Model
     //middle school classes and below
     public function middle_classes()
     {
-      return $this->belongsToMany('App\Tutor', 'tutor_middle_classes', 'tutor_id', 'middle_classes_id')->withTimestamps();
+      return $this->belongsToMany('App\MiddleClass', 'tutor_middle_classes', 'tutor_id', 'middle_classes_id')->withTimestamps();
     }
 
     public function reviews()
