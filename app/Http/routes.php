@@ -175,6 +175,19 @@ Route::post('account/tutoring/ajaxstartstopmusic', [
     'as' => 'tutoring.ajaxstartstopmusic', 'uses' => 'Account\TutorController@ajaxstartstopmusic'
 ]);
 
+Route::get('account/tutoring/ajaxgettutormiddleclasses', [
+    'as' => 'tutoring.ajaxgettutormiddleclasses', 'uses' => 'Account\TutorController@ajaxgettutormiddleclasses'
+]);
+Route::post('account/tutoring/editmiddleclasses', [
+    'as' => 'tutoring.editmiddleclasses', 'uses' => 'Account\TutorController@posteditmiddleclasses'
+]);
+Route::get('account/tutoring/ajaxgetmiddleclasses', [
+    'as' => 'tutoring.ajaxgetmiddleclasses', 'uses' => 'Account\TutorController@ajaxgetmiddleclasses'
+]);
+
+
+
+
 //settings
 Route::get('account/settings/index', [
     'as' => 'accountsettings.index', 'uses' => 'Account\SettingsController@index'
