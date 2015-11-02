@@ -53,8 +53,6 @@
       },
     });
 
-    // initialize the bloodhound suggestion engine
-    schools.initialize();
 
     $('.typeahead').typeahead(null,
       {
@@ -68,7 +66,7 @@
             '</p>'
           ].join('\n'),
           suggestion: function(data) {
-            return '<p><strong>' + data.school_name + '</strong> <small>' + data.city + ', '+ data.state_prefix + ' '+ data.zip_code + '</small></p>';
+            return '<p><strong>' + data.school_name + ',</strong> <small>' + data.city + ', '+ data.state_prefix + ' '+ data.zip_code + '</small></p>';
           }
 
         }
