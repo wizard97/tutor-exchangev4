@@ -194,10 +194,31 @@
               <i class="fa fa-university fa-fw"></i> Your Schools
             </div>
             <div class="panel-body">
-              <p class="alert alert-info"><i class="fa fa-info-circle"></i> Support for schools outside of Lexington is under development.</p>
-              <div class="table-responsive">
-                <table id="tutor_schools" class="table table-striped table-bordered table-hover"></table>
+
+              <div class="row col-md-12">
+                <form class="form-horizontal" method="POST" action="{{route('tutoring.addschool')}}">
+                  {!! csrf_field() !!}
+                  <div class="form-group">
+                    <label for="school-search" class="col-sm-3 control-label">Add a School</label>
+                    <div class="col-sm-9 input-group">
+                      <!-- <span class="input-group-addon"><i class="fa fa-university fa-fw"></i></span> -->
+                      <input type="search" id="school-search" class="typeahead form-control" name="school_name" placeholder="Add a school...">
+                      <span class="input-group-btn">
+                        <button class="btn btn-success" type="submit">Add!</button>
+                      </span>
+                    </div>
+
+                  </div>
+
+                </form>
               </div>
+
+              <div class="row">
+                <div class="table-responsive col-md-12">
+                  <table id="tutor_schools" class="table table-striped table-bordered table-hover"></table>
+                </div>
+              </div>
+
             </div>
           </div>
 
@@ -240,7 +261,53 @@
 </div>
 
 <script>
+var rm_school_url = "{{route('tutoring.removeschool')}}";
 $( document ).ready(function() {
+
+  // initialize the bloodhound suggestion engine
+  var schools = new Bloodhound({
+    sufficient: 10,
+    identify: function(obj) { return obj.id; },
+    queryTokenizer: function(query) {
+      var no_commas = query.replace(/,/g , '');
+      return Bloodhound.tokenizers.whitespace(no_commas);
+    },
+    datumTokenizer: function(datum) {
+      var tokens = [];
+      tokens.push(String(datum.school_name));
+      tokens.push(String(datum.city));
+      tokens.push(String(datum.zip_code));
+      tokens.push(String(datum.state_prefix));
+      tokens.push(String(datum.school_id));
+      return tokens;
+    },
+    prefetch: "{{route('hs.prefetch')}}",
+    remote: {
+      url: '{{ route('hs.query', ['query' => '%QUERY']) }}',
+      wildcard: '%QUERY'
+    },
+  });
+
+
+  $('.typeahead').typeahead(null,
+    {
+      source: schools.ttAdapter(),
+      display: 'response',
+      limit: 5,
+      templates: {
+        notFound: [
+          '<p class="empty-message tt-suggestion">',
+          '<strong>Sorry, we could not find that school.</strong>',
+          '</p>'
+        ].join('\n'),
+        suggestion: function(data) {
+          return '<p><strong>' + data.school_name + ',</strong> <small>' + data.city + ', '+ data.state_prefix + ' '+ data.zip_code + '</small></p>';
+        }
+
+      }
+    });
+
+
   $('.contact-message').readmore({
     collapsedHeight: 41,
     moreLink: '<a href="#">Read More</a>',
@@ -280,12 +347,43 @@ $( document ).ready(function() {
         "orderable": false,
         "className": 'table-text-center',
         "data": null,
-        "defaultContent": '<button class="btn btn-info">Classes</button> <button class="btn btn-danger disabled">Remove</button>'
+        "defaultContent": '<button class="btn btn-warning rm-school"><i class="fa fa-times text-danger fa-fw"></i> Remove</button>'
       },
     ]
   });
 
+  $tutor_schools.on('click', '.rm-school', function ()
+  {
+    //add spinner
+    $btn = $(this);
+    $spin = $('<i class="fa fa-spinner fa-spin"></i>');
+    $btn.prepend($spin);
+
+    var $clicked_row = $(this).closest('tr');
+    var data = $tutor_schools.DataTable().row($clicked_row).data();
+    //submit ajax request to delete row
+    var post = new Object();
+    post.school_id = data.id;
+    console.log(post);
+    $.ajax({
+      type: "POST",
+      data: post,
+      url: rm_school_url,
+      success: function (data){
+        //remove row
+        $tutor_schools.DataTable().row($clicked_row).remove().draw();
+      },
+      complete: function()
+      {
+        //render feedback
+        $btn.find($spin).remove();
+        lte.feedback();
+      }
+
+    });
+  });
 });
+
 
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()

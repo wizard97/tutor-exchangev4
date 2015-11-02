@@ -159,6 +159,15 @@ Route::post('account/tutoring/editschedule', [
 Route::get('account/tutoring/music', [
     'as' => 'tutoring.music', 'uses' => 'Account\TutorController@getmusic'
 ]);
+//add school
+Route::post('account/tutoring/addschool', [
+    'as' => 'tutoring.addschool', 'uses' => 'Account\TutorController@addschool'
+]);
+//remove school
+Route::post('account/tutoring/removeschool', [
+    'as' => 'tutoring.removeschool', 'uses' => 'Account\TutorController@removeschool'
+]);
+
 //ajax
 Route::get('account/tutoring/ajaxgetschools', [
     'as' => 'tutoring.ajaxgetschools', 'uses' => 'Account\TutorController@ajaxgetschools'
