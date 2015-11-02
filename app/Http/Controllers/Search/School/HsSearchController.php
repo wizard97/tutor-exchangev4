@@ -386,10 +386,10 @@ class HsSearchController extends Controller
     $num_keys = count($keys);
 
     $search = \App\School::join('zips', 'schools.zip_id', '=', 'zips.id');
-    //make queries more complex until we stop getting results, then back up one
+
     for ($i = 0; $i < $num_keys; $i++)
     {
-        $previous = clone $search;
+        //$previous = clone $search;
 
         $search->where(function ($query) use ($keys, $i){
           $query->orWhere('school_name', 'LIKE', '%'.$keys[$i].'%')
@@ -398,9 +398,9 @@ class HsSearchController extends Controller
           ->orWhere('zips.state_prefix', 'LIKE', '%'.$keys[$i].'%');
         });
 
-          if ($search->count() == 0) break;
+          //if ($search->count() == 0) break;
     }
-    $matches = $previous->select('zips.*', 'schools.school_name', 'schools.id AS school_id', \DB::raw("CONCAT_WS(', ', school_name, CONCAT(UCASE(LEFT(city, 1)),LCASE(SUBSTRING(city, 2))), CONCAT_WS(' ',state_prefix, zips.zip_code)) as response"))
+    $matches = $search->select('zips.*', 'schools.school_name', 'schools.id AS school_id', \DB::raw("CONCAT_WS(', ', school_name, CONCAT(UCASE(LEFT(city, 1)),LCASE(SUBSTRING(city, 2))), CONCAT_WS(' ',state_prefix, zips.zip_code)) as response"))
     ->take(10)
     ->get();
 

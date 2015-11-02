@@ -1,4 +1,6 @@
 #!/bin/bash
+# Remove old pictures
+rm -rf ../storage/app/images/*
 php ../artisan migrate:refresh
 php users_tutors.php
 php reviews.php
