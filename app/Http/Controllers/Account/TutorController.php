@@ -15,8 +15,25 @@ class TutorController extends Controller
   public function __construct()
   {
     $this->middleware('\App\Http\Middleware\AuthenticateTutors');
-    if (\Auth::check()) {
     $this->id = \Auth::user()->id;
+    $this->tutor = \App\Tutor::findOrFail($this->id);
+  }
+
+  //pause listing if something changed
+  public function __destruct()
+  {
+    if ($this->tutor->tutor_active)
+    {
+      $checklist = $this->makechecklist($this->id);
+
+      if(count(array_unique($checklist)) != 1 || !array_values($checklist)[0])
+      {
+        //pause listing
+        $this->tutor->tutor_active = false;
+        $this->tutor->save();
+        \Session::put('feedback_warning', 'Your listing has been paused due to your recent changes.');
+      }
+
     }
   }
 
@@ -499,7 +516,7 @@ class TutorController extends Controller
     //$tutor_model = \App\Tutor::findOrFail($this->id);
 
     isset($tutor->grade) && isset($tutor->rate) && isset($tutor->about_me) ? $checklist['info'] = true : $checklist['info'] = false;
-    !$tutor->levels()->get()->isEmpty() ? $checklist['classes'] = true : $checklist['classes'] = false;
+    $tutor->levels()->get()->isEmpty() && $tutor->middle_classes->isEmpty() ? $checklist['classes'] = false : $checklist['classes'] = true;
     $tutor->tutor_active ? $checklist['active'] = true : $checklist['active'] = false;
 
     //music check
@@ -518,6 +535,63 @@ class TutorController extends Controller
     }
 
     return $checklist;
+  }
+
+  //eventually move school typeahead query completer to a seperate class
+  //this is very similar to the one in hssearchcontroller
+  public function addschool(Request $request)
+  {
+    $this->validate($request, [
+      'school_name' => 'required|string'
+      ]);
+
+    //figure out their school
+    $school_name = $request->input('school_name');
+
+    //bad practice, fix later
+    $results = json_decode(app('App\Http\Controllers\Search\School\HsSearchController')->query($school_name));
+    if(empty($results)) return redirect()->back();
+    $school_id = $results[0]->school_id;
+
+    $school = \App\School::findOrFail($school_id);
+    if ($this->tutor->schools()->count() >= 5 && $this->tutor->user->account_type < 3)
+    {
+      $request->session()->put('feedback_negative', 'Standard tutors can only have up to five schools.');
+    }
+    else if (empty($this->tutor->schools->find($school_id)))
+    {
+      $this->tutor->schools()->attach($school_id);
+      $request->session()->put('feedback_positive', "You successfully added {$school->school_name} to your schools. You can now add classes for this school.");
+    }
+    else {
+      $request->session()->put('feedback_negative', 'You already tutor classes at this school.');
+    }
+
+    return redirect(route('tutoring.dashboard'));
+  }
+
+  public function removeschool(Request $request)
+  {
+    $this->validate($request, [
+      'school_id' => 'required|integer'
+      ]);
+    $sid = $request->school_id;
+    $school = $this->tutor->schools()->findOrFail($sid);
+
+    //get id of levels to delete for this school
+    $levels = $this->tutor->levels()->join('classes', 'classes.id', '=', 'levels.class_id')
+      ->join('schools', 'schools.id', '=', 'classes.school_id')->where('schools.id', $sid)
+      ->select('levels.id')->get()->pluck('id')->toArray();
+
+    //remove levels
+    $this->tutor->levels()->detach($levels);
+    //remove school
+    $this->tutor->schools()->detach($sid);
+
+    $num = count($levels);
+    $request->session()->put('feedback_positive', "You have removed '{$school->school_name}' and the {$num} class(es) you tutor in it.");
+
+    return response()->json([]);
   }
 
 }
