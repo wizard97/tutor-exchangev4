@@ -14,15 +14,19 @@ class TutorController extends Controller
 
   public function __construct()
   {
+    $this->middleware('auth');
     $this->middleware('\App\Http\Middleware\AuthenticateTutors');
-    $this->id = \Auth::user()->id;
-    $this->tutor = \App\Tutor::findOrFail($this->id);
+    if (\Auth::check())
+    {
+      $this->id = \Auth::user()->id;
+      $this->tutor = \App\Tutor::findOrFail($this->id);
+    }
   }
 
   //pause listing if something changed
   public function __destruct()
   {
-    if ($this->tutor->tutor_active)
+    if (\Auth::check() && $this->tutor->tutor_active)
     {
       $checklist = $this->makechecklist($this->id);
 
@@ -324,25 +328,12 @@ class TutorController extends Controller
 
     $class_ids = $request->input('class_ids');
     //remove old classes
-    \App\Tutor::findOrFail($this->id)->middle_classes()->detach();
+    $this->tutor->middle_classes()->detach();
 
     //insert new levels
     if (!empty($class_ids))
     {
-      foreach ($class_ids as $cid)
-      {
-        //make sure not to insert redundant level for a class
-
-        //find class for class_id
-        $class = \App\MiddleClass::findOrFail($cid);
-
-        if ($tutor->middle_classes()->where('middle_classes.id', '=', $cid)->get()->isEmpty())
-        {
-          //there is no duplicate class, so do the insert
-          $tutor->middle_classes()->attach($cid);
-        }
-
-      }
+      $this->tutor->middle_classes()->sync($class_ids);
       $num_classes = $tutor->middle_classes()->count();
       $request->session()
         ->put('feedback_positive', "You have successfully updated the middle school and below classes you tutor. You currently are tutoring {$num_classes} class/classes.");
