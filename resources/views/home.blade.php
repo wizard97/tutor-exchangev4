@@ -10,6 +10,7 @@
 </style>
 <div class="container">
   @include('templates/feedback')
+  <div class="alert alert-warning text-primary" role="alert"><p><strong><i class="fa fa-smile-o"></i> Welcome to version 4.0.</strong> After months of hard work, we have finished adding dozens of new features to improve every aspect of the site. We are eager to share our work. So just login and enjoy!</p></div>
   <div class="jumbotron">
     <div class="container">
       <img src="/img/logo2.png" class="img-responsive" />

@@ -20,9 +20,50 @@
     </div>
 
     <div class="col-md-9">
-      <div class="alert alert-info">
-        <h3>About Me:</h3>
-        <p class="about_me">{!! nl2br($tutor->about_me) !!}</p>
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#about" aria-controls="about" role="tab" data-toggle="tab"><i class="fa fa-info fa-fw"></i> About Me</a></li>
+        <li role="presentation"><a href="#avail" aria-controls="avail" role="tab" data-toggle="tab"><i class="fa fa-calendar fa-fw"></i> Availability</a></li>
+      </ul>
+      <br>
+      <div class="well row">
+
+        <div class="tab-content">
+
+          <div role="tabpanel" class="tab-pane fade in active" id="about">
+            <h3>About Me:</h3>
+            <p class="about_me">{!! nl2br($tutor->about_me) !!}</p>
+          </div>
+
+          <div role="tabpanel" class="tab-pane fade col-md-6" id="avail">
+              <h3><i class="fa fa-calendar"></i> Availability</h3>
+              <ul class="list-group">
+                <?php $days = ['mon' => 'Monday', 'tues' => 'Tuesday', 'wed' => 'Wednesday', 'thurs' => 'Thursday', 'fri' => 'Friday', 'sat' => 'Saturday', 'sun' => 'Sunday']; ?>
+                @foreach($days as $key => $day)
+                <li class="list-group-item @if(!empty($tutor->{$key.'1_start'}) || !empty($tutor->{$key.'2_start'})) list-group-item-success @else list-group-item @endif">
+                  <strong>{{ $day }}:</strong>
+                  <p class="pull-right">
+                    @if(!empty($tutor->{$key.'1_start'}))
+                    {{ date('g:iA', strtotime($tutor->{$key.'1_start'})) }} - {{ date('g:iA', strtotime($tutor->{$key.'1_end'})) }}
+                    @if(!empty($tutor->{$key.'2_start'})), @endif
+                    @endif
+
+                    @if(!empty($tutor->{$key.'2_start'}))
+                    {{ date('g:iA', strtotime($tutor->{$key.'2_start'})) }} - {{ date('g:iA', strtotime($tutor->{$key.'2_end'})) }}
+                    @endif
+
+                    @if(empty($tutor->{$key.'1_start'}) && empty($tutor->{$key.'2_start'}))
+                      <i class="fa fa-times"></i>
+                    @endif
+                  </p>
+                </li>
+                @endforeach
+              </ul>
+          </div>
+
+        </div>
+
+
+
       </div>
     </div>
   </div>
