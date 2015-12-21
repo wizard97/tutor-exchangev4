@@ -347,7 +347,7 @@ $( document ).ready(function() {
         "orderable": false,
         "className": 'table-text-center',
         "data": null,
-        "defaultContent": '<button class="btn btn-warning rm-school"><i class="fa fa-times text-danger fa-fw"></i> Remove</button>'
+        "defaultContent": '<button class="btn btn-warning rm-school" data-toggle="tooltip" data-placement="top" title="Will remove all classes!"><i class="fa fa-times text-danger fa-fw"></i> Remove</button>'
       },
     ]
   });

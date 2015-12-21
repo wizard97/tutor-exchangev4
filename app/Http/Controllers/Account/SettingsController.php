@@ -148,8 +148,6 @@ class SettingsController extends Controller
       $user->account_type = $request->input('account_type');
       $user->save();
 
-      //temporarily add LHS
-      $tutor->schools()->attach(1);
 
       \Session::put('feedback_positive', 'You have successfully upgraded your account.');
     }
