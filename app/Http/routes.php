@@ -193,6 +193,9 @@ Route::post('account/tutoring/editmiddleclasses', [
 Route::get('account/tutoring/ajaxgetmiddleclasses', [
     'as' => 'tutoring.ajaxgetmiddleclasses', 'uses' => 'Account\TutorController@ajaxgetmiddleclasses'
 ]);
+Route::get('account/tutoring/settingsplaceholder', [
+    'as' => 'tutoring.placeholder'
+]);
 
 
 
