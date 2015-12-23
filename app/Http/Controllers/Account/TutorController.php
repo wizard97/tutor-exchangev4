@@ -68,7 +68,10 @@ class TutorController extends Controller
     //tutor checklist
     $checklist = $this->makechecklist($this->id);
 
-    return view('/account/tutoring/index')->with('contacts', $contacts)->with('tutor', $tutor)->with('contacts_array', $contacts_array)->with('checklist', $checklist);
+    return view('/account/tutoring/index')->with('contacts', $contacts)
+      ->with('tutor', $tutor)
+      ->with('contacts_array', $contacts_array)
+      ->with('checklist', $checklist);
   }
 
 
@@ -81,7 +84,8 @@ class TutorController extends Controller
 
   public function getmusic()
   {
-    return view('/account/tutoring/music');
+    $music = \App\Music::orderBy('music_name', 'asc')->get();
+    return view('/account/tutoring/music')->with('instruments', $music);
   }
 
 
