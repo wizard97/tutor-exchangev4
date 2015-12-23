@@ -11,37 +11,61 @@
         <h1>My Music</h1>
         <button type='button' id="togglebutton" class='btn btn-danger dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'> I do not teach an instrument </button>
       </div>
+      <!--
       <p class="alert alert-info"><i class="fa fa-info-circle"></i>  This is where you update your music info. Make sure to fill it out as completely as possible and keep it updated.</p>
-      <div class="row">
-        <div class="col-xs-12 col-sm-6 col-md-6">
-          <div class="panel panel-default">
-            <div class="panel-heading"><i class="fa fa-bars"></i> All Instruments
+    -->
+      <div id="to-hide">
+        <div class="row">
+          <div class="well col-md-10">
+            <h3>Add an Instrument</h3>
+            <form class="">
 
-            </div>
-            <div class="panel-body">
-
-              <div class="table-responsive">
-                <table id="all_instruments" class="table table-striped table-bordered table-hover"></table>
+              <div class="form-group">
+                <label for="instrument">Instrument</label>
+                <select class="form-control" id="instrument">
+                  @foreach ($instruments as $inst)
+                  <option value="{{ $inst->id }}">{{ $inst->music_name }}</option>
+                  @endforeach
+                </select>
               </div>
-            </div>
 
+              <div class="form-group">
+                <label for="years-experiance">Experience Playing Instrument (Years)</label>
+                <input type="number" class="form-control" id="years-experiance" placeholder="7">
+              </div>
+
+              <div class="form-group">
+                <label for="student-experiance">Max Student Experience (Years)</label>
+                <input type="number" class="form-control" id="student-experiance" placeholder="3">
+              </div>
+
+              <button type="submit" class="btn btn-success pull-right">Add</button>
+
+            </form>
           </div>
         </div>
 
-        <div class="col-xs-12 col-sm-6 col-md-6">
-          <div class="panel panel-primary">
-            <div class="panel-heading"><i class="fa fa-bars"></i> Your Instruments</div>
-            <div class="panel-body">
-              <div class="table-responsive">
-                <table id="your_instruments" class="table table-striped table-bordered table-hover"></table>
+        <div class="clearfix"></div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="panel panel-primary">
+              <div class="panel-heading"><i class="fa fa-bars"></i> Your Instruments</div>
+              <div class="panel-body">
+                <div class="table-responsive">
+                  <table id="your_instruments" class="table table-striped table-bordered table-hover"></table>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+
+    </div>
+
     </div>
   </div>
 </div>
+
 <script>
 $( document ).ready(function() {
   var data1 = [['Flute', 'French']];
