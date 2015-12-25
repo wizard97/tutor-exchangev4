@@ -150,10 +150,10 @@
           </div>
           <div class="panel-body">
             <div class="row">
-              <div class="col-md-2">
-                Name: <span class="text text-danger">*</span>
+              <div class="col-md-3">
+                ClassName: <span class="text text-danger">*</span>
               </div>
-              <div class="col-md-10">
+              <div class="col-md-9">
                 <div class="input-group">
                   <input type="text" class="form-control" placeholder="e.g. Calculus" aria-describedby="basic-addon1">
                 </div>
@@ -184,6 +184,17 @@
                     <li><a href="#">Elementary/Middle School Math</a></li>
                     <li><a href="#">Elementary/Middle School Foreign Language</a></li>
                   </ul>
+                </div>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="Level Name" aria-describedby="basic-addon2">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
+                  </span>
                 </div>
               </div>
             </div>
@@ -233,7 +244,7 @@ $( document ).ready(function() {
       }
       }
     ]
-  }).
+  });
 
   //middle school and below
 
