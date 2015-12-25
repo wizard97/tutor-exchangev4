@@ -159,9 +159,6 @@
                 </div>
               </div>
             </div>
-            <div class"row">
-              Select Relevant Levels: <span class="text text-danger">*</span>
-            </div>
             <div class="row">
               <div class="col-md-12">
                 Select Subject: <span class="text text-danger">*</span>
