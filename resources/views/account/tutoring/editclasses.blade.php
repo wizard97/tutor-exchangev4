@@ -27,8 +27,8 @@
 
       <div class="row">
         <ul class="nav nav-tabs" role="tablist">
-          <li role="presentation" class="active"><a href="#middle_s" aria-controls="middleSchool" role="tab" data-toggle="tab">Middle School and Below</a></li>
-          <li role="presentation"><a href="#high_s" aria-controls="highSchool" role="tab" data-toggle="tab">High School and Above</a></li>
+          <li role="presentation" class="active"><a href="#middle_s" aria-controls="middleSchool" role="tab" data-toggle="tab">Middle School and Above</a></li>
+          <li role="presentation"><a href="#high_s" aria-controls="highSchool" role="tab" data-toggle="tab">High School and Below</a></li>
         </ul>
       </div>
 
@@ -123,102 +123,15 @@
               </div>
             </div>
           </div>
+
         </div>
       </div>
-      <div class="row">
 
 
-        <h2>Submit a new class</h2>
 
-        <div class="col-md-6">
-          <div class="panel panel-default">
-            <div class="panel-heading"> <!-- <i class="fa fa-bars"></i> School Classes -->
-              <div class="row">
-                <div class="dropdown col-md-6" id="school-dropdown">
-                  <button class="btn btn-default dropdown-toggle"type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <span id="school-dropdown-text">My Schools</span>
-                    <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    @foreach($schools as $school)
-                    <li><a href="#" class="school-anchor" data-schoolid="{{ $school->id }}">{{ $school->school_name }} <span class="badge">{{ $school->num_classes }}</span></a></li>
-                    @endforeach
-                  </ul>
-                </div>
-
-            </div>
-          </div>
-          <div class="panel-body">
-            <div class="row">
-              <div class="col-md-2">
-                Name: <span class="text text-danger">*</span>
-              </div>
-              <div class="col-md-10">
-                <div class="input-group">
-                  <input type="text" class="form-control" placeholder="e.g. Calculus" aria-describedby="basic-addon1">
-                </div>
-              </div>
-            </div>
-            <div class"row">
-              Select Relevant Levels: <span class="text text-danger">*</span>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <div class="btn-group" data-toggle="buttons">
-                  <label class="btn btn-success">
-                    <input type="checkbox"> Level 2
-                  </label>
-                  <label class="btn btn-success active">
-                    <input type="checkbox"> Level 1
-                  </label>
-                  <label class="btn btn-success">
-                    <input type="checkbox"> Honors
-                  </label>
-                  <label class="btn btn-success">
-                    <input type="checkbox"> AP
-                  </label>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                Select Subject: <span class="text text-danger">*</span>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <div class="dropup">
-                  <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    Subject
-                    <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <li><a href="#">English</a></li>
-                    <li><a href="#">Social Studies</a></li>
-                    <li><a href="#">Science</a></li>
-                    <li><a href="#">Math</a></li>
-                    <li><a href="#">Foreign Language</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li><a href="#">Elementary/Middle School English</a></li>
-                    <li><a href="#">Elementary/Middle School Social Studies</a></li>
-                    <li><a href="#">Elementary/Middle School Science</a></li>
-                    <li><a href="#">Elementary/Middle School Math</a></li>
-                    <li><a href="#">Elementary/Middle School Foreign Language</a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <span class="text text-danger">* = Required</span>
-
-            <button class="btn btn-success pull-right" type="button">
-              Submit
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
-</div>
+
 </div>
 <script>
 $( document ).ready(function() {
