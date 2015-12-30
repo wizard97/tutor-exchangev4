@@ -150,10 +150,10 @@
           </div>
           <div class="panel-body">
             <div class="row">
-              <div class="col-md-3">
-                ClassName: <span class="text text-danger">*</span>
+              <div class="col-md-4">
+                Class Name: <span class="text text-danger">*</span>
               </div>
-              <div class="col-md-9">
+              <div class="col-md-8">
                 <div class="input-group">
                   <input type="text" class="form-control" placeholder="e.g. Calculus" aria-describedby="basic-addon1">
                 </div>
