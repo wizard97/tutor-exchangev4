@@ -6,14 +6,14 @@
     "type": "project",
     "require": {
         "php": ">=5.5.9",
-        "laravel/framework": "5.1.*",
+        "laravel/framework": "5.2.*",
         "doctrine/dbal": "^2.6@dev",
         "illuminate/html": "5.0.*",
         "aws/aws-sdk-php": "~3.0",
         "pda/pheanstalk": "~3.0",
         "iron-io/iron_mq": "~2.0",
         "predis/predis": "~1.0",
-        "laravelcollective/html": "~5.0",
+        "laravelcollective/html": "5.2.*",
         "patricktalmadge/bootstrapper": "~5",
         "intervention/image": "dev-master",
         "laracasts/utilities": "~2.0"
@@ -22,7 +22,9 @@
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "~4.0",
-        "phpspec/phpspec": "~2.1"
+        "phpspec/phpspec": "~2.1",
+	"symfony/dom-crawler": "~3.0",
+	"symfony/css-selector": "~3.0"
     },
     "autoload": {
         "classmap": [
