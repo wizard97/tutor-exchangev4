@@ -34,14 +34,14 @@
             <p class="about_me">{!! nl2br($tutor->about_me) !!}</p>
           </div>
 
-          <div role="tabpanel" class="tab-pane fade col-md-6" id="avail">
+          <div role="tabpanel" class="tab-pane fade col-lg-8" id="avail">
               <h3><i class="fa fa-calendar"></i> Availability</h3>
               <ul class="list-group">
                 <?php $days = ['mon' => 'Monday', 'tues' => 'Tuesday', 'wed' => 'Wednesday', 'thurs' => 'Thursday', 'fri' => 'Friday', 'sat' => 'Saturday', 'sun' => 'Sunday']; ?>
                 @foreach($days as $key => $day)
                 <li class="list-group-item @if(!empty($tutor->{$key.'1_start'}) || !empty($tutor->{$key.'2_start'})) list-group-item-success @else list-group-item @endif">
                   <strong>{{ $day }}:</strong>
-                  <p class="pull-right">
+                  <small class="pull-right">
                     @if(!empty($tutor->{$key.'1_start'}))
                     {{ date('g:iA', strtotime($tutor->{$key.'1_start'})) }} - {{ date('g:iA', strtotime($tutor->{$key.'1_end'})) }}
                     @if(!empty($tutor->{$key.'2_start'})), @endif
@@ -54,7 +54,7 @@
                     @if(empty($tutor->{$key.'1_start'}) && empty($tutor->{$key.'2_start'}))
                       <i class="fa fa-times"></i>
                     @endif
-                  </p>
+                  </small>
                 </li>
                 @endforeach
               </ul>
