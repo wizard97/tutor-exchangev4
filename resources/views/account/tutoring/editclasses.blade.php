@@ -30,13 +30,13 @@
           <li role="presentation" class="active"><a href="#middle_s" aria-controls="middleSchool" role="tab" data-toggle="tab">Middle School and Below</a></li>
           <li role="presentation"><a href="#high_s" aria-controls="highSchool" role="tab" data-toggle="tab">High School and Above</a></li>
         </ul>
+        <br>
       </div>
 
       <div class="row">
         <div class="tab-content">
 
           <div role="tabpanel" class="tab-pane fade in active" id="middle_s">
-            <h2>Middle School and Below Classes</h2>
             <div class="col-md-6">
               <div class="panel panel-default">
                 <div class="panel-heading"><i class="fa fa-bars"></i> All Classes
@@ -75,7 +75,6 @@
 
           <div role="tabpanel" class="tab-pane fade" id="high_s">
 
-            <h2>High School and Above Classes</h2>
             <div class="col-md-6">
               <div class="panel panel-default">
                 <div class="panel-heading"> <!-- <i class="fa fa-bars"></i> School Classes -->
