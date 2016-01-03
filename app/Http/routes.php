@@ -102,7 +102,6 @@ Route::get('search/music/showresults', [
 ]);
 
 
-
 /* deprecated 8/5/15
 //search
 Route::get('search/index', [
@@ -182,6 +181,12 @@ Route::get('account/tutoring/ajaxgettutorschoolclasses', [
 ]);
 Route::post('account/tutoring/ajaxstartstopmusic', [
     'as' => 'tutoring.ajaxstartstopmusic', 'uses' => 'Account\TutorController@ajaxstartstopmusic'
+]);
+Route::post('account/tutoring/ajaxremovemusic', [
+    'as' => 'tutoring.ajaxremovemusic', 'uses' => 'Account\TutorController@ajaxremovemusic'
+]);
+Route::post('account/tutoring/addmusic', [
+    'as' => 'tutoring.addmusic', 'uses' => 'Account\TutorController@addmusic'
 ]);
 
 Route::get('account/tutoring/ajaxgettutormiddleclasses', [
