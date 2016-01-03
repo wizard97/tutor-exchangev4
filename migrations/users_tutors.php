@@ -507,8 +507,9 @@ $lex_zip = $zip_res->id;
                 else {
 
                     $music_insert = $new->prepare("INSERT INTO tutor_music (tutor_id,
-                        music_id, years_experiance, upto_years) VALUES (?, ?, ?, ?)");
-                    $music_insert->execute([$new_id, $music_object->id, $u->music_years, $music_level[$u->music_level]]);
+                        music_id, years_experiance, upto_years, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)");
+                    $music_insert->execute([$new_id, $music_object->id, $u->music_years, $music_level[$u->music_level],
+                        date("Y-m-d H:i:s", $u->user_last_login_timestamp), date("Y-m-d H:i:s", $u->user_last_login_timestamp)]);
                 }
                 print "Finished migrating '{$u->instrument}' for {$u->fname} {$u->lname}\n\n";
             }
