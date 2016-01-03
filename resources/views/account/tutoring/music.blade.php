@@ -23,11 +23,11 @@
         <div class="row">
           <div class="well col-md-10">
             <h3>Add an Instrument</h3>
-            <form class="">
-
+            <form class="" action="{{ route("tutoring.addmusic") }}" method="POST">
+              {!! csrf_field() !!}
               <div class="form-group">
                 <label for="instrument">Instrument</label>
-                <select class="form-control" id="instrument">
+                <select name="music_id" class="form-control" id="instrument">
                   @foreach ($instruments as $inst)
                   <option value="{{ $inst->id }}">{{ $inst->music_name }}</option>
                   @endforeach
@@ -36,12 +36,12 @@
 
               <div class="form-group">
                 <label for="years-experiance">Experience Playing Instrument (Years)</label>
-                <input type="number" class="form-control" id="years-experiance" placeholder="7">
+                <input type="number" class="form-control" name="years-experiance" placeholder="7">
               </div>
 
               <div class="form-group">
                 <label for="student-experiance">Max Student Experience (Years)</label>
-                <input type="number" class="form-control" id="student-experiance" placeholder="3">
+                <input type="number" class="form-control" name="student-experiance" placeholder="3">
               </div>
 
               <button type="submit" class="btn btn-success pull-right">Add</button>
@@ -86,21 +86,39 @@ $( document ).ready(function() {
 
 
   var insts = {!! $tutor->music()->get()->toJson() !!}
-  console.log(insts)
 
   var $your_instruments = $('#your_instruments');
 
 $your_instruments.DataTable({
   data: insts,
-  columns: [{'title': 'Instrument:', 'data': 'music_name'},
+  columns:
+  [{'title': 'Instrument:', 'data': 'music_name'},
   {'title': 'Your Years of Experience', 'data': 'pivot.years_experiance'},
   {'title': 'Max Years of Student Experience', 'data': 'pivot.upto_years'},
   {'title': 'Options', 'orderable': false, 'data': null, createdCell: function(td, cellData, rowData, row, col) {
-    var string = '<i style="font-size: 20px;" class="fa fa-fw fa-minus text-danger"></i>';
+    var string = '<span class="music-remove" style="cursor: pointer" data-toggle="tooltip" data-placement="top" title="Remove"><i style="font-size: 24px;" class="fa fa-fw fa-minus text-danger center-block"></i></span>';
     $(td).html(string);
+    $(td).find(".music-remove").attr('data-musicid', rowData.id);
   }}]
 });
+$(".music-remove").on("click", function( event ){
+  var $clk = $(this)
+  var id = $clk.data("musicid");
+  $.ajax({
+    type: "POST",
+    url : "{{ route('tutoring.ajaxremovemusic') }}",
+    data: {"music_id": id},
+    success: function (data){
+      $your_instruments.DataTable().row($clk.closest("tr")).remove().draw();
+      $('#instrument').prepend($('<option>', {
+          value: data.id,
+          text: data.music_name
+      }));
+    }
+  });
 });
+
+
 
 $("#togglebutton").click(function() {
   var tutors_music;
@@ -133,6 +151,8 @@ $("#togglebutton").click(function() {
       });
     }
   });
+});
+$('[data-toggle="tooltip"]').tooltip()
 });
 </script>
 @stop
