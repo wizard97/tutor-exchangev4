@@ -84,8 +84,11 @@ class TutorController extends Controller
 
   public function getmusic()
   {
-    $music = \App\Music::orderBy('music_name', 'asc')->get();
-    return view('/account/tutoring/music')->with('instruments', $music);
+    //don't list things tutor already has
+    $ids = \App\Tutor::findOrFail($this->id)->music()->select('music.id')->get()->pluck('id')->toArray();
+    $music = \App\Music::orderBy('music_name', 'asc')->whereNotIn('id', $ids)->get();
+    $tutor = \App\Tutor::findOrFail($this->id);
+    return view('/account/tutoring/music')->with('instruments', $music)->with('tutor', $tutor);
   }
 
 
