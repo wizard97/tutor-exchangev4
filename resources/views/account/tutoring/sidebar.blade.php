@@ -7,6 +7,7 @@
     <li class="{{ isActiveRoute('tutoring.classes') }}"><a href="{{route('tutoring.classes')}}"><i class="fa fa-graduation-cap fa-fw"></i> My Classes</a></li>
     <li class="{{ isActiveRoute('tutoring.music') }}"><a href="{{route('tutoring.music')}}"><i class="fa fa-music fa-fw"></i> My Music</a></li>
     <li class="{{ isActiveRoute('tutoring.myprofile') }}"><a href="{{route('tutoring.myprofile')}}"><i class="fa fa-user fa-fw"></i> View My Profile</a></li>
+    <li class="{{ isActiveRoute('tutoring.submitclass') }}"><a href="{{route('tutoring.submitclass')}}"><i class="fa fa-book fa-fw"></i> Submit New Class</a></li>
   </ul>
 
   <ul class="nav nav-sidebar">
