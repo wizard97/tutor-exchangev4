@@ -168,7 +168,7 @@
               @if(strtotime($tutor->profile_expiration) < strtotime('1 week') && $tutor->tutor_active)
               <p class="alert alert-warning"><i class="fa fa-info-circle"></i> Your listing expires in less than a week!</p>
               @endif
-              <p class="text bg-warning"><span class="text text-danger">Attention:</br></span>We now have an updated <a href="/LextutorexchangePrivacyPolicy.pdf" target="_blank">Privacy Policy</a> and <a href="/LextutorexchangeTermsofUse.pdf" target="_blank">Terms of Use</a>. We advise that you read these documents, as your use of this website constitutes your agreement to these terms. Thank you, </br>The Creators</p>
+              <p class="text alert alert-warning"><span class="text text-danger">Attention:</br></span>We now have an updated <a href="/LextutorexchangePrivacyPolicy.pdf" target="_blank">Privacy Policy</a> and <a href="/LextutorexchangeTermsofUse.pdf" target="_blank">Terms of Use</a>. We advise that you read these documents, as your use of this website constitutes your agreement to these terms. Thank you, </br>The Creators</p>
             </div>
             <!-- /.panel-body -->
           </div>
