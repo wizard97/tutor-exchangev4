@@ -507,6 +507,35 @@ class TutorController extends Controller
     return response()->json(['data' => $tutor->music]);
   }
 
+  public function ajaxremovemusic(Request $request)
+  {
+    $this->validate($request, [
+      'music_id' => 'required|numeric|exists:music,id'
+      ]);
+    $id = $request->input('music_id');
+    $to_rmv = \App\Music::findOrFail($id);
+    $tutor = \App\Tutor::findOrFail($this->id);
+    $tutor->music()->detach($to_rmv->id);
+    return response()->json($to_rmv);
+  }
+
+  public function addmusic(Request $request)
+  {
+    $this->validate($request, [
+      'music_id' => 'required|numeric|exists:music,id',
+      'years-experiance' => 'required|numeric|between:0,100',
+      'student-experiance' => 'required|numeric|between:0,100'
+      ]);
+    $id = $request->input('music_id');
+    $music = \App\Music::findOrFail($id);
+    $tutor = \App\Tutor::findOrFail($this->id);
+    $tutor->music()
+    ->attach($music->id,
+      ["years_experiance" => $request->input('years-experiance'),
+      "upto_years" => $request->input('student-experiance')]
+    );
+    return redirect(route('tutoring.music'));
+  }
   //used to make checklist for tutor
   private function makechecklist($tutor_id)
   {
