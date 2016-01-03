@@ -143,6 +143,9 @@ Route::get('account/tutoring/myprofile', [
 Route::get('account/tutoring/runlisting', [
     'as' => 'tutoring.runlisting', 'uses' => 'Account\TutorController@runlisting'
 ]);
+Route::get('account/tutoring/settings', [
+    'as' => 'tutoring.settings', 'uses' => 'Account\TutorController@getsettings'
+]);
 Route::post('account/tutoring/runlisting', [
     'as' => 'tutoring.submitlisting', 'uses' => 'Account\TutorController@submitlisting'
 ]);
