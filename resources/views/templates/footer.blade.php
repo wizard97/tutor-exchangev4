@@ -25,7 +25,7 @@
         </div>
         <div class="modal-body">
           <h4>We pay all expenses out of pocket.</h4>
-          <p>We designed this site for free to help the community. Currently, we also are paying all of our operating costs out of our pockets. As highschoolers, we don't have much money to spare. Our domain and server costs total close to $100 a year, so if you found this site helpful, we would be grateful if you could help us out in return. Thank you,</br>The Creators
+          <p>We designed this site for free to help the community. Currently, we also are paying all of our operating costs out of our pockets. As college students, we don't have much money to spare. Our domain and server costs total close to $100 a year, so if you found this site helpful, we would be grateful if you could help us out in return. Thank you,</br>The Creators
 
             <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
               <input type="hidden" name="cmd" value="_s-xclick">

@@ -23,7 +23,7 @@
           </div>
           <div class="clearfix col-md-9">
             <h3>Aaron Wisner</h3>
-            <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
+            <p>Aaron is a Freshman at Northeastern University, majoring in Electrical Engineering and Computer Science at Cornell University. He's worked as an intern at a local Lexington company called Adapteva, on a parallel processing development board. Aaron takes care of the backend for lextutorexchange, which was his brainchild in the senior year at Lexington High School.</p>
           </div>
         </div>
       </div>
@@ -34,7 +34,7 @@
           </div>
           <div class="col-md-9">
             <h3>Matan Silver</h3>
-            <p>Matan is a rising Freshman at Northeastern University, studying Electrical Engineering. He has worked for the last year at <a href="http://www.fractenna.com" target="_blank">Fractal Antenna</a>, where he build wideband antennas using a fleet of seven 3D printers. He is currently interning at <a href="http://www.dangerawesome.co" target="_blank">Danger!Awesome</a>, which is a startup that does tons of awesome laser cutting/engraving, 3D printing, vinyl cutting, CNC milling, and more. In his free time, Matan plays with the 3D printer that he built at home, plays flute, and works on improving this site! He also enjoys correcting Aaron's spelling mistakes that once riddled the site... :P</p>
+            <p>Matan is a Freshman at Northeastern University, studying Electrical Engineering. He has worked for the last year at <a href="http://www.fractenna.com" target="_blank">Fractal Antenna</a>, where he build wideband antennas using a fleet of seven 3D printers. He is currently interning at <a href="http://www.dangerawesome.co" target="_blank">Danger!Awesome</a>, which is a startup that does tons of awesome laser cutting/engraving, 3D printing, vinyl cutting, CNC milling, and more. In his free time, Matan plays with the 3D printer that he built at home, plays flute, and works on improving this site! He also enjoys correcting Aaron's spelling mistakes that once riddled the site... :P</p>
             <blockquote>
   <p>"Do you even code even, bruh?"</p>
   <footer>Matan Silver</footer>

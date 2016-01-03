@@ -27,7 +27,7 @@
 
       <div class="row">
         <ul class="nav nav-tabs" role="tablist">
-          <li role="presentation" class="active"><a href="#middle_s" aria-controls="middleSchool" role="tab" data-toggle="tab"><h3>Middle School and Above</h3></a></li>
+          <li role="presentation" class="active"><a href="#middle_s" aria-controls="middleSchool" role="tab" data-toggle="tab"><h3>Middle School and Below</h3></a></li>
           <li role="presentation"><a href="#high_s" aria-controls="highSchool" role="tab" data-toggle="tab"><h3>High School and Below</h3></a></li>
         </ul>
         <br>
