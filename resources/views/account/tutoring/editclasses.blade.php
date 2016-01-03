@@ -237,6 +237,7 @@ $( document ).ready(function() {
   //add classes
   $add_classes.dataTable( {
     data: placeholder_data,
+    "dom": 't',
     columns: [
       {title: "Level"},
       {title: "Level Degree", visible: false, data: null},
