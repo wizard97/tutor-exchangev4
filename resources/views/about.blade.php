@@ -23,7 +23,7 @@
           </div>
           <div class="clearfix col-md-9">
             <h3>Aaron Wisner</h3>
-            <p>Aaron is a Freshman at Northeastern University, majoring in Electrical Engineering and Computer Science at Cornell University. He's worked as an intern at a local Lexington company called Adapteva, on a parallel processing development board. Aaron takes care of the backend for lextutorexchange, which was his brainchild in the senior year at Lexington High School.</p>
+            <p>Aaron is a Freshman majoring in Electrical and Computer Engineering at Cornell University. He's worked as an intern at a local Lexington company called Adapteva, on a parallel processing development board. Aaron takes care of the backend for lextutorexchange, which was his brainchild in the senior year at Lexington High School.</p>
           </div>
         </div>
       </div>
