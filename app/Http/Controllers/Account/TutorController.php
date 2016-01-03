@@ -74,6 +74,11 @@ class TutorController extends Controller
       ->with('checklist', $checklist);
   }
 
+  public function getsettings()
+  {
+    return view('/account/tutoring/settings');
+  }
+
 
   public function geteditschedule()
   {
@@ -523,7 +528,7 @@ class TutorController extends Controller
   {
     $this->validate($request, [
       'music_id' => 'required|numeric|exists:music,id',
-      'years-experiance' => 'required|numeric|between:0,100',
+      'years-experiance' => 'required|numeric|between:1,100',
       'student-experiance' => 'required|numeric|between:0,100'
       ]);
     $id = $request->input('music_id');
