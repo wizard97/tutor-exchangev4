@@ -440,6 +440,25 @@ class TutorController extends Controller
     return view('/account/tutoring/runlisting')->with('tutor', $tutor);
   }
 
+  public function getsubmitclass()
+  {
+    $tutor = \App\Tutor::findOrFail($this->id);
+    //get tutor schools
+    $schools = $tutor->schools()
+      ->leftJoin('classes', 'classes.school_id', '=', 'schools.id')
+      ->leftJoin('levels', 'levels.class_id', '=', 'classes.id')
+      ->leftJoin('tutor_levels', function($join)
+      {
+        $join->on('levels.id', '=', 'tutor_levels.level_id');
+        $join->on('tutor_levels.user_id','=', \DB::raw($this->id));
+      })
+      ->groupBy('schools.id')
+      ->orderBy('num_classes', 'desc')
+      ->select('schools.school_name', 'schools.id', \DB::raw('COUNT(DISTINCT tutor_levels.id) AS num_classes'))
+      ->get();
+    return view('/account/tutoring/submitclass')->with('schools', $schools)->with('tutor', $tutor);
+  }
+
   public function submitlisting(Request $request)
   {
      $validator = \Validator::make($request->all(), [
