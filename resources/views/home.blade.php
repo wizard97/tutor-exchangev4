@@ -25,7 +25,7 @@
       </center>
 
     </div>
-
+    
   </div>
   <div class="row">
     <div class="col-md-10 col-md-offset-1">
@@ -116,11 +116,11 @@
   </div>
   <div class="row">
     <div class="col-md-6">
-    <div class="panel panel-success">
-      <div class="panel-heading">
-        <i class="fa fa-plus fa-fw"></i> New Features
-      </div>
-      <div class="panel-body">
+      <div class="panel panel-success">
+        <div class="panel-heading">
+          <i class="fa fa-plus fa-fw"></i> New Features
+        </div>
+        <div class="panel-body">
           <ul>
             <li>New Bootstrap theme!</li>
             <li>Improved search function</li>
