@@ -5,12 +5,14 @@ use Intervention\Image\ImageManagerStatic as Image;
 
 //use this to migrate to new db
 $servername = "localhost";
-$username = "homestead";
-$password = "secret";
+$username = $argv[1];
+$password = $argv[2];
+$old_name = $argv[3];
+$new_name = $argv[4];
 
 try {
-    $old = new PDO("mysql:host=$servername;dbname=login", $username, $password);
-    $new = new PDO("mysql:host=$servername;dbname=homestead", $username, $password);
+    $old = new PDO("mysql:host=$servername;dbname=$old_name", $username, $password);
+    $new = new PDO("mysql:host=$servername;dbname=$new_name", $username, $password);
     // set the PDO error mode to exception
     $old->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $new->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -21,6 +23,7 @@ try {
 catch(PDOException $e)
 {
     echo "Connection failed: " . $e->getMessage();
+    die();
 }
 
 echo "Starting migration of pictures\n";
