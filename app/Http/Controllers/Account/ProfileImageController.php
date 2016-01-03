@@ -105,6 +105,9 @@ class ProfileImageController extends Controller
       $uploaded_image->move($directory.'/', $new_name);
       //create two copies at different resolutions
       $image = \Image::make(\File::get($directory.'/'.$new_name));
+
+      // Crop image so it is 1:1
+      $image->fit(min($image->width(), $image->height()));
       $image->resize(720, 720)->save($directory.'/profile_full.png');
       $image->resize(100, 100)->save($directory.'/profile_thumb.jpg');
       $user = \App\User::findOrFail($this->id);
