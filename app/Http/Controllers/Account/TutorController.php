@@ -84,8 +84,11 @@ class TutorController extends Controller
 
   public function getmusic()
   {
-    $music = \App\Music::orderBy('music_name', 'asc')->get();
-    return view('/account/tutoring/music')->with('instruments', $music);
+    //don't list things tutor already has
+    $ids = \App\Tutor::findOrFail($this->id)->music()->select('music.id')->get()->pluck('id')->toArray();
+    $music = \App\Music::orderBy('music_name', 'asc')->whereNotIn('id', $ids)->get();
+    $tutor = \App\Tutor::findOrFail($this->id);
+    return view('/account/tutoring/music')->with('instruments', $music)->with('tutor', $tutor);
   }
 
 
@@ -504,6 +507,35 @@ class TutorController extends Controller
     return response()->json(['data' => $tutor->music]);
   }
 
+  public function ajaxremovemusic(Request $request)
+  {
+    $this->validate($request, [
+      'music_id' => 'required|numeric|exists:music,id'
+      ]);
+    $id = $request->input('music_id');
+    $to_rmv = \App\Music::findOrFail($id);
+    $tutor = \App\Tutor::findOrFail($this->id);
+    $tutor->music()->detach($to_rmv->id);
+    return response()->json($to_rmv);
+  }
+
+  public function addmusic(Request $request)
+  {
+    $this->validate($request, [
+      'music_id' => 'required|numeric|exists:music,id',
+      'years-experiance' => 'required|numeric|between:0,100',
+      'student-experiance' => 'required|numeric|between:0,100'
+      ]);
+    $id = $request->input('music_id');
+    $music = \App\Music::findOrFail($id);
+    $tutor = \App\Tutor::findOrFail($this->id);
+    $tutor->music()
+    ->attach($music->id,
+      ["years_experiance" => $request->input('years-experiance'),
+      "upto_years" => $request->input('student-experiance')]
+    );
+    return redirect(route('tutoring.music'));
+  }
   //used to make checklist for tutor
   private function makechecklist($tutor_id)
   {
