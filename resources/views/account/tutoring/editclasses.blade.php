@@ -126,9 +126,11 @@
           </div>
         </div>
       </div>
-      <span>If you don't see your class, submit one <span>
-        <a href="{{ route('tutoring.submitclass') }}" role="button">here</a>.
-
+      <div class="col-md-6">
+        <div class="alert alert-danger" role="alert">
+          <span>If you don't see your class, submit one</span>
+          <a href="{{ route('tutoring.submitclass') }}" role="button">here</a><span>.</span>
+        </div>
       </div>
     </div>
   </div>
@@ -153,63 +155,63 @@ $( document ).ready(function() {
 
 
 
-//middle school and below
+  //middle school and below
 
-//classes availible
-$middle_classes.dataTable( {
-  "lengthMenu": [ 5, 10, 25, 50, 75, 100 ],
-  ajax: {
-    url: mid_class_url,
-  },
-  processing: true,
-  stateSave: true,
-  "order": [],
-  "dom": 'lfrtip',
-  columns: [
-    {
-      "orderable":      false,
-      "className":      'details-control table-text-center',
-      "data":           null,
-      "defaultContent": '<a href="javascript:void(0)"><i style="font-size: 20px;" class="fa fa-plus"></i></a>'
+  //classes availible
+  $middle_classes.dataTable( {
+    "lengthMenu": [ 5, 10, 25, 50, 75, 100 ],
+    ajax: {
+      url: mid_class_url,
     },
-    { "visible": false, "title": 'Class ID', "data": 'id'},
-    { "title": 'Name', "data": 'class_name'},
-    { "title": 'Subject', "data": 'subject_name'},
-  ],
-  createdRow: function( row, data, dataIndex ) {
-    //if selected
-    if ( data.selected == "TRUE" ) {
-      $row = $(row);
-      $row.find('i.fa').replaceWith('<i style="font-size: 20px;" class="fa fa-times text-danger"></i>');
-      $row.addClass('success');
-    }
-  },
-});
+    processing: true,
+    stateSave: true,
+    "order": [],
+    "dom": 'lfrtip',
+    columns: [
+      {
+        "orderable":      false,
+        "className":      'details-control table-text-center',
+        "data":           null,
+        "defaultContent": '<a href="javascript:void(0)"><i style="font-size: 20px;" class="fa fa-plus"></i></a>'
+      },
+      { "visible": false, "title": 'Class ID', "data": 'id'},
+      { "title": 'Name', "data": 'class_name'},
+      { "title": 'Subject', "data": 'subject_name'},
+    ],
+    createdRow: function( row, data, dataIndex ) {
+      //if selected
+      if ( data.selected == "TRUE" ) {
+        $row = $(row);
+        $row.find('i.fa').replaceWith('<i style="font-size: 20px;" class="fa fa-times text-danger"></i>');
+        $row.addClass('success');
+      }
+    },
+  });
 
-//tutors classes
-$tutor_middle_classes.dataTable({
-  ajax: {
-    url: t_middle_class_url,
-  },
-  processing: true,
-  "order": [],
-  pageLength: 10,
-  columns: [
-    {
-      "orderable":      false,
-      "className":      'details-control table-text-center',
-      "data":           null,
-      "defaultContent": '<a href="javascript:void(0)"><i style="font-size: 20px;" class="fa fa-times text-danger"></i></a>'
+  //tutors classes
+  $tutor_middle_classes.dataTable({
+    ajax: {
+      url: t_middle_class_url,
     },
-    { "visible": false, "title": 'Class ID', "data": 'id'},
-    { "title": 'Name', "data": 'class_name'},
-    { "title": 'Subject', "data": 'subject_name'},
-    { "title": 'Added On', "data": 'pivot.created_at', createdCell: function (td, cellData, rowData, row, col) {
-      var date = new Date(rowData.pivot.created_at);
-      $(td).text(date.toLocaleDateString());
-    }
-  },
-]
+    processing: true,
+    "order": [],
+    pageLength: 10,
+    columns: [
+      {
+        "orderable":      false,
+        "className":      'details-control table-text-center',
+        "data":           null,
+        "defaultContent": '<a href="javascript:void(0)"><i style="font-size: 20px;" class="fa fa-times text-danger"></i></a>'
+      },
+      { "visible": false, "title": 'Class ID', "data": 'id'},
+      { "title": 'Name', "data": 'class_name'},
+      { "title": 'Subject', "data": 'subject_name'},
+      { "title": 'Added On', "data": 'pivot.created_at', createdCell: function (td, cellData, rowData, row, col) {
+        var date = new Date(rowData.pivot.created_at);
+        $(td).text(date.toLocaleDateString());
+      }
+    },
+  ]
 });
 
 //remove row when clicked_row
