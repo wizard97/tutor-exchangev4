@@ -3,15 +3,11 @@
 
 @section('content')
 <div class="container">
-<div class="page-header">
-  <h1>Submit a New Class</h1>
-</div>
+  <div class="page-header">
+    <h1>Submit a New Class</h1>
+  </div>
 
-@include('templates/feedback')
-<div class="row">
-
-
-  <h2>Submit a new class</h2>
+  @include('templates/feedback')
 
   <div class="col-md-6">
     <div class="panel panel-default">
@@ -29,71 +25,71 @@
             </ul>
           </div>
 
-      </div>
-    </div>
-    <div class="panel-body">
-      <div class="row">
-        <div class="col-md-4">
-          Class Name: <span class="text text-danger">*</span>
         </div>
-        <div class="col-md-8">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="e.g. Calculus" aria-describedby="basic-addon1">
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-4">
+            Class Name: <span class="text text-danger">*</span>
+          </div>
+          <div class="col-md-8">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="e.g. Calculus" aria-describedby="basic-addon1">
+            </div>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          Select Subject: <span class="text text-danger">*</span>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <div class="dropup">
-            <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              Subject
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-              <li><a href="#">English</a></li>
-              <li><a href="#">Social Studies</a></li>
-              <li><a href="#">Science</a></li>
-              <li><a href="#">Math</a></li>
-              <li><a href="#">Foreign Language</a></li>
-              <li role="separator" class="divider"></li>
-              <li><a href="#">Elementary/Middle School English</a></li>
-              <li><a href="#">Elementary/Middle School Social Studies</a></li>
-              <li><a href="#">Elementary/Middle School Science</a></li>
-              <li><a href="#">Elementary/Middle School Math</a></li>
-              <li><a href="#">Elementary/Middle School Foreign Language</a></li>
-            </ul>
+        <div class="row">
+          <div class="col-md-12">
+            Select Subject: <span class="text text-danger">*</span>
           </div>
         </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-md-12">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Level Name" aria-describedby="basic-addon2">
-            <span class="input-group-btn">
-              <button class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
-            </span>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="dropup">
+              <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                Subject
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="#">English</a></li>
+                <li><a href="#">Social Studies</a></li>
+                <li><a href="#">Science</a></li>
+                <li><a href="#">Math</a></li>
+                <li><a href="#">Foreign Language</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">Elementary/Middle School English</a></li>
+                <li><a href="#">Elementary/Middle School Social Studies</a></li>
+                <li><a href="#">Elementary/Middle School Science</a></li>
+                <li><a href="#">Elementary/Middle School Math</a></li>
+                <li><a href="#">Elementary/Middle School Foreign Language</a></li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="table-responsive">
-        <table id="add-classes" class="table table-striped table-bordered table-hover"></table>
-      </div>
-      <span class="text text-danger">* = Required</span>
+        <hr>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Level Name" aria-describedby="basic-addon2">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table id="add-classes" class="table table-striped table-bordered table-hover"></table>
+        </div>
+        <span class="text text-danger">* = Required</span>
 
-      <button class="btn btn-success pull-right" type="button">
-        Submit
-      </button>
+        <button class="btn btn-success pull-right" type="button">
+          Submit
+        </button>
+      </div>
     </div>
   </div>
-</div>
 
-
+  
 </div>
 <script>
 var $add_classes = $('#add-classes');
