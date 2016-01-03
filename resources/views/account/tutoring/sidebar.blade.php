@@ -10,7 +10,7 @@
   </ul>
 
   <ul class="nav nav-sidebar">
-    <li class=""><a href="/tutor/index"><strong><i class="fa fa-cog"></i> Tutoring Settings</strong></a></li>
+    <li class=""><a href="{{ route('tutoring.settings') }}"><strong><i class="fa fa-cog"></i> Tutoring Settings</strong></a></li>
   </ul>
 </div>
 
