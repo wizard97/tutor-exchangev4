@@ -20,4 +20,9 @@ class SchoolClass extends Model
       return $this->belongsTo('App\School', 'school_id', 'id');
   }
 
+  public function subject()
+  {
+      return $this->belongsTo('App\SchoolSubject', 'subject_id', 'id');
+  }
+
 }

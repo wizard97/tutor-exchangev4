@@ -17,9 +17,9 @@ class CreatePendingMiddleClassesTable extends Migration
           $table->integer('middle_subject_id')->unsigned()->nullable();
           $table->string('class_name', 50);
           //pending refrence
-          $table->integer('pending_middle_class_id')->unsigned()->nullable();
+          $table->integer('pending_middle_subject_id')->unsigned()->nullable();
           // Refrence back to original if editing
-          $table->integer('music_id')->unsigned()->nullable();
+          $table->integer('middle_class_id')->unsigned()->nullable();
           // Refrence to proposal_table
           $table->integer('proposal_id')->unsigned()->index();
           $table->foreign('proposal_id')->references('id')->on('proposals')->onDelete('cascade');
