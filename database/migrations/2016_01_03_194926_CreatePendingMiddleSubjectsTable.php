@@ -17,9 +17,9 @@ class CreatePendingMiddleSubjectsTable extends Migration
           $table->string('subject_name', 50);
           // Refrence back to original if editing
           $table->integer('middle_subject_id')->unsigned()->nullable();
-          $table->integer('user_id')->unsigned();
-          $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-          $table->timestamps();
+          // Refrence to proposal_table
+          $table->integer('proposal_id')->unsigned()->index();
+          $table->foreign('proposal_id')->references('id')->on('proposals')->onDelete('cascade');
         });
     }
 

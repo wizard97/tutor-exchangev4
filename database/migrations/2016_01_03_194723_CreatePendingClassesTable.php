@@ -17,14 +17,14 @@ class CreatePendingClassesTable extends Migration
           $table->integer('school_id')->unsigned()->nullable();
           $table->integer('subject_id')->unsigned()->nullable();
           $table->string('class_name', 50);
-          //pending refrence
+          //pending refrence to new entry
           $table->integer('pending_school_id')->unsigned()->nullable();
           $table->integer('pending_subject_id')->unsigned()->nullable();
           // Refrence back to original if editing
           $table->integer('class_id')->unsigned()->nullable();
-          $table->integer('user_id')->unsigned();
-          $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-          $table->timestamps();
+          // Refrence to proposal_table
+          $table->integer('proposal_id')->unsigned()->index();
+          $table->foreign('proposal_id')->references('id')->on('proposals')->onDelete('cascade');
         });
     }
 

@@ -17,13 +17,13 @@ class CreatePendingLevelsTable extends Migration
           $table->integer('class_id')->unsigned()->nullable();
           $table->integer('level_num')->unsigned();
           $table->string('level_name', 50);
-          //pending refrence
+          //pending refrence to new entry
           $table->integer('pending_class_id')->unsigned()->nullable();
           // Refrence back to original if editing
           $table->integer('level_id')->unsigned()->nullable();
-          $table->integer('user_id')->unsigned();
-          $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-          $table->timestamps();
+          // Refrence to proposal_table
+          $table->integer('proposal_id')->unsigned()->index();
+          $table->foreign('proposal_id')->references('id')->on('proposals')->onDelete('cascade');
         });
     }
 

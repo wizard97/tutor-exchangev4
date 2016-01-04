@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use App\Status;
+use App\Models\Pending\Status;
 
 class CreateStatusesTable extends Migration
 {
@@ -21,13 +21,13 @@ class CreateStatusesTable extends Migration
         });
 
         $s = new Status;
-        $s->title = "Active";
-        $s->slug = 'active';
+        $s->title = "Accepted";
+        $s->slug = 'accepted';
         $s->save();
 
         $s = new Status;
-        $s->title = "Pending Activation";
-        $s->slug = 'pend_act';
+        $s->title = "Pending Accept";
+        $s->slug = 'pend_acpt';
         $s->save();
 
         $s = new Status;
@@ -35,6 +35,10 @@ class CreateStatusesTable extends Migration
         $s->slug = 'pend_del';
         $s->save();
 
+        $s = new Status;
+        $s->title = "Rejected";
+        $s->slug = 'rejected';
+        $s->save();
     }
 
     /**
