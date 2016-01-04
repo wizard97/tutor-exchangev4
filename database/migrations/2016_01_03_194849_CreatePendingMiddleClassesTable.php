@@ -20,9 +20,9 @@ class CreatePendingMiddleClassesTable extends Migration
           $table->integer('pending_middle_class_id')->unsigned()->nullable();
           // Refrence back to original if editing
           $table->integer('music_id')->unsigned()->nullable();
-          $table->integer('user_id')->unsigned();
-          $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-          $table->timestamps();
+          // Refrence to proposal_table
+          $table->integer('proposal_id')->unsigned()->index();
+          $table->foreign('proposal_id')->references('id')->on('proposals')->onDelete('cascade');
         });
     }
 

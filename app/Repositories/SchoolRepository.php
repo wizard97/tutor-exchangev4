@@ -8,6 +8,5 @@ class SchoolRepository extends BaseRepository
   public function _construct(School $school)
   {
     $this->school = $school;
-    $this->sclass = $sclass;
   }
 }
