@@ -34,11 +34,11 @@
           </div>
           <div class="col-md-9">
             <h3>Matan Silver</h3>
-            <p>Matan is a Freshman at Northeastern University, studying Electrical Engineering. He has worked for the last year at <a href="http://www.fractenna.com" target="_blank">Fractal Antenna</a>, where he build wideband antennas using a fleet of seven 3D printers. He is currently interning at <a href="http://www.dangerawesome.co" target="_blank">Danger!Awesome</a>, which is a startup that does tons of awesome laser cutting/engraving, 3D printing, vinyl cutting, CNC milling, and more. In his free time, Matan plays with the 3D printer that he built at home, plays flute, and works on improving this site! He also enjoys correcting Aaron's spelling mistakes that once riddled the site... :P</p>
+            <p>Matan is a Freshman at Northeastern University, studying Electrical Engineering. He has worked at <a href="http://www.fractenna.com" target="_blank">Fractal Antenna</a>, where he built wideband antennas using a fleet of seven 3D printers. He also interned at <a href="http://www.dangerawesome.co" target="_blank">Danger!Awesome</a>, which is a startup that does tons of awesome laser cutting/engraving, 3D printing, vinyl cutting, CNC milling, and more. In his free time, Matan plays with the 3D printer that he built at home, plays flute, and works on improving this site! He also enjoys correcting Aaron's spelling mistakes that once riddled the site... :P</p>
             <blockquote>
-  <p>"Do you even code even, bruh?"</p>
-  <footer>Matan Silver</footer>
-</blockquote>
+              <p>"Do you even code even, bruh?"</p>
+              <footer>Matan Silver</footer>
+            </blockquote>
           </div>
         </div>
       </div>
