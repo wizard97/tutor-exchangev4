@@ -23,7 +23,7 @@ class SchoolProposal extends BaseProposal implements ProposalInterface
   protected $is_edit;
 
   public function __construct(Proposal $prop, Status $status, Zip $zip, User $user, PendingSchool $pendSchool, School $school,
-      $pid=null, $uid = null, $name=null, $zip_id = null, $school_id=null)
+      $gid=null, $uid = null, $name=null, $zip_id = null, $school_id=null)
   {
     $this->status = $status;
     $this->zip = $zip;
@@ -31,17 +31,18 @@ class SchoolProposal extends BaseProposal implements ProposalInterface
     $this->pend_school = $pendSchool;
     $this->school = $school;
 
-    if (!is_null($pid))
+    if (!is_null($gid))
     {
-      parent::__construct($pid, $prop);
-      $this->pend_school_model = $this->proposal_model->pending_school;
+      parent::__construct($gid, $prop);
+      $this->pend_school_model = $this->prop_models[0]->pending_school;
     }
     else
     {
-      $this->proposal_model = new $prop;
+      $this->prop = $prop;
+      $this->prop_models[0] = new $prop;
       // Figure out if updating or adding new listing
-      $this->proposal_model->status_id = $this->status->where('slug', 'pend_acpt')->firstOrFail()->id;
-      $this->proposal_model->user_id = $this->user->findOrFail($uid)->id;
+      $this->prop_models[0]->status_id = $this->status->where('slug', 'pend_acpt')->firstOrFail()->id;
+      $this->prop_models[0]->user_id = $this->user->findOrFail($uid)->id;
 
       $this->pend_school_model = new $pendSchool;
       $this->pend_school_model->school_name = $name;
@@ -59,8 +60,10 @@ class SchoolProposal extends BaseProposal implements ProposalInterface
 
   public function save()
   {
-    $this->proposal_model->save();
-    $this->pend_school_model->proposal_id = $this->proposal_model->id;
+    if(is_null($this->prop_models[0]->group_id)) $this->set_group_id($this->next_group_id());
+
+    $this->prop_models[0]->save();
+    $this->pend_school_model->proposal_id = $this->prop_models[0]->id;
     $this->pend_school_model->save();
   }
 
@@ -81,14 +84,14 @@ class SchoolProposal extends BaseProposal implements ProposalInterface
       $to_save->school_name = $this->pend_school_model->school_name;
       $to_save->save();
     }
-    $this->proposal_model->status_id = $this->status->where('slug', 'accepted')->firstOrFail()->id;
+    $this->prop_models[0]->status_id = $this->status->where('slug', 'accepted')->firstOrFail()->id;
     $this->save();
     return true;
   }
 
   public function reject()
   {
-    $this->proposal_model->status_id = $this->status->where('slug', 'rejected')->firstOrFail()->id;
+    $this->prop_models[0]->status_id = $this->status->where('slug', 'rejected')->firstOrFail()->id;
     $this->save();
     return true;
   }
@@ -109,6 +112,6 @@ class SchoolProposal extends BaseProposal implements ProposalInterface
 
   public function is_saved()
   {
-    return !is_null($this->proposal_model->id);
+    return !is_null($this->prop_models[0]->id);
   }
 }
