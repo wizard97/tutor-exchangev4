@@ -4,10 +4,26 @@ use App\Models\Pending\Proposal;
 
 abstract class BaseProposal
 {
-  protected $proposal_model;
+  protected $prop_models;
+  protected $prop;
 
-  public function __construct($prop_id, Proposal $proposal)
+  public function __construct($group_id, Proposal $proposal)
   {
-    $this->proposal_model = $proposal->findOrFail($prop_id);
+    $this->prop_models = $proposal->where('group_id', $group_id)->get();
+    $this->prop = $proposal;
   }
+
+  public function next_group_id()
+  {
+    $id = 1;
+    $res = $this->prop->orderBy("group_id", 'desc')->first();
+    if (!is_null($res)) $id = $res->group_id +1;
+    return $id;
+  }
+
+  public function set_group_id($id)
+  {
+    $this->prop->group_id = $id;
+  }
+
 }
