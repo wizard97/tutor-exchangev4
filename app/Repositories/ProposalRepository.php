@@ -1,12 +1,12 @@
 <?php
 namespace App\Repositories;
-use App\Models\Pending\Proposals;
+use App\Models\Pending\Proposal;
 
-class ClassRepository extends BaseRepository
+class ProposalRepository extends BaseRepository
 {
 
-  public function _construct(Proposal $p)
+  public function _construct(Proposal $prop)
   {
-    $this->proposal = $p;
+    $this->prop = $prop;
   }
 }

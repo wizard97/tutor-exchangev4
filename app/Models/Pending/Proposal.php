@@ -13,39 +13,39 @@ class Proposal extends Model
     return $this->belongsTo('App\Models\Pending\Status', 'status_id', 'id');
     }
 
-    public function pending_schools()
+    public function pending_school()
     {
-        return $this->hasMany('App\Models\Pending\PendingSchool', 'proposal_id', 'id');
+        return $this->hasOne('App\Models\Pending\PendingSchool', 'proposal_id', 'id');
     }
 
-    public function pending_school_subjects()
+    public function pending_school_subject()
     {
-        return $this->hasMany('App\Models\Pending\PendingSchoolSubject', 'proposal_id', 'id');
+        return $this->hasOne('App\Models\Pending\PendingSchoolSubject', 'proposal_id', 'id');
     }
 
-    public function pending_classes()
+    public function pending_class()
     {
-        return $this->hasMany('App\Models\Pending\PendingClass', 'proposal_id', 'id');
+        return $this->hasOne('App\Models\Pending\PendingClass', 'proposal_id', 'id');
     }
 
-    public function pending_levels()
+    public function pending_level()
     {
-        return $this->hasMany('App\Models\Pending\PendingLevel', 'proposal_id', 'id');
+        return $this->hasOne('App\Models\Pending\PendingLevel', 'proposal_id', 'id');
     }
 
 
-    public function pending_middle_classes()
+    public function pending_middle_class()
     {
-        return $this->hasMany('App\Models\Pending\PendingMiddleClass', 'proposal_id', 'id');
+        return $this->hasOne('App\Models\Pending\PendingMiddleClass', 'proposal_id', 'id');
     }
 
-    public function pending_middle_subjects()
+    public function pending_middle_subject()
     {
-        return $this->hasMany('App\Models\Pending\PendingMiddleSubject', 'proposal_id', 'id');
+        return $this->hasOne('App\Models\Pending\PendingMiddleSubject', 'proposal_id', 'id');
     }
 
     public function pending_music()
     {
-        return $this->hasMany('App\Models\Pending\PendingMusic', 'proposal_id', 'id');
+        return $this->hasOne('App\Models\Pending\PendingMusic', 'proposal_id', 'id');
     }
 }
