@@ -6,11 +6,16 @@ abstract class BaseProposal
 {
   protected $prop_models;
   protected $prop;
+  protected $prop_ids;
+  protected $gid;
 
   public function __construct($group_id, Proposal $proposal)
   {
     $this->prop_models = $proposal->where('group_id', $group_id)->get();
+    if ($this->prop_models->isEmpty()) throw new \Exception('Proposal is empty.');
+    $this->prop_ids = $this->prop_models->pluck('id')->toArray();
     $this->prop = $proposal;
+    $this->gid = $group_id;
   }
 
   public function next_group_id()
@@ -23,7 +28,10 @@ abstract class BaseProposal
 
   public function set_group_id($id)
   {
-    $this->prop->group_id = $id;
+    foreach($this->prop_models as $mod)
+    {
+      $mod->group_id = $id;
+    }
   }
 
 }

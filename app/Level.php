@@ -19,6 +19,11 @@ class Level extends Model
     return $this->belongsToMany('App\Tutor', 'tutor_levels', 'level_id', 'user_id')->withTimestamps();
   }
 
+  public function pending_levels()
+  {
+    return $this->hasMany('App\Models\Pending\PendingLevel', 'level_id', 'id');
+  }
+
   //return ids of matches
   public function scopeFindTutors($query)
   {
