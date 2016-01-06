@@ -30,10 +30,6 @@ class CreateStatusesTable extends Migration
         $s->slug = 'pend_acpt';
         $s->save();
 
-        $s = new Status;
-        $s->title = "Pending Deletion";
-        $s->slug = 'pend_del';
-        $s->save();
 
         $s = new Status;
         $s->title = "Rejected";

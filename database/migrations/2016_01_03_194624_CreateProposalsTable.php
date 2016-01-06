@@ -17,6 +17,7 @@ class CreateProposalsTable extends Migration
             $table->integer('status_id')->unsigned();
             $table->foreign('status_id')->references('id')->on('statuses')->onDelete('cascade');
             $table->integer('group_id')->unsigned();
+            $table->boolean('to_delete')->default(0);
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

@@ -14,7 +14,7 @@ class SchoolProposal extends BaseProposal implements ProposalInterface
   protected $user;
 
   protected $pend_school;
-  protected $school;
+  protected $schl;
 
   protected $pend_school_model;
   protected $school_model;
@@ -29,7 +29,7 @@ class SchoolProposal extends BaseProposal implements ProposalInterface
     $this->zip = $zip;
     $this->user = $user;
     $this->pend_school = $pendSchool;
-    $this->school = $school;
+    $this->schl = $school;
 
     if (!is_null($gid))
     {
@@ -49,22 +49,21 @@ class SchoolProposal extends BaseProposal implements ProposalInterface
       $this->pend_school_model->zip_id = $this->zip->findOrFail($zip_id)->id;
       if(!is_null($school_id))
       {
-        $this->pend_school_model->school_id = $this->school->findOrFail($school_id)->id;
+        $this->pend_school_model->school_id = $this->schl->findOrFail($school_id)->id;
       }
     }
 
-    // Can be null
-    $this->school_model = $this->pend_school_model->school;
-    $this->is_edit = !is_null($this->school_model);
+    $this->update();
   }
 
-  public function save()
+  public function save($sid = null)
   {
     if(is_null($this->prop_models[0]->group_id)) $this->set_group_id($this->next_group_id());
-
     $this->prop_models[0]->save();
     $this->pend_school_model->proposal_id = $this->prop_models[0]->id;
+    if (is_null($this->pend_school_model->school)) $this->pend_school_model->school_id = $sid;
     $this->pend_school_model->save();
+    $this->update();
   }
 
   public function accept()
@@ -73,19 +72,30 @@ class SchoolProposal extends BaseProposal implements ProposalInterface
 
     if($this->is_edit())
     {
-      //update attributes
-      $this->school_model->zip_id = $this->pend_school_model->zip_id;
-      $this->school_model->school_name = $this->pend_school_model->school_name;
-      $this->school_model->save();
+      //delete?
+      if ($this->prop_models[0]->to_delete)
+      {
+        $this->school_model->delete();
+        $sid = null;
+      }
+      else {
+        //update attributes
+        $this->school_model->zip_id = $this->pend_school_model->zip_id;
+        $this->school_model->school_name = $this->pend_school_model->school_name;
+        $this->school_model->save();
+        $sid = $this->school_model->id;
+      }
+
     }
     else {
-      $to_save = new $this->school;
+      $to_save = new $this->schl;
       $to_save->zip_id = $this->pend_school_model->zip_id;
       $to_save->school_name = $this->pend_school_model->school_name;
       $to_save->save();
+      $sid = $to_save->id;
     }
     $this->prop_models[0]->status_id = $this->status->where('slug', 'accepted')->firstOrFail()->id;
-    $this->save();
+    $this->save($sid);
     return true;
   }
 
@@ -113,5 +123,12 @@ class SchoolProposal extends BaseProposal implements ProposalInterface
   public function is_saved()
   {
     return !is_null($this->prop_models[0]->id);
+  }
+
+  private function update()
+  {
+    // Can be null
+    $this->school_model = $this->pend_school_model->school()->first();
+    $this->is_edit = !is_null($this->school_model);
   }
 }
