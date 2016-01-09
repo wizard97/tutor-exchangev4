@@ -12,57 +12,57 @@ class LevelsProposal extends BaseProposal implements ProposalInterface
 {
   protected $pendLevels;
 
-  public function __construct(Proposal $prop, Status $status, PendingLevel $pend_level, Level $level, $pid=NULL,
-    //If constructing, rather than retrieving from db
-    $mod_coll = NULL, $cid=NULL, $pending=false, $uid=NULL)
+  public function __construct(Proposal $prop, Status $status, PendingLevel $pend_level, Level $level)
   {
     $this->status = $status;
     $this->pend_level = $pend_level;
     $this->level = $level;
 
-    // retrieve everything by group_id
-    if (!is_null($pid))
-    {
-      parent::__construct($pid, $prop);
-
-      $this->pendLevels =
-          $pend_level->whereIn("proposal_id", $this->prop_ids)->orderBy('level_num', 'asc')->get();
-
-      if (!is_null($this->pendLevels[0]->class_id)) $this->cid = $this->pendLevels[0]->class_id;
-      else $this->pend_cid = $this->pendLevels[0]->pending_class_id;
-    }
-    else
-    {
-      $this->pendLevels = $mod_coll;
-      $this->prop = $prop;
-      $pending ? $this->pend_cid = $cid : $this->cid = $cid;
-      $this->uid = $uid;
-
-      // If pending, do I need to make delete requests?
-
-      if (!$pending)
-      {
-        $lev_ids = $this->pendLevels->pluck('level_id');
-        $to_del = $this->level->where('class_id', $this->cid)->whereNotIn('id', $lev_ids)->get();
-
-        foreach($to_del as $mod)
-        {
-          $p = new $this->pend_level;
-          $p->to_delete = true;
-          $p->class_id = $this->cid;
-          $p->level_num = $mod->level_num;
-          $p->level_name = $mod->level_name;
-          // Add the delete operation
-          $this->pendLevels.add($p);
-        }
-      }
-
-      //Create the proposal model, unable to set id until saved
-      $this->prop_model = new $this->prop;
-      $this->prop_model->status_id = $this->status->where('slug', "pending")->firstOrFail()->id;
-      $this->prop_model->user_id = $this->user->findOrFail($this->uid)->id;
-    }
     $this->validate();
+  }
+  
+  public function load_by_id($pid)
+  {
+    Parent::load_by_id($this->prop, $pid);
+
+    $this->pendLevels = $pend_level->whereIn("proposal_id", $this->prop_ids)
+        ->orderBy('level_num', 'asc')->get();
+
+    if (!is_null($this->pendLevels[0]->class_id)) $this->cid = $this->pendLevels[0]->class_id;
+    else $this->pend_cid = $this->pendLevels[0]->pending_class_id;
+
+  }
+
+  public function create_new($mod_coll = NULL, $cid=NULL, $pending=false, $uid=NULL)
+  {
+    $this->pendLevels = $mod_coll;
+    $this->prop = $prop;
+    $pending ? $this->pend_cid = $cid : $this->cid = $cid;
+    $this->uid = $uid;
+
+    // If pending, do I need to make delete requests?
+
+    if (!$pending)
+    {
+      $lev_ids = $this->pendLevels->pluck('level_id');
+      $to_del = $this->level->where('class_id', $this->cid)->whereNotIn('id', $lev_ids)->get();
+
+      foreach($to_del as $mod)
+      {
+        $p = new $this->pend_level;
+        $p->to_delete = true;
+        $p->class_id = $this->cid;
+        $p->level_num = $mod->level_num;
+        $p->level_name = $mod->level_name;
+        // Add the delete operation
+        $this->pendLevels.add($p);
+      }
+    }
+
+    //Create the proposal model, unable to set id until saved
+    $this->prop_model = new $this->prop;
+    $this->prop_model->status_id = $this->status->where('slug', "pending")->firstOrFail()->id;
+    $this->prop_model->user_id = $this->user->findOrFail($this->uid)->id;
   }
 
   public function save()
@@ -250,6 +250,6 @@ class LevelsProposalFactory
 
   public function createLevelsProposal()
   {
-    return new LevelsProposal($mod_coll = $this->levelModels, $cid=$this->cid, $pending=$this->pending, $uid=$this->uid);
+    return new LevelsProposal($pid=NULL, $mod_coll = $this->levelModels, $cid=$this->cid, $pending=$this->pending, $uid=$this->uid);
   }
 }

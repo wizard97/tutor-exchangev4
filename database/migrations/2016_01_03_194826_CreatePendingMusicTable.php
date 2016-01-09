@@ -21,6 +21,7 @@ class CreatePendingMusicTable extends Migration
           $table->integer('proposal_id')->unsigned()->index();
           $table->foreign('proposal_id')->references('id')->on('proposals')->onDelete('cascade');
           $table->boolean('to_delete')->default(0);
+        });
     }
 
     /**
