@@ -7,27 +7,54 @@ abstract class BaseProposal
   protected $prop_model;
   protected $prop;
 
-  public function __construct($prop_id, Proposal $proposal)
+  public function __construct(Proposal $proposal)
   {
-    $this->prop_model = $proposal->where('proposal_id', $prop_id)->firstOrFail();
     $this->prop = $proposal;
   }
-/*
-  public function next_group_id()
+
+  public function load_by_id($prop_id)
   {
-    $id = 1;
-    $res = $this->prop->orderBy("group_id", 'desc')->first();
-    if (!is_null($res)) $id = $res->group_id +1;
-    return $id;
+    $this->prop_model = $this->prop->where('id', $prop_id)->firstOrFail();
   }
 
-  public function set_group_id($id)
+  public function create_new($uid)
   {
-    foreach($this->prop_models as $mod)
-    {
-      $mod->group_id = $id;
-    }
+    $this->prop_model = new $this->prop;
+    // Figure out if updating or adding new listing
+    $this->prop_model->status_id = $this->status->where('slug', 'pend_acpt')->firstOrFail()->id;
+    $this->prop_model->user_id = $this->user->findOrFail($uid)->id;
   }
-  */
+
+  public function save()
+  {
+    $this->prop_model->save();
+  }
+
+  public function reject()
+  {
+    $this->prop_model->status_id = $this->status->where('slug', 'rejected')->firstOrFail()->id;
+    $this->prop_model->save();
+    return $this->prop_model->id;
+  }
+
+  public function accept()
+  {
+    $this->prop_model->status_id = $this->status->where('slug', 'accepted')->firstOrFail()->id;
+    $this->prop_model->save();
+
+    return $this->prop_model->id;
+  }
+
+  public function validate()
+  {
+    $p = true;
+
+    $p &= !is_null($this->prop_model->status);
+    if (!$p) throw new \Exception('Unknown status.');
+
+    $p &= !is_null($this->prop_model->user);
+    if (!$p) throw new \Exception('Unknown user.');
+    return $p;
+  }
 
 }
