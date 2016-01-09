@@ -55,16 +55,16 @@ function escape_sql($string)
 
 function dump_sql()
 {
-  \DB::listen(function($sql, $bindings, $time) {
-    $new_string = $sql;
-    foreach($bindings as $key => $value)
+  \DB::listen(function($qe) {
+    $new_string = $qe->sql;
+    foreach($qe->bindings as $key => $value)
     {
       $new_string = preg_replace('/\?/', "'".$value."'", $new_string, 1);
     }
   echo str_replace("''","'",$new_string);
   echo "<br><br>Query length: ".strlen($new_string);
-  var_dump($bindings);
-  var_dump($time);
+  var_dump($qe->bindings);
+  var_dump($qe->time);
   });
   }
 ?>

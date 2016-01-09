@@ -24,10 +24,8 @@ class SchoolProposal extends BaseProposal implements ProposalInterface
 
   public function __construct(Proposal $prop, Status $status, Zip $zip, User $user, PendingSchool $pendSchool, School $school)
   {
-    Parent::__construct($prop);
-    $this->status = $status;
+    Parent::__construct($prop, $status, $user);
     $this->zip = $zip;
-    $this->user = $user;
     $this->pend_school = $pendSchool;
     $this->schl = $school;
   }
@@ -45,32 +43,40 @@ class SchoolProposal extends BaseProposal implements ProposalInterface
 
     $this->pend_school_model = new $this->pend_school;
     $this->pend_school_model->to_delete = $to_delete;
-    $this->pend_school_model->school_name = $name;
-    $this->pend_school_model->zip_id = $this->zip->findOrFail($zip_id)->id;
-    if(!is_null($school_id))
+
+    if (!is_null($school_id)) $this->pend_school_model->school_id = $school_id;
+
+    if ($to_delete)
     {
-      $this->pend_school_model->school_id = $this->schl->findOrFail($school_id)->id;
+      $scl = $this->schl->findOrFail($school_id);
+      $this->pend_school_model->school_name = $scl->school_name;
+      $this->pend_school_model->zip_id = $scl->zip_id;
+    }
+    else {
+      $this->pend_school_model->school_name = $name;
+      $this->pend_school_model->zip_id = $this->zip->findOrFail($zip_id)->id;
     }
     $this->update();
   }
 
-  public function save($sid = null)
+  public function save()
   {
+    $this->validate();
+
     Parent::save();
+
     $this->pend_school_model->proposal_id = $this->prop_model->id;
-    if (is_null($this->pend_school_model->school)) $this->pend_school_model->school_id = $sid;
+
     $this->pend_school_model->save();
     $this->update();
+
     return $this->prop_model->id;
   }
 
   public function accept()
   {
-    try {
-      $this->validate();
-    } catch (Exception $e) {
-      return false;
-    }
+    $this->validate();
+    Parent::accept();
 
     $sid = null;
 
@@ -80,6 +86,7 @@ class SchoolProposal extends BaseProposal implements ProposalInterface
       if ($this->pend_school_model->to_delete)
       {
         $this->school_model->delete();
+        $sid = null;
       }
       else {
         //update attributes
@@ -97,8 +104,15 @@ class SchoolProposal extends BaseProposal implements ProposalInterface
       $to_save->save();
       $sid = $to_save->id;
     }
-    $this->save($sid);
-    return Parent::accept();
+
+    $this->pend_school_model->proposal_id = $this->prop_model->id;
+    $this->pend_school_model->school_id = $sid;
+
+    $this->pend_school_model->save();
+    $this->update();
+
+
+    return $this->prop_model->id;
   }
 
 
