@@ -1,15 +1,19 @@
 <?php
 namespace App\Proposals;
 use App\Models\Pending\Proposal;
+use App\User;
+use App\Models\Pending\Status;
 
 abstract class BaseProposal
 {
   protected $prop_model;
   protected $prop;
 
-  public function __construct(Proposal $proposal)
+  public function __construct(Proposal $proposal, Status $status, User $user)
   {
     $this->prop = $proposal;
+    $this->status = $status;
+    $this->user = $user;
   }
 
   public function load_by_id($prop_id)
@@ -27,7 +31,9 @@ abstract class BaseProposal
 
   public function save()
   {
+    $this->validate();
     $this->prop_model->save();
+    return $this->prop_model->id;
   }
 
   public function reject()
@@ -39,6 +45,7 @@ abstract class BaseProposal
 
   public function accept()
   {
+    $this->validate();
     $this->prop_model->status_id = $this->status->where('slug', 'accepted')->firstOrFail()->id;
     $this->prop_model->save();
 
@@ -47,14 +54,23 @@ abstract class BaseProposal
 
   public function validate()
   {
+
     $p = true;
 
     $p &= !is_null($this->prop_model->status);
     if (!$p) throw new \Exception('Unknown status.');
 
+    $p &= $this->prop_model->status()->first()->slug === 'pend_acpt';
+    if (!$p) throw new \Exception('The request is closed.');
+
     $p &= !is_null($this->prop_model->user);
     if (!$p) throw new \Exception('Unknown user.');
     return $p;
+  }
+
+  public function is_accepted()
+  {
+    return $this->prop_model->status()->first()->slug === 'accepted';
   }
 
 }
