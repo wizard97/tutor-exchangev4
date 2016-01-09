@@ -4,20 +4,15 @@ use App\Models\Pending\Proposal;
 
 abstract class BaseProposal
 {
-  protected $prop_models;
+  protected $prop_model;
   protected $prop;
-  protected $prop_ids;
-  protected $gid;
 
-  public function __construct($group_id, Proposal $proposal)
+  public function __construct($prop_id, Proposal $proposal)
   {
-    $this->prop_models = $proposal->where('group_id', $group_id)->get();
-    if ($this->prop_models->isEmpty()) throw new \Exception('Proposal is empty.');
-    $this->prop_ids = $this->prop_models->pluck('id')->toArray();
+    $this->prop_model = $proposal->where('proposal_id', $prop_id)->firstOrFail();
     $this->prop = $proposal;
-    $this->gid = $group_id;
   }
-
+/*
   public function next_group_id()
   {
     $id = 1;
@@ -33,5 +28,6 @@ abstract class BaseProposal
       $mod->group_id = $id;
     }
   }
+  */
 
 }
