@@ -35,6 +35,7 @@ class SchoolProposal extends BaseProposal implements ProposalInterface
     Parent::load_by_id($pid);
     $this->pend_school_model = $this->prop_model->pending_school;
     $this->update();
+    $this->validate();
   }
 
   public function create_new($uid = null, $name=null, $zip_id = null, $school_id=null, $to_delete = false)
@@ -57,19 +58,22 @@ class SchoolProposal extends BaseProposal implements ProposalInterface
       $this->pend_school_model->zip_id = $this->zip->findOrFail($zip_id)->id;
     }
     $this->update();
+    $this->validate();
   }
 
   public function save()
   {
     $this->validate();
+    return $this->save_helper();
+  }
 
-    Parent::save();
+  protected function save_helper()
+  {
+    Parent::save_helper();
 
     $this->pend_school_model->proposal_id = $this->prop_model->id;
-
     $this->pend_school_model->save();
     $this->update();
-
     return $this->prop_model->id;
   }
 
@@ -105,13 +109,10 @@ class SchoolProposal extends BaseProposal implements ProposalInterface
       $sid = $to_save->id;
     }
 
-    $this->pend_school_model->proposal_id = $this->prop_model->id;
     $this->pend_school_model->school_id = $sid;
-
-    $this->pend_school_model->save();
+    // Save without validation
+    $this->save_helper();
     $this->update();
-
-
     return $this->prop_model->id;
   }
 
@@ -128,10 +129,25 @@ class SchoolProposal extends BaseProposal implements ProposalInterface
     // Make sure school_id is set if edit
     if ($this->is_edit())
     {
+      // Are there any pending edits?
+      $sid = $this->status->where('slug', 'pend_acpt')->firstOrFail()->id;
+      $qry = $this->pend_school
+          ->join('proposals', 'proposals.id', '=', 'pending_schools.proposal_id')
+          ->where('proposals.status_id', $sid)
+          ->where('pending_schools.school_id', $this->pend_school_model->school_id);
+
+      if ($this->is_saved())
+      {
+        $qry->where('pending_schools.proposal_id', '!=', $this->prop_model->id);
+      }
+      $count =$qry->get()->count();
+      if ($count !== 0) throw new \Exception('There are existing pending edits for school.');
+
       $p &= !is_null($this->pend_school_model->school()->first());
       if (!$p) throw new \Exception('Trying to edit an unknown school.');
     }
-    else {
+    else
+    {
       //must be false
       $p &= $this->pend_school_model->to_delete === false;
       if (!$p) throw new \Exception('Can not delete an unknown school.');
@@ -141,6 +157,7 @@ class SchoolProposal extends BaseProposal implements ProposalInterface
     if (!$p) throw new \Exception('Unknown zip_id.');
     return true;
   }
+
   public function dependencies()
   {
     // no dependencies

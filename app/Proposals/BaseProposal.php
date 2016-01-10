@@ -32,6 +32,10 @@ abstract class BaseProposal
   public function save()
   {
     $this->validate();
+    return $this->save_helper();
+  }
+  protected function save_helper()
+  {
     $this->prop_model->save();
     return $this->prop_model->id;
   }
