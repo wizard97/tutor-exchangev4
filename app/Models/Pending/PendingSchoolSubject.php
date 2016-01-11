@@ -10,7 +10,7 @@ class PendingSchoolSubject extends PendingBase
 
     public function school_subject()
     {
-        return $this->belongsTo('App\SchoolSubject', 'subject_id', 'id');
+        return $this->belongsTo('App\SchoolSubject', 'school_subject_id', 'id');
     }
 
     public function school()

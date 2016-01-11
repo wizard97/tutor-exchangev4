@@ -16,6 +16,11 @@ return redirect('home');
 });
 
 //some static pages
+Route::get('test', [
+    'as' => 'test', 'uses' => 'Account\ProposalController@index'
+]);
+
+//some static pages
 Route::get('home', [
     'as' => 'home', 'uses' => 'HomeController@index'
 ]);
