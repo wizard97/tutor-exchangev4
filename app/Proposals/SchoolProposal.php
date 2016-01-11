@@ -149,7 +149,7 @@ class SchoolProposal extends BaseProposal implements ProposalInterface
     else
     {
       //must be false
-      $p &= $this->pend_school_model->to_delete === false;
+      $p &= $this->pend_school_model->to_delete == false;
       if (!$p) throw new \Exception('Can not delete an unknown school.');
     }
 
@@ -171,7 +171,7 @@ class SchoolProposal extends BaseProposal implements ProposalInterface
 
   public function is_saved()
   {
-    return !is_null($this->pend_school_model->proposal_id);
+    return !is_null($this->pend_school_model->proposal_id) && Parent::is_saved();
   }
 
   private function update()
