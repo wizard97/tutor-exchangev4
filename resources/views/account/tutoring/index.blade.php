@@ -297,7 +297,7 @@ $( document ).ready(function() {
       templates: {
         notFound: [
           '<p class="empty-message tt-suggestion">',
-          '<strong>Sorry, we could not find that school.</strong>',
+          '<strong>Sorry, we could not find that school. To submit a new school go <a href="{{route('tutoring.submitschool')}}">here</a></strong>',
           '</p>'
         ].join('\n'),
         suggestion: function(data) {
