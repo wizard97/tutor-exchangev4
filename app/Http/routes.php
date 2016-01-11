@@ -209,6 +209,11 @@ Route::get('account/tutoring/submitclass', [
     'middleware' => 'auth',
     'uses' => 'Account\TutorController@getsubmitclass'
 ]);
+Route::get('account/tutoring/submitschool', [
+    'as' => 'tutoring.submitschool',
+    'middleware' => 'auth',
+    'uses' => 'Account\TutorController@getsubmitschool'
+]);
 
 
 
