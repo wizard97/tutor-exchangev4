@@ -1,5 +1,5 @@
 <?php
-namespace App\Proposals;
+namespace App\Repositories\Proposals;
 use App\Models\Pending\Proposal;
 use App\Models\Pending\PendingSchool;
 use App\Models\Pending\PendingSchoolSubject;
@@ -8,7 +8,7 @@ use App\School;
 use App\User;
 use App\SchoolSubject;
 
-class SchoolSubjectProposal extends BaseProposal implements ProposalInterface
+class SchoolSubjectProposal extends BaseProposal implements ProposalContract
 {
   protected $pendSchool;
   protected $school;
