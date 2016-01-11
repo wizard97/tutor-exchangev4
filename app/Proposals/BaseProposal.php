@@ -4,7 +4,7 @@ use App\Models\Pending\Proposal;
 use App\User;
 use App\Models\Pending\Status;
 
-abstract class BaseProposal
+abstract class BaseProposal implements ProposalInterface
 {
   protected $prop_model;
   protected $prop;
@@ -75,6 +75,11 @@ abstract class BaseProposal
   public function is_accepted()
   {
     return $this->prop_model->status()->first()->slug === 'accepted';
+  }
+
+  public function is_saved()
+  {
+    return !is_null($this->prop_model->id);
   }
 
 }

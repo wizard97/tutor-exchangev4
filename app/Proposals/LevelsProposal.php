@@ -9,7 +9,15 @@ use App\User;
 
 class LevelsProposal extends BaseProposal implements ProposalInterface
 {
+  // Passed in through constructor
+  protected $pend_level;
+  protected $level;
+
+  // Attributes
   protected $pendLevels;
+  protected $cid;
+  protected $pend_cid;
+  protected $uid;
 
   public function __construct(Proposal $prop, Status $status, User $user, PendingLevel $pend_level, Level $level)
   {
@@ -22,7 +30,7 @@ class LevelsProposal extends BaseProposal implements ProposalInterface
   {
     Parent::load_by_id($pid);
 
-    $this->pendLevels = $this->pend_level->whereIn("proposal_id", $this->prop_ids)
+    $this->pendLevels = $this->pend_level->where("proposal_id", $this->prop_model->id)
         ->orderBy('level_num', 'asc')->get();
 
     if (!is_null($this->pendLevels[0]->class_id)) $this->cid = $this->pendLevels[0]->class_id;
@@ -66,7 +74,7 @@ class LevelsProposal extends BaseProposal implements ProposalInterface
 
   public function save()
   {
-    $this->validate();
+    $this->validate(false);
 
     return $this->save_helper();
   }
@@ -101,6 +109,8 @@ class LevelsProposal extends BaseProposal implements ProposalInterface
             if ($pl->to_delete)
             {
               $pl->level->delete();
+              $pl->level_id = NULL;
+              $pl->save();
               continue;
             }
             $lev = $pl->level;
@@ -151,7 +161,7 @@ class LevelsProposal extends BaseProposal implements ProposalInterface
       // Pending entries for this class
       $sid = $this->status->where('slug', 'pend_acpt')->firstOrFail()->id;
 
-      $count = $this->pend_level
+      $qry = $this->pend_level
           ->join('proposals', 'proposals.id', '=', 'pending_levels.proposal_id')
           ->where('proposals.status_id', $sid)
           ->where('pending_levels.class_id', $this->cid);
@@ -215,7 +225,9 @@ class LevelsProposal extends BaseProposal implements ProposalInterface
         if ($dependencies)
         {
           // Make sure pending class is merged
-          $v &= !is_null($pl->pending_school_class->school_class);
+          $sid = $this->status->where('slug', 'accepted')->first->id;
+          $v &= !is_null($pl->pending_school_class->school_class) &&
+              $pl->pending_school_class->status->id === $sid;
           if (!$v) throw new \Exception('Pending level has unmerged or missing class.');
         }
       }
