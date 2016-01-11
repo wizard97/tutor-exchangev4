@@ -45,12 +45,17 @@ class ProposalController extends Controller
       */
       //$this->sp->load_by_id(1);
       //$this->sp->accept();
+      $this->sp->create_new(1, "New unmerged school", 12345);
+      $pid = $this->sp->save();
 
-      $this->ssp->create_new($uid = 1, $subject_name=null,
-          $pending=false, $school_id=null, $sub_id=10, $to_delete = true);
+      $id = \App\Models\Pending\Proposal::findOrFail($pid)->pending_school->id;
+      var_dump($id);
+
+      $this->ssp->create_new($uid = 1, $subject_name="first Subject",
+          $pending=true, $school_id=$id, $sub_id=null, $to_delete = false);
       $this->ssp->save();
       echo "Calling accept";
-      $this->ssp->accept();
+      var_dump($this->ssp->dependencies());
 
       return "Added proposal";
     }

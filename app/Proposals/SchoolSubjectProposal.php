@@ -170,7 +170,13 @@ class SchoolSubjectProposal extends BaseProposal implements ProposalInterface
 
   public function dependencies()
   {
+    // Is pending school merged if applicable?
+    if (! $this->for_exist_school() && is_null($this->pend_ss_mod->pending_school->school))
+    {
+      return [$this->pend_ss_mod->pending_school->proposal->id];
+    }
 
+    return [];
   }
 
   // Are you editing a school subject, or creating a new one?
