@@ -14,7 +14,7 @@
     <div class="row">
       @include('templates/feedback')
       <div class="page-header">
-        <h1>Submit a New Class/Class Level</h1>
+        <h1>Submit a New Class/Level</h1>
       </div>
       <!-- <p class="alert alert-info"><i class="fa fa-info-circle"></i>  This is where you update the classes you can tutor. It is in your best interest to only select classes you can truly tutor, rather than risk negative feedback.</p> -->
     </div>
