@@ -1,37 +1,85 @@
 <?php
 namespace App\Proposals;
 use App\Models\Pending\Proposal;
+use App\User;
+use App\Models\Pending\Status;
 
-abstract class BaseProposal
+abstract class BaseProposal implements ProposalInterface
 {
-  protected $prop_models;
+  protected $prop_model;
   protected $prop;
-  protected $prop_ids;
-  protected $gid;
 
-  public function __construct($group_id, Proposal $proposal)
+  public function __construct(Proposal $proposal, Status $status, User $user)
   {
-    $this->prop_models = $proposal->where('group_id', $group_id)->get();
-    if ($this->prop_models->isEmpty()) throw new \Exception('Proposal is empty.');
-    $this->prop_ids = $this->prop_models->pluck('id')->toArray();
     $this->prop = $proposal;
-    $this->gid = $group_id;
+    $this->status = $status;
+    $this->user = $user;
   }
 
-  public function next_group_id()
+  public function load_by_id($prop_id)
   {
-    $id = 1;
-    $res = $this->prop->orderBy("group_id", 'desc')->first();
-    if (!is_null($res)) $id = $res->group_id +1;
-    return $id;
+    $this->prop_model = $this->prop->where('id', $prop_id)->firstOrFail();
   }
 
-  public function set_group_id($id)
+  public function create_new($uid)
   {
-    foreach($this->prop_models as $mod)
-    {
-      $mod->group_id = $id;
-    }
+    $this->prop_model = new $this->prop;
+    // Figure out if updating or adding new listing
+    $this->prop_model->status_id = $this->status->where('slug', 'pend_acpt')->firstOrFail()->id;
+    $this->prop_model->user_id = $this->user->findOrFail($uid)->id;
+  }
+
+  public function save()
+  {
+    $this->validate();
+    return $this->save_helper();
+  }
+  protected function save_helper()
+  {
+    $this->prop_model->save();
+    return $this->prop_model->id;
+  }
+
+  public function reject()
+  {
+    $this->prop_model->status_id = $this->status->where('slug', 'rejected')->firstOrFail()->id;
+    $this->prop_model->save();
+    return $this->prop_model->id;
+  }
+
+  public function accept()
+  {
+    $this->validate();
+    $this->prop_model->status_id = $this->status->where('slug', 'accepted')->firstOrFail()->id;
+    $this->prop_model->save();
+
+    return $this->prop_model->id;
+  }
+
+  public function validate()
+  {
+
+    $p = true;
+
+    $p &= !is_null($this->prop_model->status);
+    if (!$p) throw new \Exception('Unknown status.');
+
+    $p &= $this->prop_model->status()->first()->slug === 'pend_acpt';
+    if (!$p) throw new \Exception('The request is closed.');
+
+    $p &= !is_null($this->prop_model->user);
+    if (!$p) throw new \Exception('Unknown user.');
+    return $p;
+  }
+
+  public function is_accepted()
+  {
+    return $this->prop_model->status()->first()->slug === 'accepted';
+  }
+
+  public function is_saved()
+  {
+    return !is_null($this->prop_model->id);
   }
 
 }
