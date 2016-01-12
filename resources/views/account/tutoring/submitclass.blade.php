@@ -55,7 +55,7 @@
             </div>
             <div class="row">
               <div class="col-md-12">
-                <div class="dropup">
+                <div class="dropdown">
                   <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     Subject
                     <span class="caret"></span>
