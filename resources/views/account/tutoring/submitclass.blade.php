@@ -111,7 +111,7 @@ $add_classes.dataTable( {
   columns: [
     {title: "Level"},
     {title: "Level Degree", visible: false, data: null},
-    {title: "Options", orderable: false, data: null, createdCell: function (td, cellData, rowData, row, col) {
+    {title: "Options", "width": "10%", orderable: false, data: null, createdCell: function (td, cellData, rowData, row, col) {
       $(td).html('<i class="fa fa-chevron-down"></i><i class="fa fa-chevron-up"></i><i class="fa fa-times"></i>');
     }
   }
