@@ -53,6 +53,14 @@
               <i class="fa fa-user fa-2x"></i><br>
               View Profile
             </a>
+            <a class="btn btn-primary" href="{{ route('tutoring.submitschool') }}">
+              <i class="fa fa-user fa-2x"></i><br>
+              Submit School
+            </a>
+            <a class="btn btn-primary" href="{{ route('tutoring.submitclass') }}">
+              <i class="fa fa-user fa-2x"></i><br>
+              Submit Class
+            </a>
 
           </div>
         </div>
