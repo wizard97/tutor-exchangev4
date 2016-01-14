@@ -74,9 +74,9 @@ class SchoolClassProposal extends BaseProposal implements ProposalContract
   protected function save_helper()
   {
     Parent::save_helper();
-    if (!$this->is_saved()) $this->pend_ss_mod->proposal_id = $this->prop_model->id;
-    $this->pend_ss_mod->save();
-    return $this->prop_model->id;
+    if (!$this->is_saved()) $this->pend_class->proposal_id = $this->prop_model->id;
+    $this->pend_class->save();
+    return $this->pend_class->id;
   }
 
   public function accept()
