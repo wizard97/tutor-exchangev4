@@ -47,30 +47,21 @@ class SchoolClassProposal extends BaseProposal implements ProposalContract
   }
 
   public function create_new($uid = null, $class_name=null,
-      $school_pending=false, $school_id=null, $subject_pending,
-      $subject_id=null, $class_id=null, $to_delete = false)
+      $pending=false, $school_id=null, $class_id=null, $to_delete = false)
   {
-    // Create a new base proposal
     Parent::create_new($uid);
-    // Create a new class proposal
-    $cl = new $this->pendClass;
-    // Is the school it is a part of pending?
-    $school_pending ? $cl->pending_school_id = $school_id : $cl->school_id = $school_id;
-    // Is the subejct it is a part of pending?
-    $subject_pending ? $cl->pending_subject_id = $subject_id : $cl->subject_id = $subject_id;
-    // Are you editing an existing class
-    $cl->class_id = $class_id;
-    // Are you trying to delete the entire class listing?
-    $cl->to_delete = $to_delete;
-    $cl->class_name = $class_name;
+    $sub = new $this->pendClass;
+    $pending ? $sub->pending_school_id = $school_id : $sub->school_id = $school_id;
+    $sub->school_subject_id = $sub_id;
+    $sub->to_delete = $to_delete;
+    $sub->subject_name = $subject_name;
 
-    // if deleting, load the info from the existing model as a record
     if ($to_delete)
     {
-      $cl->school_id = $cl->school_class->school_id;
-      $cl->class_name = $cl->school_class->class_name;
+      $sub->school_id = $sub->school_subject->school_id;
+      $sub->subject_name = $sub->school_subject->subject_name;
     }
-    $this->pend_class = $cl;
+    $this->pend_ss_mod = $sub;
     $this->validate(false);
   }
 
@@ -95,29 +86,24 @@ class SchoolClassProposal extends BaseProposal implements ProposalContract
     Parent::accept();
 
     // Is it an edit for a delete?
-    if ($this->is_edit() && $this->pend_class->to_delete)
+    if ($this->is_edit() && $this->pend_ss_mod->to_delete)
     {
-      $this->pend_class->school_class->delete();
-      $this->pend_class->class_id = NULL;
-      $this->pend_class->save();
+      $this->pend_ss_mod->school_subject->delete();
+      $this->pend_ss_mod->school_subject_id = NULL;
+      $this->pend_ss_mod->save();
     }
     else //New insert or edit
     {
-      // If edit load the existing sub model, otherwise load a blank one to insert
-      $this->is_edit() ? $cl = $this->pend_class->school_class : $cl = new $this->class;
+      // If edit load the existing sub model
+      $this->is_edit() ? $sub = $this->pend_ss_mod->school_subject : $sub = new $this->schoolSubject;
 
-      // Only update school_id if you know the id of the school directly, either new insert or edit
-      if ($this->for_exist_school()) $cl->school_id = $this->pend_class->school->id;
-      // New insert, with pending school (that should be accepted), so resolve school_id
-      else if (!$this->is_edit()) $cl->school_id = $this->pend_class->pending_school->school->id;
+      // Only update school_id if new insert
+      if ($this->for_exist_school()) $sub->school_id = $this->pend_ss_mod->school_id;
+      else if (!$this->is_edit()) $sub->school_id = $this->pend_ss_mod->pending_school->school->id;
 
-      // If the subject_id is known set it
-      if ($this->for_exist_subject()) $cl->subject_id = $this->pend_class->subject->id
-      // Otherwise resolve it through the pending_subject
-      else if (!$this->is_edit()) $cl->subject_id = $this->pend_class->pending_subject->id;
       // Update the name
-      $cl->class_name = $this->pend_class->class_name;
-      $cl->save();
+      $sub->subject_name = $this->pend_ss_mod->subject_name;
+      $sub->save();
     }
 
     //Save it

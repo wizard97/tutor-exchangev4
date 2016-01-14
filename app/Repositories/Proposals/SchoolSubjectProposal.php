@@ -88,7 +88,7 @@ class SchoolSubjectProposal extends BaseProposal implements ProposalContract
       $this->is_edit() ? $sub = $this->pend_ss_mod->school_subject : $sub = new $this->schoolSubject;
 
       // Only update school_id if new insert
-      if ($this->for_exist_school()) $sub->school_id = $this->pend_ss_mod->school->id;
+      if ($this->for_exist_school()) $sub->school_id = $this->pend_ss_mod->school_id;
       else if (!$this->is_edit()) $sub->school_id = $this->pend_ss_mod->pending_school->school->id;
 
       // Update the name
