@@ -1,14 +1,18 @@
 <?php
-namespace App\Proposals;
+namespace App\Repositories\Proposals;
 use App\Models\Pending\Proposal;
-use App\Models\Pending\PendingSchool;
-use App\Models\Pending\PendingSchoolSubject;
 use App\Models\Pending\Status;
-use App\School;
 use App\User;
-use App\SchoolSubject;
+use App\School;
+use App\Models\Pending\PendingSchool;
 
-class SchoolSubjectProposal extends BaseProposal implements ProposalInterface
+use App\SchoolSubject;
+use App\Models\Pending\PendingSchoolSubject;
+
+use App\SchoolClass;
+use App\Models\Pending\PendingClass;
+
+class SchoolClassProposal extends BaseProposal implements ProposalContract
 {
   protected $pendSchool;
   protected $school;
@@ -19,28 +23,34 @@ class SchoolSubjectProposal extends BaseProposal implements ProposalInterface
 
   public function __construct(Proposal $prop, Status $status, User $user,
       School $school, PendingSchool $pendSchool,
-      SchoolSubject $schoolSubject, PendingSchoolSubject $pendSchoolSubject)
+      SchoolSubject $schoolSubject, PendingSchoolSubject $pendSchoolSubject,
+      SchoolClass $class, PendingClass $pendingClass,
+      )
   {
     Parent::__construct($prop, $status, $user);
-    $this->pendSchool = $pendSchool;
     $this->school = $school;
+    $this->pendSchool = $pendSchool;
+
     $this->schoolSubject = $schoolSubject;
     $this->pendSchoolSubject = $pendSchoolSubject;
+
+    $this->class = $class;
+    $this->pendingClass = $pendingClass;
   }
 
   public function load_by_id($pid)
   {
     Parent::load_by_id($pid);
-    $this->pend_ss_mod = $this->prop_model->pending_school_subject;
-    // Validate without checking fro depedencies
+    $this->pend_class = $this->prop_model->pending_class;
+    // Validate without checking for depedencies
     $this->validate(false);
   }
 
-  public function create_new($uid = null, $subject_name=null,
-      $pending=false, $school_id=null, $sub_id=null, $to_delete = false)
+  public function create_new($uid = null, $class_name=null,
+      $pending=false, $school_id=null, $class_id=null, $to_delete = false)
   {
     Parent::create_new($uid);
-    $sub = new $this->pendSchoolSubject;
+    $sub = new $this->pendClass;
     $pending ? $sub->pending_school_id = $school_id : $sub->school_id = $school_id;
     $sub->school_subject_id = $sub_id;
     $sub->to_delete = $to_delete;
@@ -64,9 +74,9 @@ class SchoolSubjectProposal extends BaseProposal implements ProposalInterface
   protected function save_helper()
   {
     Parent::save_helper();
-    if (!$this->is_saved()) $this->pend_ss_mod->proposal_id = $this->prop_model->id;
-    $this->pend_ss_mod->save();
-    return $this->prop_model->id;
+    if (!$this->is_saved()) $this->pend_class->proposal_id = $this->prop_model->id;
+    $this->pend_class->save();
+    return $this->pend_class->id;
   }
 
   public function accept()

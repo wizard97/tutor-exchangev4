@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Proposals\SchoolProposal;
-use App\Proposals\LevelsProposal;
-use App\Proposals\SchoolSubjectProposal;
+use App\Repositories\Proposals\LevelsProposal;
+use App\Repositories\Proposals\SchoolSubjectProposal;
 
 
 class ProposalController extends Controller

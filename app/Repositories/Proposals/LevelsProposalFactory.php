@@ -1,5 +1,5 @@
 <?php
-namespace App\Proposals;
+namespace App\Repositories\Proposals;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Pending\PendingLevel;
 use App\Proposals\LevelsProposal;

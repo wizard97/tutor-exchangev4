@@ -1,7 +1,7 @@
 <?php
-namespace App\Proposals;
+namespace App\Repositories\Proposals;
 
-interface ProposalInterface
+interface ProposalContract
 {
     public function load_by_id($pid);
     public function save();
