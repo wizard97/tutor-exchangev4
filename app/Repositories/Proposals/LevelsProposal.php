@@ -1,5 +1,5 @@
 <?php
-namespace App\Proposals;
+namespace App\Repositories\Proposals;
 use App\Models\Pending\Proposal;
 use App\Models\Pending\PendingLevel;
 use App\Models\Pending\Status;
@@ -7,7 +7,7 @@ use App\Level;
 use App\Zip;
 use App\User;
 
-class LevelsProposal extends BaseProposal implements ProposalInterface
+class LevelsProposal extends BaseProposal implements ProposalContract
 {
   // Passed in through constructor
   protected $pend_level;

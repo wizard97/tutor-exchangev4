@@ -1,10 +1,10 @@
 <?php
-namespace App\Proposals;
+namespace App\Repositories\Proposals;
 use App\Models\Pending\Proposal;
 use App\User;
 use App\Models\Pending\Status;
 
-abstract class BaseProposal implements ProposalInterface
+abstract class BaseProposal implements ProposalContract
 {
   protected $prop_model;
   protected $prop;
