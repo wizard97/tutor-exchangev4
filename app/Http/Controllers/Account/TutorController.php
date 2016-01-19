@@ -189,7 +189,8 @@ class TutorController extends Controller
     $tutor = \App\Tutor::findOrFail($this->id);
     //get tutor schools
     $schools = $tutor->schools()
-      ->leftJoin('classes', 'classes.school_id', '=', 'schools.id')
+      ->leftJoin('school_subjects', 'school_subjects.school_id', '=', 'schools.id')
+      ->leftJoin('classes', 'classes.subject_id', '=', 'school_subjects.id')
       ->leftJoin('levels', 'levels.class_id', '=', 'classes.id')
       ->leftJoin('tutor_levels', function($join)
       {
@@ -210,17 +211,13 @@ class TutorController extends Controller
     $hs_id = $request->get('school_id');
     \App\School::findOrFail($hs_id);
     //make sure it has at elast one level
-    $classes = \App\SchoolClass::where('classes.school_id', '=', $hs_id)
-    ->join('school_subjects', 'classes.subject_id', '=', 'school_subjects.id')
+    $classes = \App\School::findOrFail($hs_id)->classes()
     ->select('classes.*', 'school_subjects.subject_name')
     ->orderBy('class_name', 'asc')->get();
 
     foreach ($classes as &$class)
     {
-      $class->levels = \App\Level::
-      where('classes.school_id', '=', $hs_id)
-      ->where('classes.id', '=', $class->id)
-      ->join('classes', 'classes.id', '=', 'levels.class_id')
+      $class->levels = $class->levels()
       ->leftJoin('tutor_levels', function($join)
       {
         $join->on('levels.id', '=', 'tutor_levels.level_id');
@@ -244,7 +241,7 @@ class TutorController extends Controller
     $classes = $tutor->levels()
     ->join('classes', 'classes.id', '=', 'levels.class_id')
     ->join('school_subjects', 'classes.subject_id', '=', 'school_subjects.id')
-    ->where('classes.school_id', '=', $school_id)
+    ->where('school_subjects.school_id', '=', $school_id)
     ->select('classes.class_name', 'school_subjects.subject_name', 'levels.*')
     ->get();
 
@@ -270,7 +267,8 @@ class TutorController extends Controller
     //remove old classes
     \App\Tutor::findOrFail($this->id)->levels()
       ->join('classes', 'classes.id', '=', 'levels.class_id')
-      ->where('classes.school_id', '=', $school_id)
+      ->join('school_subjects', 'school_subjects.id', '=', 'classes.subject_id')
+      ->where('school_subjects.school_id', '=', $school_id)
       ->detach();
 
     //insert new levels
@@ -293,7 +291,7 @@ class TutorController extends Controller
             }
 
       }
-      $num_classes = $tutor->levels()->join('classes', 'classes.id', '=', 'levels.class_id')->where('school_id', $school_id)->count();
+      $num_classes = $tutor->levels()->join('classes', 'classes.id', '=', 'levels.class_id')->join('school_subjects', 'school_subjects.id', '=', 'classes.subject_id')->where('school_id', $school_id)->count();
       $request->session()
         ->put('feedback_positive', "You have successfully updated the classes you tutor for {$school->school_name}. You currently are tutoring {$num_classes} class/classes.");
     }
@@ -393,13 +391,14 @@ class TutorController extends Controller
     ->join('classes', 'levels.class_id', '=', 'classes.id')
     ->join('school_subjects', 'classes.subject_id', '=', 'school_subjects.id')
     ->groupBy('subject_id')
-    ->select('classes.school_id', 'classes.subject_id', 'subject_name', \DB::raw('count(*) AS num_classes'))
+    ->select('school_subjects.school_id', 'classes.subject_id', 'subject_name', \DB::raw('count(*) AS num_classes'))
     ->get()
     ->groupBy('school_id');
 
     //get tutor schools
     $schools = $tutor->schools()
-      ->leftJoin('classes', 'classes.school_id', '=', 'schools.id')
+      ->leftJoin('school_subjects', 'school_subjects.school_id', '=', 'schools.id')
+      ->leftJoin('classes', 'school_subjects.id', '=', 'classes.subject_id')
       ->leftJoin('levels', 'levels.class_id', '=', 'classes.id')
       ->leftJoin('tutor_levels', function($join)
       {
@@ -445,7 +444,8 @@ class TutorController extends Controller
     $tutor = \App\Tutor::findOrFail($this->id);
     //get tutor schools
     $schools = $tutor->schools()
-      ->leftJoin('classes', 'classes.school_id', '=', 'schools.id')
+      ->leftJoin('school_subjects', 'school_subjects.school_id', '=', 'schools.id')
+      ->leftJoin('classes', 'classes.subject_id', '=', 'school_subjects.id')
       ->leftJoin('levels', 'levels.class_id', '=', 'classes.id')
       ->leftJoin('tutor_levels', function($join)
       {
@@ -463,7 +463,8 @@ class TutorController extends Controller
     $tutor = \App\Tutor::findOrFail($this->id);
     //get tutor schools
     $schools = $tutor->schools()
-      ->leftJoin('classes', 'classes.school_id', '=', 'schools.id')
+      ->leftJoin('school_subjects', 'school_subjects.school_id', '=', 'schools.id')
+      ->leftJoin('classes', 'classes.subject_id', '=', 'school_subjects.id')
       ->leftJoin('levels', 'levels.class_id', '=', 'classes.id')
       ->leftJoin('tutor_levels', function($join)
       {
