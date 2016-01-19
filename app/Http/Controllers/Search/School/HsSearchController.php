@@ -53,7 +53,7 @@ class HsSearchController extends Controller
     $inputs = $request->session()->get('school_search_inputs');
     $hs_id = $request->session()->get('hs_id');
 
-    //make sure it has at elast one level
+    //make sure it has at least one level
     $classes = \App\SchoolClass::where('classes.school_id', '=', $hs_id)
     ->join('school_subjects', 'classes.subject_id', '=', 'school_subjects.id')
     ->select('classes.*', 'school_subjects.subject_name')
