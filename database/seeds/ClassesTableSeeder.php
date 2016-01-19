@@ -19,7 +19,7 @@ class ClassesTableSeeder extends Seeder
         $classes = rand(1, 30);
         for ($i =0; $i < $classes; $i++)
         {
-          $u->classes()->save(factory('App\SchoolClass')->make(['subject_id' => $u->subjects()->orderBy(\DB::raw('RAND()'))->firstOrFail()->id]));
+          $u->subjects()->orderBy(DB::raw('RAND()'))->first()->classes()->save(factory('App\SchoolClass')->make());
         }
       });
 

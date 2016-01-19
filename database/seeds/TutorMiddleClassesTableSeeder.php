@@ -17,7 +17,7 @@ class TutorMiddleClassesTableSeeder extends Seeder
         for ($i=0; $i < $rand_num; $i++)
         {
           $rand_class = \App\MiddleClass::orderBy(\DB::raw('RAND()'))->first();
-          if (!$u->middle_classes()->where('id', '=', $rand_class->id)->get()->isEmpty()) continue;
+          if (!$u->middle_classes()->where('middle_classes.id', '=', $rand_class->id)->get()->isEmpty()) continue;
           $u->middle_classes()->attach($rand_class->id);
         }
       });
