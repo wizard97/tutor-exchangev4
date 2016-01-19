@@ -7,8 +7,8 @@
     <li class="{{ isActiveRoute('tutoring.classes') }}"><a href="{{route('tutoring.classes')}}"><i class="fa fa-graduation-cap fa-fw"></i> My Classes</a></li>
     <li class="{{ isActiveRoute('tutoring.music') }}"><a href="{{route('tutoring.music')}}"><i class="fa fa-music fa-fw"></i> My Music</a></li>
     <li class="{{ isActiveRoute('tutoring.myprofile') }}"><a href="{{route('tutoring.myprofile')}}"><i class="fa fa-user fa-fw"></i> View My Profile</a></li>
-    <li class="{{ isActiveRoute('tutoring.submitschool') }}"><a href="{{route('tutoring.submitschool')}}"><i class="fa fa-book fa-fw"></i> Submit New School</a></li>
-    <li class="{{ isActiveRoute('tutoring.submitclass') }}"><a href="{{route('tutoring.submitclass')}}"><i class="fa fa-book fa-fw"></i> Submit New Class/Level</a></li>
+    <li class="{{ isActiveRoute('tutoring.submitschool') }}"><a href="{{route('tutoring.submitschool')}}"><i class="fa fa-book fa-fw"></i> Submit/Edit School</a></li>
+    <li class="{{ isActiveRoute('tutoring.submitclass') }}"><a href="{{route('tutoring.submitclass')}}"><i class="fa fa-book fa-fw"></i> Submit/Edit Class/Level</a></li>
 
   </ul>
 
@@ -55,11 +55,11 @@
             </a>
             <a class="btn btn-primary" href="{{ route('tutoring.submitschool') }}">
               <i class="fa fa-user fa-2x"></i><br>
-              Submit School
+              Submit/Edit School
             </a>
             <a class="btn btn-primary" href="{{ route('tutoring.submitclass') }}">
               <i class="fa fa-user fa-2x"></i><br>
-              Submit Class
+              Submit/Edit Class
             </a>
 
           </div>
