@@ -53,15 +53,17 @@ class HsSearchController extends Controller
     $inputs = $request->session()->get('school_search_inputs');
     $hs_id = $request->session()->get('hs_id');
 
-    //make sure it has at least one level
-    $classes = \App\SchoolClass::where('classes.school_id', '=', $hs_id)
-    ->join('school_subjects', 'classes.subject_id', '=', 'school_subjects.id')
+
+    //make sure it has at elast one level
+    $classes = \App\School::findOrFail($hs_id)->classes()
+
     ->select('classes.*', 'school_subjects.subject_name')
     ->orderBy('class_name', 'asc')->get();
 
     //return (\App\SchoolClass::where('school_id', '=', $hs_id)->orderBy('class_name', 'asc')->toSql());
-    $levels = \App\Level::where('classes.school_id', '=', $hs_id)
+    $levels = \App\Level::where('school_subjects.school_id', '=', $hs_id)
     ->join('classes', 'classes.id', '=', 'levels.class_id')
+    ->join('school_subjects', 'classes.subject_id', '=', 'school_subjects.id')
     ->orderBy('level_num', 'desc')
     ->select('levels.*')
     ->get()
@@ -158,7 +160,7 @@ class HsSearchController extends Controller
     if (!empty($form_inputs['min_grade'])) $search = $search->where('grade', '>=', $form_inputs['min_grade']);
     if (!empty($form_inputs['max_dist'])) $max_dist = $form_inputs['max_dist'];
     //school_id
-    if (!empty($hs_id)) $search->where('classes.school_id', '=', $hs_id);
+    if (!empty($hs_id)) $search->where('school_subjects.school_id', '=', $hs_id);
 
     //handle user classes
     $search->where(function ($query) use($form_inputs, $classes){
@@ -250,6 +252,7 @@ class HsSearchController extends Controller
     $res_count = $count_query
     ->join('tutor_levels', 'levels.id', '=', 'tutor_levels.level_id')
     ->join('classes', 'classes.id', '=', 'levels.class_id')
+    ->join('school_subjects', 'classes.subject_id', '=', 'school_subjects.id')
     ->join('users', 'users.id', '=', 'tutor_levels.user_id')
     ->join('tutors', 'tutors.user_id', '=', 'tutor_levels.user_id')
     ->join('zips', 'users.zip_id', '=', 'zips.id')
@@ -262,6 +265,7 @@ class HsSearchController extends Controller
     //finish building search
     $search->join('tutor_levels', 'levels.id', '=', 'tutor_levels.level_id')
     ->join('classes', 'classes.id', '=', 'levels.class_id')
+    ->join('school_subjects', 'classes.subject_id', '=', 'school_subjects.id')
     ->join('users', 'users.id', '=', 'tutor_levels.user_id')
     ->join('tutors', 'tutors.user_id', '=', 'tutor_levels.user_id')
     ->leftjoin('grades', 'tutors.grade', '=', 'grades.id')

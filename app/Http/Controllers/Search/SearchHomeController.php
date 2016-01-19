@@ -29,14 +29,15 @@ class SearchHomeController extends Controller
     ->join('classes', 'levels.class_id', '=', 'classes.id')
     ->join('school_subjects', 'classes.subject_id', '=', 'school_subjects.id')
     ->groupBy('subject_id')
-    ->select('classes.school_id', 'classes.subject_id', 'subject_name', \DB::raw('count(*) AS num_classes'))
+    ->select('school_subjects.school_id', 'classes.subject_id', 'subject_name', \DB::raw('count(*) AS num_classes'))
     ->get()
     ->groupBy('school_id');
 
     //get tutor schools
     $schools = $tutor->schools()
-      ->leftJoin('classes', 'classes.school_id', '=', 'schools.id')
-      ->join('levels', 'levels.class_id', '=', 'classes.id')
+      ->leftJoin('school_subjects', 'school_subjects.school_id', '=', 'schools.id')
+      ->leftJoin('classes', 'classes.subject_id', '=', 'school_subjects.id')
+      ->leftjoin('levels', 'levels.class_id', '=', 'classes.id')
       ->join('tutor_levels', 'tutor_levels.level_id', '=', 'levels.id')
       ->where('tutor_levels.user_id', $tutor->user_id)
       ->groupBy('schools.id')
@@ -67,7 +68,7 @@ class SearchHomeController extends Controller
     $tutor_classes = $tutor->levels()
     ->join('classes', 'classes.id', '=', 'levels.class_id')
     ->join('school_subjects', 'school_subjects.id', '=', 'classes.subject_id')
-    ->where('classes.school_id', $request->get('school_id'))
+    ->where('school_subjects.school_id', $request->get('school_id'))
     ->select('classes.id', 'levels.level_name', 'classes.class_name', 'school_subjects.subject_name')
     ->get();
 

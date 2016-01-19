@@ -17,7 +17,7 @@ class SchoolClass extends Model
 
   public function school()
   {
-      return $this->belongsTo('App\School', 'school_id', 'id');
+      return $this->subject->school;
   }
 
   public function subject()
