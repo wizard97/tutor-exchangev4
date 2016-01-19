@@ -14,7 +14,7 @@ class TutorsTableSeeder extends Seeder
        $tutors = App\User::where('account_type', '>', 1)->get();
 
        $tutors->each(function($u) {
-       $u->tutor()->save(factory('App\Tutor')->make());
+         if (is_null($u->tutor)) $u->tutor()->save(factory('App\Tutor')->make());
         });
       }
 

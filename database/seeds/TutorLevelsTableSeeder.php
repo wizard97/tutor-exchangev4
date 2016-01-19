@@ -11,6 +11,8 @@ class TutorLevelsTableSeeder extends Seeder
      */
     public function run()
     {
+      // Skip over LHS eventually!!!!
+
       App\Tutor::get()->each(function($u) {
 
         $u->schools->each(function ($school) use ($u)
@@ -20,7 +22,10 @@ class TutorLevelsTableSeeder extends Seeder
           {
             $rand_class = $school->classes()->orderBy(\DB::raw('RAND()'))->first();
             if (!$u->levels()->where('class_id', '=', $rand_class->id)->get()->isEmpty()) continue;
-            $u->levels()->attach($rand_class->levels()->get()->random()->id);
+            if (!$rand_class->levels()->get()->isEmpty())
+            {
+              $u->levels()->attach($rand_class->levels()->get()->random()->id);
+            }
           }
         });
 
