@@ -12,7 +12,8 @@ class LevelsTableSeeder extends Seeder
     public function run()
     {
       //all schools except LHS
-      $classes = App\SchoolClass::where('school_id', '!=', 1)->get();
+      $subs = App\SchoolSubject::where('school_id', '=', 1)->get()->pluck('id');
+      $classes = App\SchoolClass::whereNotIn('subject_id', $subs)->get();
 
       $classes->each(function($u) {
         //figure out how many levels for each school
