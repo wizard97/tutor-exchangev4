@@ -53,8 +53,10 @@ class HsSearchController extends Controller
     $inputs = $request->session()->get('school_search_inputs');
     $hs_id = $request->session()->get('hs_id');
 
+
     //make sure it has at elast one level
     $classes = \App\School::findOrFail($hs_id)->classes()
+
     ->select('classes.*', 'school_subjects.subject_name')
     ->orderBy('class_name', 'asc')->get();
 
