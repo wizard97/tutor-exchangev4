@@ -20,7 +20,8 @@ class School extends Model
 
   public function classes()
   {
-    return $this->hasMany('App\SchoolClass', 'school_id', 'id');
+    return $this->hasManyThrough('App\SchoolClass', 'App\SchoolSubject', 'school_id', 'subject_id');
+    //return $this->hasMany('App\SchoolClass', 'school_id', 'id');
   }
 
   public function subjects()
