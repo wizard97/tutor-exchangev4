@@ -344,7 +344,7 @@ foreach ($subjects as $prefix => $sub_name)
 
   foreach (${$prefix.'_classes'} as $class)
   {
-    $class_mod = $sub_model->classes()->create(['class_name' => $class->name, 'school_id' => $school->id]);
+    $class_mod = $sub_model->classes()->create(['class_name' => $class->name]);
 
     foreach($class->levels as $level_num => $level_name)
     {
