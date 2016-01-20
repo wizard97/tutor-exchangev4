@@ -140,7 +140,7 @@ $( document ).ready(function() {
       templates: {
         notFound: [
           '<p class="empty-message tt-suggestion">',
-          '<strong>Sorry, no tutors belong to that school.</strong>',
+          '<strong>Sorry, that school does not exist yet. Go to the submit section to propose a new school.</strong>',
           '</p>'
         ].join('\n'),
         suggestion: function(data) {
@@ -156,7 +156,7 @@ $( document ).ready(function() {
         templates: {
           notFound: [
             '<p class="empty-message tt-suggestion">',
-            '<strong>Sorry, no tutors belong to that school.</strong>',
+            '<strong>Continue with the form to add your new school.</strong>',
             '</p>'
           ].join('\n'),
           suggestion: function(data) {
@@ -172,7 +172,7 @@ $( document ).ready(function() {
           templates: {
             notFound: [
               '<p class="empty-message tt-suggestion">',
-              '<strong>Sorry, no tutors belong to that school.</strong>',
+              '<strong>Sorry, that school does not exist. No need to delete it!</strong>',
               '</p>'
             ].join('\n'),
             suggestion: function(data) {
