@@ -7,7 +7,7 @@
     <div class="row">
       @include('templates/feedback')
       <div class="page-header">
-        <h1>Submit or Edit a School</h1>
+        <h1>Submit/Edit/Delete a School</h1>
       </div>
       <!-- <p class="alert alert-info"><i class="fa fa-info-circle"></i>  This is where you update the classes you can tutor. It is in your best interest to only select classes you can truly tutor, rather than risk negative feedback.</p> -->
     </div>
@@ -33,7 +33,7 @@
                     {!! Form::label('name', 'School Name') !!} <span class="text text-danger">*</span>
                   </div>
                   <div class="col-xs-8">
-                    {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'submitschoolname', 'data-provide' => 'typeahead']) !!}
+                    {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'submitschoolname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. Lexington High School']) !!}
                   </div>
                 </div>
                 <div class="row">
@@ -41,7 +41,7 @@
                     {!! Form::label('address', 'School Address') !!} <span class="text text-danger">*</span>
                   </div>
                   <div class="col-xs-8">
-                    {!! Form::text('address', null, ['class' => 'form-control typeahead']) !!}
+                    {!! Form::text('address', null, ['class' => 'form-control typeahead', 'id' => 'submitschooladdress', 'autocomplete' => 'off', 'placeholder' => 'e.g. 78 Main Street, Boston, MA 02115, USA']) !!}
                   </div>
                 </div>
                 <hr>
@@ -54,7 +54,7 @@
         <div role="tabpanel" class="tab-pane fade in" id="edit">
           <div class="col-md-8">
             <div class="panel panel-default">
-              <div class="panel-heading"> <!-- <i class="fa fa-bars"></i> School Classes -->
+              <div class="panel-heading">
                 Enter School Info
               </div>
               <div class="panel-body">
@@ -63,7 +63,15 @@
                     {!! Form::label('name', 'School Name') !!} <span class="text text-danger">*</span>
                   </div>
                   <div class="col-xs-8">
-                    {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'editschoolname', 'data-provide' => 'typeahead']) !!}
+                    {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'editschoolname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. Lexington High School']) !!}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xs-4">
+                    {!! Form::label('name', 'New Name') !!}
+                  </div>
+                  <div class="col-xs-8">
+                    {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'editedschoolname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. Lexington High School']) !!}
                   </div>
                 </div>
                 <div class="row">
@@ -71,7 +79,7 @@
                     {!! Form::label('address', 'School Address') !!} <span class="text text-danger">*</span>
                   </div>
                   <div class="col-xs-8">
-                    {!! Form::text('address', null, ['class' => 'form-control typeahead']) !!}
+                    {!! Form::text('address', null, ['class' => 'form-control typeahead', 'id' => 'editschooladdress', 'autocomplete' => 'off', 'placeholder' => 'e.g. 78 Main Street, Boston, MA 02115, USA']) !!}
                   </div>
                 </div>
                 <hr>
@@ -93,12 +101,12 @@
                     {!! Form::label('name', 'School Name') !!} <span class="text text-danger">*</span>
                   </div>
                   <div class="col-xs-8">
-                    {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'deleteschoolname', 'data-provide' => 'typeahead']) !!}
+                    {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'deleteschoolname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. Lexington High School']) !!}
                   </div>
                 </div>
                 <hr>
                 <span class="text text-danger">* = Required</span>
-                {!! Form::submit('Delete', ['class' => 'btn btn-success pull-right']); !!}
+                {!! Form::submit('Delete', ['class' => 'btn btn-danger pull-right']); !!}
               </div>
             </div>
           </div>
@@ -132,22 +140,6 @@ $( document ).ready(function() {
       wildcard: '%QUERY'
     },
   });
-  $('#editschoolname').typeahead(null, //instantiate edit typeahead
-    {
-      source: schools.ttAdapter(),
-      display: 'response',
-      limit: 5,
-      templates: {
-        notFound: [
-          '<p class="empty-message tt-suggestion">',
-          '<strong>Sorry, that school does not exist yet. Go to the submit section to propose a new school.</strong>',
-          '</p>'
-        ].join('\n'),
-        suggestion: function(data) {
-          return '<p><strong>' + data.school_name + ',</strong> <small>' + data.city + ', '+ data.state_prefix + ' '+ data.zip_code + '</small></p>';
-        }
-      }
-    });
     $('#submitschoolname').typeahead(null, //instantiate submit typeahead
       {
         source: schools.ttAdapter(),
@@ -156,7 +148,7 @@ $( document ).ready(function() {
         templates: {
           notFound: [
             '<p class="empty-message tt-suggestion">',
-            '<strong>Continue with the form to add your new school.</strong>',
+            '<strong>No schools with that name.</strong>',
             '</p>'
           ].join('\n'),
           suggestion: function(data) {
@@ -164,6 +156,22 @@ $( document ).ready(function() {
           }
         }
       });
+      $('#editschoolname').typeahead(null, //instantiate submit typeahead
+        {
+          source: schools.ttAdapter(),
+          display: 'response',
+          limit: 5,
+          templates: {
+            notFound: [
+              '<p class="empty-message tt-suggestion">',
+              '<strong>No schools with that name.</strong>',
+              '</p>'
+            ].join('\n'),
+            suggestion: function(data) {
+              return '<p><strong>' + data.school_name + ',</strong> <small>' + data.city + ', '+ data.state_prefix + ' '+ data.zip_code + '</small></p>';
+            }
+          }
+        });
       $('#deleteschoolname').typeahead(null, //instantiate submit typeahead
         {
           source: schools.ttAdapter(),
