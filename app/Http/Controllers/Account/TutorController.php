@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Account;
 
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProposeSchoolRequest;
 use \stdClass;
 
 class TutorController extends Controller
@@ -458,7 +458,7 @@ class TutorController extends Controller
       ->get();
     return view('/account/tutoring/submitclass')->with('schools', $schools)->with('tutor', $tutor);
   }
-  public function getsubmitschool()
+  public function getsubmitschool(ProposeSchoolRequest $request)
   {
     $tutor = \App\Tutor::findOrFail($this->id);
     //get tutor schools
@@ -475,6 +475,7 @@ class TutorController extends Controller
       ->orderBy('num_classes', 'desc')
       ->select('schools.school_name', 'schools.id', \DB::raw('COUNT(DISTINCT tutor_levels.id) AS num_classes'))
       ->get();
+
     return view('/account/tutoring/submitschool')->with('schools', $schools)->with('tutor', $tutor);
   }
 
