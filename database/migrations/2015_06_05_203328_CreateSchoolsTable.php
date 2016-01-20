@@ -17,6 +17,9 @@ class CreateSchoolsTable extends Migration
             $table->integer('zip_id')->unsigned()->index();
             $table->string('school_name', 50);
             $table->foreign('zip_id')->references('id')->on('zips')->onDelete('cascade');
+            $table->string('address', 128);
+            $table->float('lat');
+            $table->float('lon');
             $table->timestamps();
         });
     }
