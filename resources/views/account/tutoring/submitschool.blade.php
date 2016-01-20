@@ -31,7 +31,6 @@
 
     <div class="row">
       <div class="tab-content">
-
         <div role="tabpanel" class="tab-pane fade in active" id="submit">
           <div class="col-md-8">
             <div class="panel panel-default">
@@ -40,36 +39,28 @@
               </div>
               <div class="panel-body">
                 <div class="row">
-                  <div class="col-xs-3">
-                    School Name: <span class="text text-danger">*</span>
+                  <div class="col-xs-4">
+                    {!! Form::label('name', 'School Name') !!} <span class="text text-danger">*</span>
                   </div>
-                  <div class="col-xs-9">
-
-                    <!--<input type="text" class="typeahead form-control" id="searchform" spellcheck="false">-->
-                    <input type="text" class="typeahead form-control" id="submitschoolname" data-provide="typeahead">
+                  <div class="col-xs-8">
+                    {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'submitschoolname', 'data-provide' => 'typeahead']) !!}
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-xs-3">
-                    School Address: <span class="text text-danger">*</span>
+                  <div class="col-xs-4">
+                    {!! Form::label('address', 'School Address') !!} <span class="text text-danger">*</span>
                   </div>
-                  <div class="col-xs-9">
-
-                    <input type="text" class="typeahead form-control" spellcheck="false">
-
+                  <div class="col-xs-8">
+                    {!! Form::text('address', null, ['class' => 'form-control typeahead']) !!}
                   </div>
                 </div>
                 <hr>
                 <span class="text text-danger">* = Required</span>
-
-                <button class="btn btn-success pull-right" type="button">
-                  Submit
-                </button>
+                {!! Form::submit('Submit', ['class' => 'btn btn-success pull-right']); !!}
               </div>
             </div>
           </div>
         </div>
-
         <div role="tabpanel" class="tab-pane fade in" id="edit">
           <div class="col-md-8">
             <div class="panel panel-default">
@@ -78,31 +69,24 @@
               </div>
               <div class="panel-body">
                 <div class="row">
-                  <div class="col-xs-3">
-                    School Name: <span class="text text-danger">*</span>
+                  <div class="col-xs-4">
+                    {!! Form::label('name', 'School Name') !!} <span class="text text-danger">*</span>
                   </div>
-                  <div class="col-xs-9">
-
-                    <!--<input type="text" class="typeahead form-control" id="searchform" spellcheck="false">-->
-                    <input type="text" class="typeahead form-control" id="editschoolname" data-provide="typeahead">
+                  <div class="col-xs-8">
+                    {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'editschoolname', 'data-provide' => 'typeahead']) !!}
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-xs-3">
-                    School Address: <span class="text text-danger">*</span>
+                  <div class="col-xs-4">
+                    {!! Form::label('address', 'School Address') !!} <span class="text text-danger">*</span>
                   </div>
-                  <div class="col-xs-9">
-
-                    <input type="text" class="typeahead form-control" spellcheck="false">
-
+                  <div class="col-xs-8">
+                    {!! Form::text('address', null, ['class' => 'form-control typeahead']) !!}
                   </div>
                 </div>
                 <hr>
                 <span class="text text-danger">* = Required</span>
-
-                <button class="btn btn-success pull-right" type="button">
-                  Submit
-                </button>
+                {!! Form::submit('Submit', ['class' => 'btn btn-success pull-right']); !!}
               </div>
             </div>
           </div>
@@ -115,21 +99,16 @@
               </div>
               <div class="panel-body">
                 <div class="row">
-                  <div class="col-xs-3">
-                    School Name: <span class="text text-danger">*</span>
+                  <div class="col-xs-4">
+                    {!! Form::label('name', 'School Name') !!} <span class="text text-danger">*</span>
                   </div>
-                  <div class="col-xs-9">
-
-                    <!--<input type="text" class="typeahead form-control" id="searchform" spellcheck="false">-->
-                    <input type="text" class="typeahead form-control" id="deleteschoolname" data-provide="typeahead">
+                  <div class="col-xs-8">
+                    {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'deleteschoolname', 'data-provide' => 'typeahead']) !!}
                   </div>
                 </div>
                 <hr>
                 <span class="text text-danger">* = Required</span>
-
-                <button class="btn btn-danger pull-right" type="button">
-                  Delete
-                </button>
+                {!! Form::submit('Delete', ['class' => 'btn btn-success pull-right']); !!}
               </div>
             </div>
           </div>
@@ -220,7 +199,7 @@ $( document ).ready(function() {
           }
         });
 
-  });
+      });
 
-  </script>
-@stop
+      </script>
+      @stop
