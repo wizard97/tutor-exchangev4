@@ -1,16 +1,9 @@
 <!-- resources/views/auth/register.blade.php -->
 @extends('app')
-
 @section('content')
-
-
-
 <div class="container-fluid">
-
   @include('/account/tutoring/sidebar')
-
   <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
     <div class="row">
       @include('templates/feedback')
       <div class="page-header">
@@ -18,17 +11,14 @@
       </div>
       <!-- <p class="alert alert-info"><i class="fa fa-info-circle"></i>  This is where you update the classes you can tutor. It is in your best interest to only select classes you can truly tutor, rather than risk negative feedback.</p> -->
     </div>
-
     <div class="row">
       <ul class="nav nav-tabs" role="tablist">
-
         <li role="presentation" class="active"><a href="#submit" aria-controls="submitEdit" role="tab" data-toggle="tab">Submit</a></li>
         <li role="presentation"><a href="#edit" aria-controls="edit" role="tab" data-toggle="tab">Edit</a></li>
         <li role="presentation"><a href="#delete" aria-controls="delete" role="tab" data-toggle="tab">Delete</a></li>
       </ul>
       <br>
     </div>
-
     <div class="row">
       <div class="tab-content">
         <div role="tabpanel" class="tab-pane fade in active" id="submit">
@@ -117,7 +107,6 @@
     </div>
   </div>
 </div>
-
 <script>
 // instantiate the bloodhound suggestion engine
 $( document ).ready(function() {
@@ -143,8 +132,6 @@ $( document ).ready(function() {
       wildcard: '%QUERY'
     },
   });
-
-
   $('#editschoolname').typeahead(null, //instantiate edit typeahead
     {
       source: schools.ttAdapter(),
@@ -159,10 +146,8 @@ $( document ).ready(function() {
         suggestion: function(data) {
           return '<p><strong>' + data.school_name + ',</strong> <small>' + data.city + ', '+ data.state_prefix + ' '+ data.zip_code + '</small></p>';
         }
-
       }
     });
-
     $('#submitschoolname').typeahead(null, //instantiate submit typeahead
       {
         source: schools.ttAdapter(),
@@ -177,10 +162,8 @@ $( document ).ready(function() {
           suggestion: function(data) {
             return '<p><strong>' + data.school_name + ',</strong> <small>' + data.city + ', '+ data.state_prefix + ' '+ data.zip_code + '</small></p>';
           }
-
         }
       });
-
       $('#deleteschoolname').typeahead(null, //instantiate submit typeahead
         {
           source: schools.ttAdapter(),
@@ -195,11 +178,8 @@ $( document ).ready(function() {
             suggestion: function(data) {
               return '<p><strong>' + data.school_name + ',</strong> <small>' + data.city + ', '+ data.state_prefix + ' '+ data.zip_code + '</small></p>';
             }
-
           }
         });
-
       });
-
       </script>
       @stop
