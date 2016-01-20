@@ -94,7 +94,7 @@
                 <div class="panel-body">
                   <img src="{{ route('profileimage.showfull', ['id' => Auth::user()->id]) }}" class="img-responsive img-rounded" alt="Profle Picture">
                   <br>
-                  <button class="btn btn-info btn-block" data-toggle="modal" data-target="#image"><i class="fa fa-upload"></i> Upload Picutre</button>
+                  <button class="btn btn-info btn-block" data-toggle="modal" data-target="#image"><i class="fa fa-upload"></i> Upload Picture</button>
                   @if(Auth::user()->has_picture)<a href="{{ route('profileimage.destroy') }}" class="btn btn-danger btn-block"><i class="fa fa-trash"></i> Delete Picture</a>@endif
                 </div>
                 <!-- /.panel-body -->
