@@ -164,60 +164,6 @@ $( document ).ready(function() {
         }
       }
     });
-
-
-
-
-
-  /*
-    $('#submitsubjectschoolname').typeahead(null, //instantiate submit typeahead
-      {
-        source: schools.ttAdapter(),
-        display: 'response',
-        limit: 5,
-        templates: {
-          notFound: [
-            '<p class="empty-message tt-suggestion">',
-            '<strong>No schools with that name.</strong>',
-            '</p>'
-          ].join('\n'),
-          suggestion: function(data) {
-            return '<p><strong>' + data.school_name + ',</strong> <small>' + data.city + ', '+ data.state_prefix + ' '+ data.zip_code + '</small></p>';
-          }
-        }
-      });
-      $('#editsubjectschoolname').typeahead(null, //instantiate submit typeahead
-        {
-          source: schools.ttAdapter(),
-          display: 'response',
-          limit: 5,
-          templates: {
-            notFound: [
-              '<p class="empty-message tt-suggestion">',
-              '<strong>No schools with that name.</strong>',
-              '</p>'
-            ].join('\n'),
-            suggestion: function(data) {
-              return '<p><strong>' + data.school_name + ',</strong> <small>' + data.city + ', '+ data.state_prefix + ' '+ data.zip_code + '</small></p>';
-            }
-          }
-        });
-      $('#deletesubjectschoolname').typeahead(null, //instantiate submit typeahead
-        {
-          source: schools.ttAdapter(),
-          display: 'response',
-          limit: 5,
-          templates: {
-            notFound: [
-              '<p class="empty-message tt-suggestion">',
-              '<strong>Sorry, that school does not exist. No need to delete it!</strong>',
-              '</p>'
-            ].join('\n'),
-            suggestion: function(data) {
-              return '<p><strong>' + data.school_name + ',</strong> <small>' + data.city + ', '+ data.state_prefix + ' '+ data.zip_code + '</small></p>';
-            }
-          }
-        });*/
-      });
-      </script>
-      @stop
+  });
+  </script>
+  @stop
