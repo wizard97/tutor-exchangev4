@@ -41,7 +41,7 @@
                     {!! Form::label('subject', 'Subject Name') !!} <span class="text text-danger">*</span>
                   </div>
                   <div class="col-xs-8">
-                    {!! Form::text('subject', null, ['class' => 'form-control typeahead', 'id' => 'submitsubjectname', 'autocomplete' => 'off', 'placeholder' => 'e.g. English']) !!}
+                    {!! Form::text('subject', null, ['class' => 'form-control', 'id' => 'submitsubjectname', 'autocomplete' => 'off', 'placeholder' => 'e.g. English']) !!}
                   </div>
                 </div>
                 <hr>
@@ -79,7 +79,7 @@
                     {!! Form::label('name', 'New Subject Name') !!} <span class="text text-danger">*</span>
                   </div>
                   <div class="col-xs-8">
-                    {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'editedsubjectname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. English']) !!}
+                    {!! Form::text('name', null, ['class' => 'form-control', 'id' => 'editedsubjectname', 'autocomplete' => 'off', 'placeholder' => 'e.g. English']) !!}
                   </div>
                 </div>
                 <hr>
@@ -148,6 +148,28 @@ $( document ).ready(function() {
       wildcard: '%QUERY'
     },
   });
+  $('.typeahead').not('#deletesubjectname,#editsubjectname').typeahead(null, //instantiate submit typeahead
+    {
+      source: schools.ttAdapter(),
+      display: 'response',
+      limit: 5,
+      templates: {
+        notFound: [
+          '<p class="empty-message tt-suggestion">',
+          '<strong>No schools with that name.</strong>',
+          '</p>'
+        ].join('\n'),
+        suggestion: function(data) {
+          return '<p><strong>' + data.school_name + ',</strong> <small>' + data.city + ', '+ data.state_prefix + ' '+ data.zip_code + '</small></p>';
+        }
+      }
+    });
+
+
+
+
+
+  /*
     $('#submitsubjectschoolname').typeahead(null, //instantiate submit typeahead
       {
         source: schools.ttAdapter(),
@@ -195,7 +217,7 @@ $( document ).ready(function() {
               return '<p><strong>' + data.school_name + ',</strong> <small>' + data.city + ', '+ data.state_prefix + ' '+ data.zip_code + '</small></p>';
             }
           }
-        });
+        });*/
       });
       </script>
       @stop
