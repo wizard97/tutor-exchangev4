@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models\Statistic;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,7 +10,7 @@ class Stat extends Model
 
   static public function incr_search()
   {
-    $res = \App\Stat::firstOrFail();
+    $res = Stat::firstOrFail();
     $res->searches++;
     $res->save();
     return $res->searches;
@@ -18,7 +18,7 @@ class Stat extends Model
 
   static public function incr_visitors()
   {
-    $res = \App\Stat::firstOrFail();
+    $res = Stat::firstOrFail();
     $res->visitors++;
     $res->save();
     return $res->visitors;

@@ -6,6 +6,14 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\Models\School\School;
+use App\Models\Grade\Grade;
+use App\Models\Level\Level;
+use App\Models\SchoolSubject\SchoolSubject;
+use App\Models\SchoolClass\SchoolClass;
+use App\Models\Statistic\Stat;
+use App\Models\Zip\Zip;
+
 class HsSearchController extends Controller
 {
 
@@ -55,13 +63,13 @@ class HsSearchController extends Controller
 
 
     //make sure it has at elast one level
-    $classes = \App\School::findOrFail($hs_id)->classes()
+    $classes = School::findOrFail($hs_id)->classes()
 
     ->select('classes.*', 'school_subjects.subject_name')
     ->orderBy('class_name', 'asc')->get();
 
     //return (\App\SchoolClass::where('school_id', '=', $hs_id)->orderBy('class_name', 'asc')->toSql());
-    $levels = \App\Level::where('school_subjects.school_id', '=', $hs_id)
+    $levels = Level::where('school_subjects.school_id', '=', $hs_id)
     ->join('classes', 'classes.id', '=', 'levels.class_id')
     ->join('school_subjects', 'classes.subject_id', '=', 'school_subjects.id')
     ->orderBy('level_num', 'desc')
@@ -70,8 +78,8 @@ class HsSearchController extends Controller
     ->groupBy('class_id');
 
     //  $classes->merge($levels);
-    $subjects = \App\SchoolSubject::where('school_id', '=', $hs_id)->orderBy('subject_name', 'asc')->get()->pluck('subject_name');
-    $grades = \App\Grade::all();
+    $subjects = SchoolSubject::where('school_id', '=', $hs_id)->orderBy('subject_name', 'asc')->get()->pluck('subject_name');
+    $grades = Grade::all();
 
     \JavaScript::put([
       'classes' => $classes,
@@ -98,19 +106,19 @@ class HsSearchController extends Controller
       //make sure user input isnt garbage
       foreach($input as $class_id => $class)
       {
-        \App\SchoolClass::findOrFail($class_id)->levels()->where('level_num', '=', $class['level_num']);
+        SchoolClass::findOrFail($class_id)->levels()->where('level_num', '=', $class['level_num']);
       }
 
       $request->session()->put('school_search_classes', $input);
 
-      \App\Stat::incr_search();
+      Stat::incr_search();
       //otherwise everything is good
       return response()->json(route('hs.showresults'));
     }
 
     public function run_hs_search(Request $request)
     {
-      $search = new \App\Level;
+      $search = new Level;
 
       //get the search inputs from the session
       $form_inputs = $request->session()->get('school_search_inputs');
@@ -133,7 +141,7 @@ class HsSearchController extends Controller
       }
       else
       {
-        $zip_model = \App\Zip::where('zip_code', '=', $form_inputs['zip'])->firstOrFail();
+        $zip_model = Zip::where('zip_code', '=', $form_inputs['zip'])->firstOrFail();
         $u_lat = $zip_model->lat;
         $u_lon = $zip_model->lon;
       }
@@ -389,7 +397,7 @@ class HsSearchController extends Controller
     $keys = preg_split("/[\s,.]+/", trim(urldecode($query)));
     $num_keys = count($keys);
 
-    $search = \App\School::join('zips', 'schools.zip_id', '=', 'zips.id');
+    $search = School::join('zips', 'schools.zip_id', '=', 'zips.id');
 
     for ($i = 0; $i < $num_keys; $i++)
     {
@@ -414,7 +422,7 @@ class HsSearchController extends Controller
   public function prefetch()
   {
     //get most popular schools, choose based on most tutors
-    $prefetch = \App\School::join('zips', 'schools.zip_id', '=', 'zips.id')
+    $prefetch = School::join('zips', 'schools.zip_id', '=', 'zips.id')
     ->join('tutor_schools', 'schools.id', '=', 'tutor_schools.school_id')
     ->select('zips.*', 'schools.school_name', 'schools.id AS school_id', \DB::raw("COUNT(*) as count"), \DB::raw("CONCAT_WS(', ', school_name, CONCAT(UCASE(LEFT(city, 1)),LCASE(SUBSTRING(city, 2))), CONCAT_WS(' ',state_prefix, zips.zip_code)) as response"))
     ->groupBy('schools.id')

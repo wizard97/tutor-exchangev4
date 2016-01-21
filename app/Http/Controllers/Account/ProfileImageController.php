@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Account;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+
+use App\Models\User\User;
 
 class ProfileImageController extends Controller
 {
@@ -25,7 +26,7 @@ class ProfileImageController extends Controller
    */
   public function getShowFull($id)
   {
-    $user = \App\User::findOrFail($id);
+    $user = User::findOrFail($id);
     $directory = storage_path().'/app/images/'.$id.'/';
     if (\Auth::check() && $user->has_picture == 1 && \File::exists($directory.'profile_full.png'))
     {
@@ -49,7 +50,7 @@ class ProfileImageController extends Controller
    */
   public function getShowSmall($id)
   {
-    $user = \App\User::findOrFail($id);
+    $user = User::findOrFail($id);
     $directory = storage_path().'/app/images/'.$id.'/';
     if (\Auth::check() && $user->has_picture == 1 && \File::exists($directory.'profile_thumb.jpg'))
     {
@@ -145,7 +146,7 @@ class ProfileImageController extends Controller
           }
         }
       }
-      $user = \App\User::findOrFail($this->id);
+      $user = User::findOrFail($this->id);
       $user->has_picture = false;
       $user->save();
       \Session::put('feedback_positive', 'You successfully deleted your profile picture.');

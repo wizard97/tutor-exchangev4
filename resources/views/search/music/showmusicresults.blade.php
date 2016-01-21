@@ -71,7 +71,7 @@ $(document).ready(function(){
               <span style="font-size: 20px" class="text-nowrap">
                 {!! print_stars($tutor->avg_rating) !!}
               </span>
-              (<span style="font-size: 16px"><a href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}" target="_blank">{{ \App\Tutor::findOrFail($tutor->user_id)->reviews()->count() }}</a></span>)
+              (<span style="font-size: 16px"><a href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}" target="_blank">{{ \App\Models\Tutor\Tutor::findOrFail($tutor->user_id)->reviews()->count() }}</a></span>)
             </div>
           </div>
         </div>

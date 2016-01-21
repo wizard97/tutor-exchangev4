@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\Models\School\School;
+use App\Models\MiddleClass\MiddleClass;
+use App\Models\Statistic\Stat;
+use App\Models\Zip\Zip;
+
 class MiddleSearchController extends Controller
 {
   public function classes(Request $request)
@@ -14,7 +19,7 @@ class MiddleSearchController extends Controller
     $inputs = $request->session()->get('school_search_inputs');
 
     //make sure it has at elast one level
-    $classes = \App\MiddleClass::join('middle_subjects', 'middle_classes.middle_subject_id', '=', 'middle_subjects.id')
+    $classes = MiddleClass::join('middle_subjects', 'middle_classes.middle_subject_id', '=', 'middle_subjects.id')
     ->select('middle_classes.*', 'middle_subjects.subject_name')
     ->orderBy('class_name', 'asc')->get();
 
@@ -41,7 +46,7 @@ class MiddleSearchController extends Controller
       //make sure user input isnt garbage
       foreach($input as $class_id => $class)
       {
-        \App\MiddleClass::findOrFail($class);
+        MiddleClass::findOrFail($class);
       }
 
       $request->session()->put('middle_search_classes', $input);
@@ -54,7 +59,7 @@ class MiddleSearchController extends Controller
 
     public function run_search(Request $request)
     {
-      $search = new \App\MiddleClass;
+      $search = new MiddleClass;
 
 
       //get the search inputs from the session
@@ -73,7 +78,7 @@ class MiddleSearchController extends Controller
       }
       else
       {
-        $zip_model = \App\Zip::where('zip_code', '=', $form_inputs['zip'])->firstOrFail();
+        $zip_model = Zip::where('zip_code', '=', $form_inputs['zip'])->firstOrFail();
         $u_lat = $zip_model->lat;
         $u_lon = $zip_model->lon;
       }

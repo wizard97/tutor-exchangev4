@@ -82,8 +82,8 @@
     <td class="vert-align">
 
       <span class="text-nowrap" style="font-size: 18px;">
-        <span style="font-size: 18px">{!! print_stars(\App\Tutor::findOrFail($tutor->user_id)->reviews()->avg('rating')) !!}</span>
-       (<span class="text-primary"><a href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}">{{ \App\Tutor::findOrFail($tutor->user_id)->reviews()->count() }}</a></span>)
+        <span style="font-size: 18px">{!! print_stars(\App\Models\Tutor\Tutor::findOrFail($tutor->user_id)->reviews()->avg('rating')) !!}</span>
+       (<span class="text-primary"><a href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}">{{ \App\Models\Tutor\Tutor::findOrFail($tutor->user_id)->reviews()->count() }}</a></span>)
      </span>
 
     </td>

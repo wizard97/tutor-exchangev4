@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models\Level;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,12 +11,12 @@ class Level extends Model
 
   public function school_class()
   {
-    return $this->belongsTo('App\SchoolClass', 'class_id', 'id');
+    return $this->belongsTo('App\Models\SchoolClass\SchoolClass', 'class_id', 'id');
   }
 
   public function tutors()
   {
-    return $this->belongsToMany('App\Tutor', 'tutor_levels', 'level_id', 'user_id')->withTimestamps();
+    return $this->belongsToMany('App\Models\Tutor\Tutor', 'tutor_levels', 'level_id', 'user_id')->withTimestamps();
   }
 
   public function pending_levels()

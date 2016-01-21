@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models\SchoolClass;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,7 +12,7 @@ class SchoolClass extends Model
 
   public function levels()
   {
-      return $this->hasMany('App\Level', 'class_id', 'id');
+      return $this->hasMany('App\Models\Level\Level', 'class_id', 'id');
   }
 
   public function school()
@@ -22,7 +22,7 @@ class SchoolClass extends Model
 
   public function subject()
   {
-      return $this->belongsTo('App\SchoolSubject', 'subject_id', 'id');
+      return $this->belongsTo('App\Models\SchoolSubject\SchoolSubject', 'subject_id', 'id');
   }
 
 }

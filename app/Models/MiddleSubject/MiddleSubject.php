@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models\MiddleSubject;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,7 +11,7 @@ class MiddleSubject extends Model
 
     public function classes()
     {
-        return $this->hasMany('App\MiddleClass', 'middle_subject_id', 'id');
+        return $this->hasMany('App\Models\MiddleClass\MiddleClass', 'middle_subject_id', 'id');
     }
 
 }

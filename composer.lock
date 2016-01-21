@@ -9,16 +9,16 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.12.1",
+            "version": "3.13.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "5ee0f33fafe47740c03ff38ddb73ae4f52b4da5b"
+                "reference": "cc1796d1c21146cdcbfb7628aee816acb7b85e09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/5ee0f33fafe47740c03ff38ddb73ae4f52b4da5b",
-                "reference": "5ee0f33fafe47740c03ff38ddb73ae4f52b4da5b",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/cc1796d1c21146cdcbfb7628aee816acb7b85e09",
+                "reference": "cc1796d1c21146cdcbfb7628aee816acb7b85e09",
                 "shasum": ""
             },
             "require": {
@@ -40,7 +40,7 @@
                 "ext-simplexml": "*",
                 "ext-spl": "*",
                 "nette/neon": "^2.3",
-                "phpunit/phpunit": "~4.0"
+                "phpunit/phpunit": "~4.0|~5.0"
             },
             "suggest": {
                 "aws/aws-php-sns-message-validator": "To validate incoming SNS notifications",
@@ -84,7 +84,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2016-01-06 22:50:48"
+            "time": "2016-01-19 22:46:22"
         },
         {
             "name": "barryvdh/laravel-debugbar",
@@ -510,12 +510,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "a3a86aa50ebfe180ac5943cce90a40262041bbdf"
+                "reference": "02e5b61baedbeb1832702d0feac3174e70c32c74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/a3a86aa50ebfe180ac5943cce90a40262041bbdf",
-                "reference": "a3a86aa50ebfe180ac5943cce90a40262041bbdf",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/02e5b61baedbeb1832702d0feac3174e70c32c74",
+                "reference": "02e5b61baedbeb1832702d0feac3174e70c32c74",
                 "shasum": ""
             },
             "require": {
@@ -573,7 +573,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2016-01-10 18:11:58"
+            "time": "2016-01-15 14:39:01"
         },
         {
             "name": "doctrine/inflector",
@@ -1268,16 +1268,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.2.7",
+            "version": "v5.2.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "26cd65eaa4bcc0fb0be381cfb7cfdcda06a3c2b4"
+                "reference": "93dc5b0089eef468157fd7200e575c3861ec59a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/26cd65eaa4bcc0fb0be381cfb7cfdcda06a3c2b4",
-                "reference": "26cd65eaa4bcc0fb0be381cfb7cfdcda06a3c2b4",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/93dc5b0089eef468157fd7200e575c3861ec59a5",
+                "reference": "93dc5b0089eef468157fd7200e575c3861ec59a5",
                 "shasum": ""
             },
             "require": {
@@ -1392,20 +1392,20 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2016-01-07 13:54:34"
+            "time": "2016-01-13 20:29:10"
         },
         {
             "name": "laravelcollective/html",
-            "version": "v5.2",
+            "version": "v5.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/LaravelCollective/html.git",
-                "reference": "5a8f1380a0d5ef21cdef37e775d86566307f8358"
+                "reference": "7ec0ca55cab54cc6d331007d86ec068b61f46aad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LaravelCollective/html/zipball/5a8f1380a0d5ef21cdef37e775d86566307f8358",
-                "reference": "5a8f1380a0d5ef21cdef37e775d86566307f8358",
+                "url": "https://api.github.com/repos/LaravelCollective/html/zipball/7ec0ca55cab54cc6d331007d86ec068b61f46aad",
+                "reference": "7ec0ca55cab54cc6d331007d86ec068b61f46aad",
                 "shasum": ""
             },
             "require": {
@@ -1446,7 +1446,7 @@
             ],
             "description": "HTML and Form Builders for the Laravel Framework",
             "homepage": "http://laravelcollective.com",
-            "time": "2015-12-23 07:46:46"
+            "time": "2016-01-20 18:28:21"
         },
         {
             "name": "league/flysystem",

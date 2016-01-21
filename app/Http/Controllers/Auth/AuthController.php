@@ -1,12 +1,12 @@
 <?php
 namespace App\Http\Controllers\Auth;
 
-use App\User;
 use Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
 
+use App\Models\User\User;
 
 class AuthController extends Controller {
 
@@ -155,7 +155,7 @@ class AuthController extends Controller {
             ]);
           }
           $user = Auth::user();
-          $model = \App\User::findOrFail($user->id);
+          $model = User::findOrFail($user->id);
           $model->last_login = date('Y-m-d H:i:s');
 
           //make sure our hashing work factor hasnt changed

@@ -40,11 +40,11 @@ Route::group(['prefix' => 'search'], function() {
   // Only members can see these search pages
   Route::group(['prefix' => 'showtutorprofile', 'middleware' => 'auth'], function() {
 
-    Route::get('{id}', [
-        'as' => 'search.showtutorprofile', 'uses' => 'Search\SearchHomeController@showtutorprofile'
-    ]);
     Route::get('getclassesbyschool', [
         'as' => 'search.tutorclasses', 'uses' => 'Search\SearchHomeController@ajaxtutorclasses'
+    ]);
+    Route::get('{id}', [
+        'as' => 'search.showtutorprofile', 'uses' => 'Search\SearchHomeController@showtutorprofile'
     ]);
   });
 

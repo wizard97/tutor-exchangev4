@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Account;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+
+use App\Models\User\User;
+use App\Models\Tutor\Tutor;
+use App\Models\Zip\Zip;
 
 class SettingsController extends Controller
 {
@@ -29,7 +32,7 @@ class SettingsController extends Controller
       'lname' => 'required|max:30|alpha',
     ]);
 
-    $user = \App\User::findOrFail($this->id);
+    $user = User::findOrFail($this->id);
     $user->fname = $request->input('fname');
     $user->lname = $request->input('lname');
     $user->save();
@@ -44,7 +47,7 @@ class SettingsController extends Controller
       'email' => 'required|email|max:255|unique:users',
     ]);
 
-    $user = \App\User::findOrFail($this->id);
+    $user = User::findOrFail($this->id);
     $user->email = $request->input('email');
     $user->save();
 
@@ -81,9 +84,9 @@ class SettingsController extends Controller
 
     //return var_dump($response->results[0]->geometry->location->lat);
 
-    $user = \App\User::findOrFail($this->id);
+    $user = User::findOrFail($this->id);
     $user->address = $response->results[0]->formatted_address;
-    $user->zip_id = \App\Zip::where('zip_code', '=', $zip)->firstOrFail()->id;
+    $user->zip_id = Zip::where('zip_code', '=', $zip)->firstOrFail()->id;
     $user->lat = $response->results[0]->geometry->location->lat;
     $user->lon = $response->results[0]->geometry->location->lng;
 
@@ -112,7 +115,7 @@ class SettingsController extends Controller
     $this->validate($request, [
       'account_type' => 'required|integer|min:1|max:3',
     ]);
-    $user = \App\User::findOrFail($this->id);
+    $user = User::findOrFail($this->id);
 
     if ($user->account_type == $request->input('account_type'))
     {
@@ -124,7 +127,7 @@ class SettingsController extends Controller
     if ($request->input('account_type') == 1)
     {
       //delete tutors classes
-      $tutor = \App\Tutor::findOrFail($this->id);
+      $tutor = Tutor::findOrFail($this->id);
       $tutor->levels()->detach();
       $tutor->middle_classes()->detach();
       $tutor->music()->detach();
@@ -134,7 +137,7 @@ class SettingsController extends Controller
       $tutor->save();
 
       //delete any refrence to SavedTutor
-      \App\SavedTutor::where('tutor_id', $user->id)->delete();
+      $tutor->user_saves()->detach();
 
       //$user->tutor()->delete();
       $user->account_type = $request->input('account_type');
@@ -168,7 +171,7 @@ class SettingsController extends Controller
       'password' => 'required|confirmed|min:6',
     ]);
 
-    $user = \App\User::findOrFail($this->id);
+    $user = User::findOrFail($this->id);
     $user->password = bcrypt($request->input('password'));
     $user->save();
 

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\Models\Tutor\Tutor;
+
 class SearchHomeController extends Controller
 {
   //choose what type of tutoring
@@ -23,7 +25,7 @@ class SearchHomeController extends Controller
    */
   public function showtutorprofile($id)
   {
-    $tutor = \App\Tutor::findOrFail($id);
+    $tutor = Tutor::findOrFail($id);
     //get levels and join on class info, get all the subjects
     $subjects = $tutor->levels()
     ->join('classes', 'levels.class_id', '=', 'classes.id')
@@ -50,7 +52,7 @@ class SearchHomeController extends Controller
         ->orderBy('reviews.created_at', 'desc')
         ->get();
 
-    $tutor = \App\Tutor::get_tutor_profile($id);
+    $tutor = Tutor::get_tutor_profile($id);
     $saved_tutors = \Auth::user()->saved_tutors()->get()->pluck('tutor_id')->toArray();
     return view('search/showtutorprofile')->with('tutor', $tutor)->with('subjects', $subjects)->with('saved_tutors', $saved_tutors)->with('schools', $schools)
       ->with('reviews', $reviews);
@@ -63,8 +65,7 @@ class SearchHomeController extends Controller
       'school_id' => 'required|exists:schools,id',
       'tutor_id' => 'required|exists:tutors,user_id',
       ]);
-
-    $tutor = \App\Tutor::findOrFail($request->get('tutor_id'));
+    $tutor = Tutor::findOrFail($request->get('tutor_id'));
     $tutor_classes = $tutor->levels()
     ->join('classes', 'classes.id', '=', 'levels.class_id')
     ->join('school_subjects', 'school_subjects.id', '=', 'classes.subject_id')

@@ -69,9 +69,9 @@ jQuery('.readmore').readmore({
           <div class="row">
             <div class="text-center" style="font-size: 20px">
               <span style="font-size: 20px" class="text-nowrap">
-                {!! print_stars(\App\Tutor::findOrFail($tutor->user_id)->reviews()->avg('rating')) !!}
+                {!! print_stars(\App\Models\Tutor\Tutor::findOrFail($tutor->user_id)->reviews()->avg('rating')) !!}
               </span>
-              (<span style="font-size: 16px"><a href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}" target="_blank">{{ \App\Tutor::findOrFail($tutor->user_id)->reviews()->count() }}</a></span>)
+              (<span style="font-size: 16px"><a href="{{ route('search.showtutorprofile', ['id' => $tutor->user_id]) }}" target="_blank">{{ \App\Models\Tutor\Tutor::findOrFail($tutor->user_id)->reviews()->count() }}</a></span>)
             </div>
           </div>
         </div>

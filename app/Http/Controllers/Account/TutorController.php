@@ -8,6 +8,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProposeSchoolRequest;
 use \stdClass;
 
+use App\Models\User\User;
+use App\Models\Tutor\Tutor;
+use App\Models\Music\Music;
+use App\Models\School\School;
+use App\Models\Level\Level;
+use App\Models\MiddleClass\MiddleClass;
+use App\Models\Grade\Grade;
+
+
 class TutorController extends Controller
 {
   private $id;
@@ -19,7 +28,7 @@ class TutorController extends Controller
     if (\Auth::check())
     {
       $this->id = \Auth::user()->id;
-      $this->tutor = \App\Tutor::findOrFail($this->id);
+      $this->tutor = Tutor::findOrFail($this->id);
     }
   }
 
@@ -43,8 +52,8 @@ class TutorController extends Controller
 
   public function getindex()
   {
-    $tutor = \App\Tutor::get_tutor_profile($this->id);
-    $tutor_model = \App\Tutor::findOrFail($this->id);
+    $tutor = Tutor::get_tutor_profile($this->id);
+    $tutor_model = Tutor::findOrFail($this->id);
     $contacts = $tutor_model->contacts()->join('users', 'users.id', '=', 'tutor_contacts.user_id')->select('users.fname', 'users.lname', 'tutor_contacts.*')->orderBy('created_at', 'desc')->get();
 
     //calculate chart
@@ -82,7 +91,7 @@ class TutorController extends Controller
 
   public function geteditschedule()
   {
-    $tutor = \App\Tutor::get_tutor_profile($this->id);
+    $tutor = Tutor::get_tutor_profile($this->id);
     return view('/account/tutoring/editschedule')->with('tutor', $tutor);
   }
 
@@ -90,16 +99,16 @@ class TutorController extends Controller
   public function getmusic()
   {
     //don't list things tutor already has
-    $ids = \App\Tutor::findOrFail($this->id)->music()->select('music.id')->get()->pluck('id')->toArray();
-    $music = \App\Music::orderBy('music_name', 'asc')->whereNotIn('id', $ids)->get();
-    $tutor = \App\Tutor::findOrFail($this->id);
+    $ids = Tutor::findOrFail($this->id)->music()->select('music.id')->get()->pluck('id')->toArray();
+    $music = Music::orderBy('music_name', 'asc')->whereNotIn('id', $ids)->get();
+    $tutor = Tutor::findOrFail($this->id);
     return view('/account/tutoring/music')->with('instruments', $music)->with('tutor', $tutor);
   }
 
 
   public function posteditschedule(Request $request)
   {
-    $tutor = \App\Tutor::findOrFail($this->id);
+    $tutor = Tutor::findOrFail($this->id);
 
     $days = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun'];
     foreach($days as $day)
@@ -186,7 +195,7 @@ class TutorController extends Controller
 
   public function geteditclasses()
   {
-    $tutor = \App\Tutor::findOrFail($this->id);
+    $tutor = Tutor::findOrFail($this->id);
     //get tutor schools
     $schools = $tutor->schools()
       ->leftJoin('school_subjects', 'school_subjects.school_id', '=', 'schools.id')
@@ -209,9 +218,9 @@ class TutorController extends Controller
   public function ajaxgetschoolclasses(Request $request)
   {
     $hs_id = $request->get('school_id');
-    \App\School::findOrFail($hs_id);
+    School::findOrFail($hs_id);
     //make sure it has at elast one level
-    $classes = \App\School::findOrFail($hs_id)->classes()
+    $classes = School::findOrFail($hs_id)->classes()
     ->select('classes.*', 'school_subjects.subject_name')
     ->orderBy('class_name', 'asc')->get();
 
@@ -234,7 +243,7 @@ class TutorController extends Controller
   public function ajaxgettutorschoolclasses(Request $request)
   {
     $school_id = $request->get('school_id');
-    $tutor = \App\Tutor::findOrFail($this->id);
+    $tutor = Tutor::findOrFail($this->id);
 
     //get the tutor classes for the school_id
     //make sure tutor has school
@@ -255,17 +264,17 @@ class TutorController extends Controller
     'level_ids' => 'array',
     ]);
 
-    $tutor = \App\Tutor::findOrFail($this->id);
+    $tutor = Tutor::findOrFail($this->id);
     $school_id = $request->input('school_id');
 
-    $school = \App\School::findOrFail(intval($school_id));
+    $school = School::findOrFail(intval($school_id));
 
     //make sure tutor tutors that school
     $tutor->schools()->findOrFail($school_id);
 
     $level_ids = $request->input('level_ids');
     //remove old classes
-    \App\Tutor::findOrFail($this->id)->levels()
+    Tutor::findOrFail($this->id)->levels()
       ->join('classes', 'classes.id', '=', 'levels.class_id')
       ->join('school_subjects', 'school_subjects.id', '=', 'classes.subject_id')
       ->where('school_subjects.school_id', '=', $school_id)
@@ -279,7 +288,7 @@ class TutorController extends Controller
         //make sure not to insert redundant level for a class
 
         //find class_id for level
-        $class_id = \App\Level::findOrFail($level_id)->class_id;
+        $class_id = Level::findOrFail($level_id)->class_id;
         //make sure it is for right school
         $school->classes()->findOrFail($class_id);
 
@@ -303,7 +312,7 @@ class TutorController extends Controller
   public function ajaxgetmiddleclasses(Request $request)
   {
     //make sure it has at elast one level
-    $classes = \App\MiddleClass::join('middle_subjects', 'middle_subjects.id', '=', 'middle_classes.middle_subject_id')
+    $classes = MiddleClass::join('middle_subjects', 'middle_subjects.id', '=', 'middle_classes.middle_subject_id')
     ->leftJoin('tutor_middle_classes', function($join)
     {
       $join->on('tutor_middle_classes.middle_classes_id', '=', 'middle_classes.id');
@@ -316,7 +325,7 @@ class TutorController extends Controller
   }
   public function ajaxgettutormiddleclasses(Request $request)
   {
-    $tutor = \App\Tutor::findOrFail($this->id);
+    $tutor = Tutor::findOrFail($this->id);
 
     //get the tutor classes for the school_id
     //make sure tutor has school
@@ -334,7 +343,7 @@ class TutorController extends Controller
     'class_ids' => 'array',
     ]);
 
-    $tutor = \App\Tutor::findOrFail($this->id);
+    $tutor = Tutor::findOrFail($this->id);
 
     $class_ids = $request->input('class_ids');
     //remove old classes
@@ -355,9 +364,9 @@ class TutorController extends Controller
 
   public function geteditinfo()
   {
-    $tutor = \App\Tutor::get_tutor_profile($this->id);
+    $tutor = Tutor::get_tutor_profile($this->id);
 
-    $grades = \App\Grade::all();
+    $grades = Grade::all();
     return view('/account/tutoring/editinfo')
     ->with('tutor', $tutor)
     ->with('grades', $grades);
@@ -372,7 +381,7 @@ class TutorController extends Controller
     'about_me' => ''
     ]);
     //make sure protected prevents them from changing id and such
-    $tutor = \App\Tutor::where('user_id', $this->id)->firstOrFail();
+    $tutor = Tutor::where('user_id', $this->id)->firstOrFail();
     $tutor->age = $request->input('age');
     $tutor->grade = $request->input('grade');
     $tutor->rate = $request->input('rate');
@@ -385,7 +394,7 @@ class TutorController extends Controller
 
   public function getmyprofile()
   {
-    $tutor = \App\Tutor::findOrFail($this->id);
+    $tutor = Tutor::findOrFail($this->id);
     //get levels and join on class info, get all the subjects
     $subjects = $tutor->levels()
     ->join('classes', 'levels.class_id', '=', 'classes.id')
@@ -415,7 +424,7 @@ class TutorController extends Controller
       ->orderBy('reviews.created_at', 'desc')
       ->get();
 
-    $tutor = \App\Tutor::get_tutor_profile($this->id);
+    $tutor = Tutor::get_tutor_profile($this->id);
     $saved_tutors = \Auth::user()->saved_tutors()->get()->pluck('tutor_id')->toArray();
     return view('account/tutoring/myprofile')->with('tutor', $tutor)->with('subjects', $subjects)->with('saved_tutors', $saved_tutors)->with('schools', $schools)
       ->with('reviews', $reviews);
@@ -423,8 +432,8 @@ class TutorController extends Controller
 
   public function pauselisting(Request $request)
   {
-    $tutor = \App\Tutor::get_tutor_profile($this->id);
-    $tutor_model = \App\Tutor::findOrFail($this->id);
+    $tutor = Tutor::get_tutor_profile($this->id);
+    $tutor_model = Tutor::findOrFail($this->id);
     $tutor_model->tutor_active = false;
     $tutor_model->profile_expiration = date('Y-m-d h:i:s');
     $tutor_model->save();
@@ -435,13 +444,13 @@ class TutorController extends Controller
 
   public function runlisting()
   {
-    $tutor = \App\Tutor::get_tutor_profile($this->id);
+    $tutor = Tutor::get_tutor_profile($this->id);
     return view('/account/tutoring/runlisting')->with('tutor', $tutor);
   }
 
   public function getsubmitclass()
   {
-    $tutor = \App\Tutor::findOrFail($this->id);
+    $tutor = Tutor::findOrFail($this->id);
     //get tutor schools
     $schools = $tutor->schools()
       ->leftJoin('school_subjects', 'school_subjects.school_id', '=', 'schools.id')
@@ -460,7 +469,7 @@ class TutorController extends Controller
   }
   public function getsubmitschool(Request $request)
   {
-    $tutor = \App\Tutor::findOrFail($this->id);
+    $tutor = Tutor::findOrFail($this->id);
     //get tutor schools
     $schools = $tutor->schools()
       ->leftJoin('school_subjects', 'school_subjects.school_id', '=', 'schools.id')
@@ -480,7 +489,7 @@ class TutorController extends Controller
   }
   public function getsubmitsubject(ProposeSchoolRequest $request)
   {
-    $tutor = \App\Tutor::findOrFail($this->id);
+    $tutor = Tutor::findOrFail($this->id);
     //get tutor schools
     $schools = $tutor->schools()
       ->leftJoin('school_subjects', 'school_subjects.school_id', '=', 'schools.id')
@@ -504,8 +513,8 @@ class TutorController extends Controller
      $validator = \Validator::make($request->all(), [
     'days' => 'numeric|min:1|max:60',
     ]);
-    $tutor = \App\Tutor::get_tutor_profile($this->id);
-    $tutor_model = \App\Tutor::findOrFail($this->id);
+    $tutor = Tutor::get_tutor_profile($this->id);
+    $tutor_model = Tutor::findOrFail($this->id);
 
     $checklist = $this->makechecklist($this->id);
 
@@ -531,7 +540,7 @@ class TutorController extends Controller
 
   public function ajaxgetschools(Request $request)
   {
-    $schools = \App\Tutor::findOrFail($this->id)->schools()->get();
+    $schools = Tutor::findOrFail($this->id)->schools()->get();
 
     return response()->json(['data' => $schools]);
   }
@@ -543,7 +552,7 @@ class TutorController extends Controller
     'tutors_music' => 'required|boolean',
     ]);
 
-    $tutor = \App\Tutor::findOrFail($this->id);
+    $tutor = Tutor::findOrFail($this->id);
     //set the tutor as tutoring music
     if ($request->get('tutors_music'))
     {
@@ -567,7 +576,7 @@ class TutorController extends Controller
 
   public function ajaxgetmusic(Request $request)
   {
-    $tutor = \App\Tutor::findOrFail($this->id);
+    $tutor = Tutor::findOrFail($this->id);
     return response()->json(['data' => $tutor->music]);
   }
 
@@ -577,8 +586,8 @@ class TutorController extends Controller
       'music_id' => 'required|numeric|exists:music,id'
       ]);
     $id = $request->input('music_id');
-    $to_rmv = \App\Music::findOrFail($id);
-    $tutor = \App\Tutor::findOrFail($this->id);
+    $to_rmv = Music::findOrFail($id);
+    $tutor = Tutor::findOrFail($this->id);
     $tutor->music()->detach($to_rmv->id);
     return response()->json($to_rmv);
   }
@@ -591,8 +600,8 @@ class TutorController extends Controller
       'student-experiance' => 'required|numeric|between:0,100'
       ]);
     $id = $request->input('music_id');
-    $music = \App\Music::findOrFail($id);
-    $tutor = \App\Tutor::findOrFail($this->id);
+    $music = Music::findOrFail($id);
+    $tutor = Tutor::findOrFail($this->id);
     $tutor->music()
     ->attach($music->id,
       ["years_experiance" => $request->input('years-experiance'),
@@ -603,7 +612,7 @@ class TutorController extends Controller
   //used to make checklist for tutor
   private function makechecklist($tutor_id)
   {
-    $tutor = \App\Tutor::get_tutor_profile($tutor_id);
+    $tutor = Tutor::get_tutor_profile($tutor_id);
     //$tutor_model = \App\Tutor::findOrFail($this->id);
 
     isset($tutor->grade) && isset($tutor->rate) && isset($tutor->about_me) ? $checklist['info'] = true : $checklist['info'] = false;
@@ -644,7 +653,7 @@ class TutorController extends Controller
     if(empty($results)) return redirect()->back();
     $school_id = $results[0]->school_id;
 
-    $school = \App\School::findOrFail($school_id);
+    $school = School::findOrFail($school_id);
     if ($this->tutor->schools()->count() >= 5 && $this->tutor->user->account_type < 3)
     {
       $request->session()->put('feedback_negative', 'Standard tutors can only have up to five schools.');

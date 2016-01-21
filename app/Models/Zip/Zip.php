@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models\Zip;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,12 +11,12 @@ class Zip extends Model
 
     public function schools()
     {
-      return $this->hasMany('App\School', 'zip_id', 'id');
+      return $this->hasMany('App\Models\School\School', 'zip_id', 'id');
     }
 
     public function users()
     {
-      return $this->hasMany('App\User', 'zip_id', 'id');
+      return $this->hasMany('App\Models\User\User', 'zip_id', 'id');
     }
 
     public function scopeHaversine($query, $lat, $long, $dist_var, $max_dist, $limit, &$selector)

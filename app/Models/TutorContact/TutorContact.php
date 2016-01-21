@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models\TutorContact;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,13 +12,13 @@ protected $table = 'tutor_contacts';
 
 public function user()
 {
-  return $this->belongsTo('App\User', 'user_id', 'id');
+  return $this->belongsTo('App\Models\User\User', 'user_id', 'id');
 }
 
 
 public function tutor()
 {
-  return $this->belongsTo('App\Tutor', 'tutor_id', 'user_id');
+  return $this->belongsTo('App\Models\Tutor\Tutor', 'tutor_id', 'user_id');
 }
 
 

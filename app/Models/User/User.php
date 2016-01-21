@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models\User;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
@@ -36,26 +36,26 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function tutor()
     {
-      return $this->hasOne('App\Tutor', 'user_id', 'id');
+      return $this->hasOne('App\Models\Tutor\Tutor', 'user_id', 'id');
     }
 
     public function saved_tutors()
     {
-      return $this->belongsToMany('App\Tutor', 'saved_tutors', 'user_id', 'tutor_id')->withTimestamps();
+      return $this->belongsToMany('App\Models\Tutor\Tutor', 'saved_tutors', 'user_id', 'tutor_id')->withTimestamps();
     }
 
     public function zip()
     {
-      return $this->belongsTo('App\Zip', 'zip_id', 'id');
+      return $this->belongsTo('App\Models\Zip\Zip', 'zip_id', 'id');
     }
 
     public function reviews()
     {
-      return $this->hasMany('App\Review', 'reviewer_id', 'id');
+      return $this->hasMany('App\Models\Review\Review', 'reviewer_id', 'id');
     }
 
     public function tutor_contacts()
     {
-      return $this->hasMany('App\TutorContact', 'user_id', 'id');
+      return $this->hasMany('App\Models\TutorContact\TutorContact', 'user_id', 'id');
     }
 }

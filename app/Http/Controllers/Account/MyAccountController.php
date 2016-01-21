@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Account;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+
+use App\Models\User\User;
+use App\Models\Tutor\Tutor;
+use App\Models\Review\Review;
 
 class MyAccountController extends Controller
 {
@@ -19,7 +22,7 @@ class MyAccountController extends Controller
 
     public function index()
     {
-      $user = \App\User::findOrFail($this->id);
+      $user = User::findOrFail($this->id);
       //get saves tutors
       $saved_tutors = $user->saved_tutors()
       ->join('users', 'tutors.user_id', '=', 'users.id')
@@ -60,7 +63,7 @@ class MyAccountController extends Controller
           'userid' => 'required|exists:tutors,user_id'
           ]);
 
-          $tutor = \App\Tutor::get_tutor_profile($request->input('userid'));
+          $tutor = Tutor::get_tutor_profile($request->input('userid'));
 
           $data['name'] = $tutor->fname.' '.$tutor->lname;
           $data['tutor_profile'] = route('search.showtutorprofile', ['id' => $request->input('userid')]);
@@ -78,7 +81,7 @@ class MyAccountController extends Controller
           'message' => 'required|string',
         ]);
 
-        $tutor = \App\Tutor::get_tutor_profile($request->input('user_id'));
+        $tutor = Tutor::get_tutor_profile($request->input('user_id'));
         $user = \Auth::user();
         //queue only works with arrays
         $inputs = $request->all();
@@ -95,7 +98,7 @@ class MyAccountController extends Controller
 
       \Session::put('feedback_positive', 'Your email to '.$tutor->fname.' '.$tutor->lname.' has been successfully sent!');
 
-      $contact = new \App\TutorContact;
+      $contact = new TutorContact;
       $contact->user_id = $user->id;
       $contact->tutor_id = $request->input('user_id');
       $contact->message = $request->input('message');
@@ -111,7 +114,7 @@ class MyAccountController extends Controller
       'user_id' => 'required|exists:tutors,user_id',
       ]);
       $id = $request->input('user_id');
-      $tutor = \App\Tutor::get_tutor_profile($id);
+      $tutor = Tutor::get_tutor_profile($id);
 
 
       $search = \Auth::user()->saved_tutors()->find($id);
@@ -158,7 +161,7 @@ class MyAccountController extends Controller
       }
 
 
-      $review = new \App\Review;
+      $review = new Review;
       $review->tutor_id = $request->get('tutor_id');
       $review->rating = $request->get('rating');
       $review->title = $request->get('review_title');
@@ -168,7 +171,7 @@ class MyAccountController extends Controller
       if (!is_null($request->get('anonymous')) && $request->get('anonymous') == '1') $review->anonymous = 1;
       else $review->anonymous = 0;
 
-      $tutor = \App\Tutor::get_tutor_profile($request->get('tutor_id'));
+      $tutor = Tutor::get_tutor_profile($request->get('tutor_id'));
       //insert into db
       \Auth::user()->reviews()->save($review);
       \Session::put('feedback_positive', "Thanks for taking the time to review {$tutor->fname} {$tutor->lname}. Your feedback will be used to help others.");
@@ -178,7 +181,7 @@ class MyAccountController extends Controller
 
     public function ajaxsavedtutors(Request $request)
     {
-      $saved_tutors = \App\User::findOrFail($this->id)->saved_tutors()
+      $saved_tutors = User::findOrFail($this->id)->saved_tutors()
       ->join('users', 'tutors.user_id', '=', 'users.id')
       ->leftJoin('reviews', 'tutors.user_id', '=', 'reviews.tutor_id')
       ->leftJoin('grades', 'tutors.grade', '=', 'grades.id')
@@ -192,7 +195,7 @@ class MyAccountController extends Controller
     //note this method does not give you full tutor profile, only the name and date
     public function ajaxtutorcontacts(Request $request)
     {
-      $contacts = \App\User::findOrFail($this->id)->tutor_contacts()
+      $contacts = User::findOrFail($this->id)->tutor_contacts()
       ->leftJoin('saved_tutors', function($join)
       {
         $join->on('saved_tutors.user_id', '=', 'tutor_contacts.user_id');
@@ -208,7 +211,7 @@ class MyAccountController extends Controller
 
     public function ajaxtutorreviews(Request $request)
     {
-      $reviews = \App\User::findOrFail($this->id)->reviews()
+      $reviews = User::findOrFail($this->id)->reviews()
       ->leftJoin('saved_tutors', function($join)
       {
         $join->on('saved_tutors.user_id', '=', 'reviews.reviewer_id');

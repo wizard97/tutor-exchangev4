@@ -3,16 +3,20 @@
 namespace App\Http\Controllers\Search\Music;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+
+use App\Models\Music\Music;
+use App\Models\Zip\Zip;
+use App\Models\Statistic\Stat;
+
 
 class MusicController extends Controller
 {
   //search form for instrument
   public function index()
   {
-    $instruments = \App\Music::leftjoin('tutor_music', 'tutor_music.music_id', '=', 'music.id')
+    $instruments = Music::leftjoin('tutor_music', 'tutor_music.music_id', '=', 'music.id')
     ->leftjoin('tutors', 'tutors.user_id', '=', 'tutor_music.tutor_id')
     ->groupBy('music.id')
     ->select('music.*', \DB::raw('SUM(CASE WHEN tutors.tutor_active = 1 THEN 1 ELSE 0 END) AS num_tutors'))
@@ -53,7 +57,7 @@ class MusicController extends Controller
     $request->session()->forget('music_search_inputs');
     $request->session()->put('music_search_inputs', $input);
 
-    \App\Stat::incr_search();
+    Stat::incr_search();
     //high school or above for standard tutors
     if ($request->input('school_type') == 'high' && $request->input('tutor_type') == 'standard')
     {
@@ -72,7 +76,7 @@ class MusicController extends Controller
     if(empty($form_inputs)) return redirect()->route('music.index');
     $inst_id = $form_inputs['instrument'];
 
-    $search = \App\Music::findOrFail($inst_id)->tutors();
+    $search = Music::findOrFail($inst_id)->tutors();
 
     //get long and lat
     if (\Auth::check())
@@ -82,7 +86,7 @@ class MusicController extends Controller
     }
     else
     {
-      $zip_model = \App\Zip::where('zip_code', '=', $form_inputs['zip'])->firstOrFail();
+      $zip_model = Zip::where('zip_code', '=', $form_inputs['zip'])->firstOrFail();
       $u_lat = $zip_model->lat;
       $u_lon = $zip_model->lon;
     }
