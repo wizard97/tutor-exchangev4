@@ -2,6 +2,9 @@
 
 use Illuminate\Database\Seeder;
 
+use App\Models\Tutor\Tutor;
+use App\Models\School\School;
+
 class TutorSchoolsTableSeeder extends Seeder
 {
     /**
@@ -11,8 +14,8 @@ class TutorSchoolsTableSeeder extends Seeder
      */
     public function run()
     {
-      App\Tutor::get()->each(function($tutor) {
-        $school_id = \App\School::orderBy(\DB::raw('RAND()'))->take(3)->get()->pluck('id')->toArray();
+      Tutor::get()->each(function($tutor) {
+        $school_id = School::orderBy(\DB::raw('RAND()'))->take(3)->get()->pluck('id')->toArray();
         if (!$tutor->schools()->whereIn('schools.id', $school_id)->get()->isEmpty()) return;
         $tutor->schools()->attach($school_id);
       });

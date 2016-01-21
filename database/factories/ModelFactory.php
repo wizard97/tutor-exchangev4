@@ -1,5 +1,12 @@
 <?php
 
+use App\Models\User\User;
+use App\Models\Tutor\Tutor;
+use App\Models\Zip\Zip;
+use App\Models\School\School;
+use App\Models\Review\Review;
+use App\Models\SchoolClass\SchoolClass;
+use App\Models\Level\Level;
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -11,10 +18,10 @@
 |
 */
 
-$factory->define(App\User::class, function ($faker) {
+$factory->define(User::class, function ($faker) {
   do
   {
-  $zip = \App\Zip::where('zip_code', '<=', substr($faker->postcode, 0, 5))->orderBy(\DB::raw('RAND()'))->first();
+  $zip = Zip::where('zip_code', '<=', substr($faker->postcode, 0, 5))->orderBy(\DB::raw('RAND()'))->first();
 } while(is_null($zip));
     return [
         'fname' => $faker->firstName,
@@ -33,12 +40,12 @@ $factory->define(App\User::class, function ($faker) {
     ];
 });
 
-$factory->define(App\School::class, function ($faker) {
+$factory->define(School::class, function ($faker) {
   //make some random zips
   $zip = null;
   do
   {
-  $zip = \App\Zip::where('zip_code', '<=', substr($faker->postcode, 0, 5))->orderBy(\DB::raw('RAND()'))->first();
+  $zip = Zip::where('zip_code', '<=', substr($faker->postcode, 0, 5))->orderBy(\DB::raw('RAND()'))->first();
 } while(is_null($zip));
     return [
         'zip_id' => $zip->id,
@@ -48,7 +55,7 @@ $factory->define(App\School::class, function ($faker) {
 
 
 
-$factory->define(App\Tutor::class, function ($faker) {
+$factory->define(Tutor::class, function ($faker) {
     $rands = [
         'age' => rand(13, 50),
         'grade' => rand(9, 15),
@@ -88,7 +95,7 @@ function time_sort($a, $b)
   else return 1;
 }
 
-$factory->define(App\Review::class, function ($faker) {
+$factory->define(Review::class, function ($faker) {
     $stud_or_par = rand(0, 1);
     if ($stud_or_par) $reviewer = 'Student';
     else $reviewer = 'Parent';
@@ -102,14 +109,14 @@ $factory->define(App\Review::class, function ($faker) {
     ];
 });
 
-$factory->define(App\SchoolClass::class, function ($faker) {
+$factory->define(SchoolClass::class, function ($faker) {
 
     return [
         'class_name' => $faker->catchPhrase
     ];
 });
 
-$factory->define(App\Level::class, function ($faker) {
+$factory->define(Level::class, function ($faker) {
   //some random subjects
   $levels = ['Level 2', 'Level 1', 'Honors', 'AP', 'AP II', 'B Level', 'A Level', 'Accelerated', 'IB', 'IB II'];
 

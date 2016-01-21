@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 
+use App\Models\School\School;
+
 class SchoolSubjectsTableSeeder extends Seeder
 {
     /**
@@ -12,7 +14,7 @@ class SchoolSubjectsTableSeeder extends Seeder
     public function run()
     {
 
-      $schools = App\School::where('id', '!=', 1)->get();
+      $schools = School::where('id', '!=', 1)->get();
       //some random subjects
       $subjects = ['Math', 'Science', 'English', 'History', 'Social Studies', 'French', 'Spanish', 'Physics', 'German', 'Mandarin', 'Computer Science', 'Engineering'];
 

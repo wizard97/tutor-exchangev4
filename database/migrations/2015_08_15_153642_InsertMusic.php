@@ -3,6 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+use App\Models\Music\Music;
+
 class InsertMusic extends Migration
 {
     /**
@@ -21,7 +23,7 @@ class InsertMusic extends Migration
 
        foreach ($instruments as $instrument)
        {
-         $music = \App\Music::create(['music_name' => $instrument]);
+         $music = Music::create(['music_name' => $instrument]);
        }
     }
 

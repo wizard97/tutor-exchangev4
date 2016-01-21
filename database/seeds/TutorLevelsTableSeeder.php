@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 
+use App\Models\Tutor\Tutor;
+
 class TutorLevelsTableSeeder extends Seeder
 {
     /**
@@ -13,7 +15,7 @@ class TutorLevelsTableSeeder extends Seeder
     {
       // Skip over LHS eventually!!!!
 
-      App\Tutor::get()->each(function($u) {
+      Tutor::get()->each(function($u) {
 
         $u->schools->each(function ($school) use ($u)
         {

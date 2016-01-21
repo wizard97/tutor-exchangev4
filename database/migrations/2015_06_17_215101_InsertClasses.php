@@ -2,6 +2,9 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+use App\Models\School\School;
+use App\Models\Zip\Zip;
+
 class InsertClasses extends Migration
 {
     /**
@@ -13,12 +16,12 @@ class InsertClasses extends Migration
     {
 
 //create LHs listing
-$school = new \App\School;
+$school = new School;
 $school->school_name = 'Lexington High School';
 $school->address = '251 Waltham Street, Lexington, MA 02421';
 $school->lat = 42.443154;
 $school->lon = -71.232905;
-$school= \App\Zip::where('city', '=', 'LEXINGTON')->where('zip_code', '=', '02421')
+$school= Zip::where('city', '=', 'LEXINGTON')->where('zip_code', '=', '02421')
 ->first()
 ->schools()
 ->save($school);

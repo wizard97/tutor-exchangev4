@@ -3,6 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+use App\Models\MiddleSubject\MiddleSubject;
+
 class InsertGlobalMiddleClasses extends Migration
 {
     /**
@@ -103,7 +105,7 @@ class InsertGlobalMiddleClasses extends Migration
       //do the insert
       foreach($subjects as $key=> $subject)
       {
-        $model = \App\MiddleSubject::create(['subject_name' => $subject]);
+        $model = MiddleSubject::create(['subject_name' => $subject]);
         foreach(${"{$key}_classes"} as $class_object)
         {
           $model->classes()->create(['class_name' => reset($class_object->levels).' '.$class_object->name]);

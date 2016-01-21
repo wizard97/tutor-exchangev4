@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 
+use App\Models\Tutor\Tutor;
+
 class ReviewsTableSeeder extends Seeder
 {
     /**
@@ -11,7 +13,7 @@ class ReviewsTableSeeder extends Seeder
      */
     public function run()
     {
-      $tutors = App\Tutor::all();
+      $tutors = Tutor::all();
 
       $tutors->each(function($u) {
         //figure out how many reviews for each user
@@ -19,7 +21,7 @@ class ReviewsTableSeeder extends Seeder
 
         for ($i =0; $i < $reviews; $i++)
         {
-          $u->reviews()->save(factory('App\Review')->make());
+          $u->reviews()->save(factory('App\Models\Review\Review')->make());
         }
      });
 
