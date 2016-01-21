@@ -107,11 +107,7 @@ $( document ).ready(function() {
 
 
 
-<<<<<<< HEAD
   });
-=======
-});
 
->>>>>>> 3de359a6fb69076de3870e3d4b04d49479250555
 </script>
 @stop
