@@ -69,7 +69,7 @@
           <div class="panel-body">
             <div class="row">
               <div class="col-xs-4">
-                {!! Form::label('name', 'School Name') !!} <span class="text text-danger">*</span>
+                {!! Form::label('name', 'School Name') !!}
               </div>
               <div class="col-xs-8">
                 {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'schoolname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. Lexington High School']) !!}
@@ -127,7 +127,6 @@
             <div class="table-responsive">
               <table id="add-classes" class="table table-striped table-bordered table-hover"></table>
             </div>
-            <span class="text text-danger">* = Required</span>
             <button class="btn btn-success pull-right" type="button">
               Submit
             </button>
