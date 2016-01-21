@@ -15,17 +15,30 @@
       <div class="col-md-8">
         <div class="panel panel-default">
           <div class="panel-heading"> <!-- <i class="fa fa-bars"></i> School Classes -->
-            Submit a New School
+            Submit/Edit/Delete a School
           </div>
           <div class="panel-body">
-            <div class="btn-group" role="group">
-              <button type="button" class="btn btn-success" id="submitbutton">Submit</button>
-              <button type="button" class="btn btn-primary" id="editbutton">Edit</button>
-              <button type="button" class="btn btn-danger" id="deletebutton">Delete</button>
+            <div class="row">
+              <div class="col-md-7">
+                <div class="btn-group" role="group">
+                  <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-success" id="submitbutton">
+                      {!! Form::radio(null) !!} Submit
+                    </label>
+                    <label class="btn btn-primary" id="editbutton">
+                      {!! Form::radio(null) !!} Edit
+                    </label>
+                    <label class="btn btn-danger" id="deletebutton">
+                      {!! Form::radio(null) !!} Delete
+                    </label>
+                  </div>
+                </div>
+              </div>
             </div>
+            <br>
             <div class="row">
               <div class="col-xs-4">
-                {!! Form::label('name', 'Search School') !!} <span class="text text-danger">*</span>
+                {!! Form::label('name', 'Search School') !!}
               </div>
               <div class="col-xs-8">
                 {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'schoolname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. Lexington High School']) !!}
@@ -41,14 +54,13 @@
             </div>
             <div class="row">
               <div class="col-xs-4">
-                {!! Form::label('address', 'School Address') !!} <span class="text text-danger">*</span>
+                {!! Form::label('address', 'School Address') !!}
               </div>
               <div class="col-xs-8">
                 {!! Form::text('address', null, ['class' => 'form-control typeahead', 'id' => 'schooladdress', 'autocomplete' => 'off', 'placeholder' => 'e.g. 78 Main Street, Boston, MA 02115, USA']) !!}
               </div>
             </div>
             <hr>
-            <span class="text text-danger">* = Required</span>
             {!! Form::submit('Submit', ['class' => 'btn btn-success pull-right']); !!}
           </div>
         </div>
@@ -59,7 +71,6 @@
 <script>
 // instantiate the bloodhound suggestion engine
 $( document ).ready(function() {
-
   var schools = new Bloodhound({
     sufficient: 10,
     identify: function(obj) { return obj.id; },
@@ -82,7 +93,6 @@ $( document ).ready(function() {
       wildcard: '%QUERY'
     },
   });
-
   $('#schoolname').typeahead(null, {//instantiate submit typeahead
     source: schools.ttAdapter(),
     display: 'response',
@@ -98,12 +108,13 @@ $( document ).ready(function() {
       }
     }
   });
-
-
+  $('#schoolname').prop('disabled', true); //disable all buttons by default
+  $('#newschoolname').prop('disabled', true);
+  $('#schooladdress').prop('disabled', true);
 
   $('#submitbutton').click(function() {
-    $('#schoolname').prop('disabled', false);
-    $('#newschoolname').prop('disabled', true);
+    $('#schoolname').prop('disabled', true);
+    $('#newschoolname').prop('disabled', false);
     $('#schooladdress').prop('disabled', false);
   });
   $('#editbutton').click(function() {
@@ -116,9 +127,6 @@ $( document ).ready(function() {
     $('#newschoolname').prop('disabled', true);
     $('#schooladdress').prop('disabled', true);
   });
-
-
 });
-
 </script>
 @stop

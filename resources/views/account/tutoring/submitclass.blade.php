@@ -12,206 +12,137 @@
       </div>
       <!-- <p class="alert alert-info"><i class="fa fa-info-circle"></i>  This is where you update the classes you can tutor. It is in your best interest to only select classes you can truly tutor, rather than risk negative feedback.</p> -->
     </div>
-    <div class="row">
-      <div class="col-md-6">
-        <div class="row">
-          <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#submit" aria-controls="submitEdit" role="tab" data-toggle="tab">Submit</a></li>
-            <li role="presentation"><a href="#edit" aria-controls="edit" role="tab" data-toggle="tab">Edit</a></li>
-            <li role="presentation"><a href="#delete" aria-controls="delete" role="tab" data-toggle="tab">Delete</a></li>
-          </ul>
-          <br>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading"> <!-- <i class="fa fa-bars"></i> School Classes -->
+          Submit/Edit/Delete a Class
         </div>
-        <div class="row">
-          <div class="tab-content">
-            <div role="tabpanel" class="tab-pane fade in active" id="submit">
-              <div class="col-md-12">
-                <div class="panel panel-default">
-                  <div class="panel-heading"> <!-- <i class="fa fa-bars"></i> School Classes -->
-                    Submit a New Class
-                  </div>
-                  <div class="panel-body">
-                    <div class="row">
-                      <div class="col-xs-4">
-                        {!! Form::label('name', 'School Name') !!} <span class="text text-danger">*</span>
-                      </div>
-                      <div class="col-xs-8">
-                        {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'submitclassschoolname', 'autocomplete' => 'off', 'placeholder' => 'e.g. Lexington High School']) !!}
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-xs-4">
-                        {!! Form::label('subject', 'Class Name') !!} <span class="text text-danger">*</span>
-                      </div>
-                      <div class="col-xs-8">
-                        {!! Form::text('subject', null, ['class' => 'form-control', 'id' => 'submitclassname', 'autocomplete' => 'off', 'placeholder' => 'e.g. Calculus']) !!}
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-xs-4">
-                        {!! Form::label('subject', 'Subject') !!} <span class="text text-danger">*</span>
-                      </div>
-                      <div class="col-xs-8">
-                        {!! Form::text('subject', null, ['class' => 'form-control', 'id' => 'submitclasssubjectname', 'autocomplete' => 'off', 'placeholder' => 'e.g. Math']) !!}
-                      </div>
-                    </div>
-                    <hr>
-                    <span class="text text-danger">* = Required</span>
-                    {!! Form::submit('Submit', ['class' => 'btn btn-success pull-right']); !!}
-                  </div>
-                </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-7">
+            <div class="btn-group" role="group">
+              <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-success" id="submitbutton">
+                  {!! Form::radio(null) !!} Submit
+                </label>
+                <label class="btn btn-primary" id="editbutton">
+                  {!! Form::radio(null) !!} Edit
+                </label>
+                <label class="btn btn-danger" id="deletebutton">
+                  {!! Form::radio(null) !!} Delete
+                </label>
               </div>
             </div>
-            <div role="tabpanel" class="tab-pane fade in" id="edit">
-              <div class="col-md-12">
-                <div class="panel panel-default">
-                  <div class="panel-heading">
-                    Edit an Existing Class
-                  </div>
-                  <div class="panel-body">
-                    <div class="row">
-                      <div class="col-xs-4">
-                        {!! Form::label('school', 'School Name') !!} <span class="text text-danger">*</span>
-                      </div>
-                      <div class="col-xs-8">
-                        {!! Form::text('school', null, ['class' => 'form-control typeahead', 'id' => 'editclassschoolname', 'autocomplete' => 'off', 'placeholder' => 'e.g. Lexington High School']) !!}
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-xs-4">
-                        {!! Form::label('class', 'Class Name') !!} <span class="text text-danger">*</span>
-                      </div>
-                      <div class="col-xs-8">
-                        {!! Form::text('class', null, ['class' => 'form-control typeahead', 'id' => 'editclassname', 'autocomplete' => 'off', 'placeholder' => 'e.g. Calculus']) !!}
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-xs-4">
-                        {!! Form::label('name', 'New Name') !!} <span class="text text-danger">*</span>
-                      </div>
-                      <div class="col-xs-8">
-                        {!! Form::text('name', null, ['class' => 'form-control', 'id' => 'editedclassname', 'autocomplete' => 'off', 'placeholder' => 'e.g. Calculus']) !!}
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-xs-4">
-                        {!! Form::label('subject', 'New Subject') !!} <span class="text text-danger">*</span>
-                      </div>
-                      <div class="col-xs-8">
-                        {!! Form::text('subject', null, ['class' => 'form-control', 'id' => 'editedclasssubject', 'autocomplete' => 'off', 'placeholder' => 'e.g. Calculus']) !!}
-                      </div>
-                    </div>
-                    <hr>
-                    <span class="text text-danger">* = Required</span>
-                    {!! Form::submit('Submit', ['class' => 'btn btn-success pull-right']); !!}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div role="tabpanel" class="tab-pane fade in" id="delete">
-              <div class="col-md-12">
-                <div class="panel panel-default">
-                  <div class="panel-heading"> <!-- <i class="fa fa-bars"></i> School Classes -->
-                    Delete an Existing Class
-                  </div>
-                  <div class="panel-body">
-                    <div class="row">
-                      <div class="col-xs-4">
-                        {!! Form::label('name', 'School Name') !!} <span class="text text-danger">*</span>
-                      </div>
-                      <div class="col-xs-8">
-                        {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'deleteclassschoolname', 'autocomplete' => 'off', 'placeholder' => 'e.g. Lexington High School']) !!}
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-xs-4">
-                        {!! Form::label('name', 'Class Name') !!} <span class="text text-danger">*</span>
-                      </div>
-                      <div class="col-xs-8">
-                        {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'deleteclassname', 'autocomplete' => 'off', 'placeholder' => 'e.g. Calculus']) !!}
-                      </div>
-                    </div>
-                    <hr>
-                    <span class="text text-danger">* = Required</span>
-                    {!! Form::submit('Delete', ['class' => 'btn btn-danger pull-right']); !!}
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
+          <br>
+          <div class="row">
+            <div class="col-xs-4">
+              {!! Form::label('name', 'Search School') !!}
+            </div>
+            <div class="col-xs-8">
+              {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'schoolname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. Lexington High School']) !!}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-4">
+              {!! Form::label('address', 'Search Subject') !!}
+            </div>
+            <div class="col-xs-8">
+              {!! Form::text('address', null, ['class' => 'form-control typeahead', 'id' => 'subjectname', 'autocomplete' => 'off', 'placeholder' => 'e.g. Math']) !!}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-4">
+              {!! Form::label('name', 'Search Class') !!}
+            </div>
+            <div class="col-xs-8">
+              {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'classname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. Calculus']) !!}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-4">
+              {!! Form::label('name', 'New Class Name') !!}
+            </div>
+            <div class="col-xs-8">
+              {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'newclassname', 'autocomplete' => 'off', 'placeholder' => 'e.g. Calculus']) !!}
+            </div>
+          </div>
+
+          <hr>
+          {!! Form::submit('Submit', ['class' => 'btn btn-success pull-right']); !!}
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="panel panel-default">
-          <div class="panel-heading"> <!-- <i class="fa fa-bars"></i> School Classes -->
-              Edit Levels
+    </div>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading"> <!-- <i class="fa fa-bars"></i> School Classes -->
+          Edit Levels
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-4">
+              {!! Form::label('name', 'School Name') !!}
+            </div>
+            <div class="col-xs-8">
+              {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'schoolname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. Lexington High School']) !!}
+            </div>
           </div>
-          <div class="panel-body">
-            <div class="row">
-              <div class="col-xs-4">
-                {!! Form::label('name', 'School Name') !!} <span class="text text-danger">*</span>
-              </div>
-              <div class="col-xs-8">
-                {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'schoolname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. Lexington High School']) !!}
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-xs-4">
-                <div class="dropdown">
-                  <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    Subject
-                    <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                    <li><a href="#">English</a></li>
-                    <li><a href="#">Social Studies</a></li>
-                    <li><a href="#">Science</a></li>
-                    <li><a href="#">Math</a></li>
-                    <li><a href="#">Foreign Language</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li><a href="#">Elementary/Middle School English</a></li>
-                    <li><a href="#">Elementary/Middle School Social Studies</a></li>
-                    <li><a href="#">Elementary/Middle School Science</a></li>
-                    <li><a href="#">Elementary/Middle School Math</a></li>
-                    <li><a href="#">Elementary/Middle School Foreign Language</a></li>
-                  </ul>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="dropdown">
-                  <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    Class
-                    <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
-                    <li><a href="#">Dystopias</a></li>
-                    <li><a href="#">Economics</a></li>
-                    <li><a href="#">Biology</a></li>
-                    <li><a href="#">Chemistry</a></li>
-                    <li><a href="#">Calculus</a></li>
-                  </ul>
-                </div>
+          <div class="row">
+            <div class="col-xs-4">
+              <div class="dropdown">
+                <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                  Subject
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                  <li><a href="#">English</a></li>
+                  <li><a href="#">Social Studies</a></li>
+                  <li><a href="#">Science</a></li>
+                  <li><a href="#">Math</a></li>
+                  <li><a href="#">Foreign Language</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">Elementary/Middle School English</a></li>
+                  <li><a href="#">Elementary/Middle School Social Studies</a></li>
+                  <li><a href="#">Elementary/Middle School Science</a></li>
+                  <li><a href="#">Elementary/Middle School Math</a></li>
+                  <li><a href="#">Elementary/Middle School Foreign Language</a></li>
+                </ul>
               </div>
             </div>
-            <br>
-            <div class="row">
-              <div class="col-md-12">
-                <div class="input-group">
-                  <input type="text" class="form-control" placeholder="Level Name" aria-describedby="basic-addon2">
-                  <span class="input-group-btn">
-                    <button class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
-                  </span>
-                </div>
+            <div class="col-md-4">
+              <div class="dropdown">
+                <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                  Class
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
+                  <li><a href="#">Dystopias</a></li>
+                  <li><a href="#">Economics</a></li>
+                  <li><a href="#">Biology</a></li>
+                  <li><a href="#">Chemistry</a></li>
+                  <li><a href="#">Calculus</a></li>
+                </ul>
               </div>
             </div>
-            <div class="table-responsive">
-              <table id="add-classes" class="table table-striped table-bordered table-hover"></table>
-            </div>
-            <span class="text text-danger">* = Required</span>
-            <button class="btn btn-success pull-right" type="button">
-              Submit
-            </button>
           </div>
+          <br>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="input-group">
+                {!! Form::text('level_name', null, ['class' => 'form-control', 'placeholder' => 'Level Name', 'aria-describedby' => 'basic-addon2']); !!}
+                <div class="input-group-btn">
+                  {!! Form::button('<i class="fa fa-plus"></i>', ['class' => 'btn btn-default']) !!}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table id="add-classes" class="table table-striped table-bordered table-hover"></table>
+          </div>
+          <button class="btn btn-success pull-right" type="button">
+            Submit
+          </button>
         </div>
       </div>
     </div>
@@ -272,6 +203,31 @@ $( document ).ready(function() {
       }
     ]
   });
+
+  $('#schoolname').prop('disabled', true);
+  $('#subjectname').prop('disabled', true);
+  $('#classname').prop('disabled', true);
+  $('#newclassname').prop('disabled', true);
+
+  $('#submitbutton').click(function() {
+    $('#schoolname').prop('disabled', false);
+    $('#subjectname').prop('disabled', false);
+    $('#classname').prop('disabled', true);
+    $('#newclassname').prop('disabled', false);
+  });
+  $('#editbutton').click(function() {
+    $('#schoolname').prop('disabled', false);
+    $('#subjectname').prop('disabled', false);
+    $('#classname').prop('disabled', false);
+    $('#newclassname').prop('disabled', false);
+  });
+  $('#deletebutton').click(function() {
+    $('#schoolname').prop('disabled', false);
+    $('#subjectname').prop('disabled', false);
+    $('#classname').prop('disabled', false);
+    $('#newclassname').prop('disabled', true);
+  });
+
 });
 </script>
 @stop
