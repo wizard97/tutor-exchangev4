@@ -12,111 +12,43 @@
       <!-- <p class="alert alert-info"><i class="fa fa-info-circle"></i>  This is where you update the classes you can tutor. It is in your best interest to only select classes you can truly tutor, rather than risk negative feedback.</p> -->
     </div>
     <div class="row">
-      <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#submit" aria-controls="submitEdit" role="tab" data-toggle="tab">Submit</a></li>
-        <li role="presentation"><a href="#edit" aria-controls="edit" role="tab" data-toggle="tab">Edit</a></li>
-        <li role="presentation"><a href="#delete" aria-controls="delete" role="tab" data-toggle="tab">Delete</a></li>
-      </ul>
-      <br>
-    </div>
-    <div class="row">
-      <div class="tab-content">
-        <div role="tabpanel" class="tab-pane fade in active" id="submit">
-          <div class="col-md-8">
-            <div class="panel panel-default">
-              <div class="panel-heading"> <!-- <i class="fa fa-bars"></i> School Classes -->
-                Submit a New Subject
-              </div>
-              <div class="panel-body">
-                <div class="row">
-                  <div class="col-xs-4">
-                    {!! Form::label('name', 'School Name') !!} <span class="text text-danger">*</span>
-                  </div>
-                  <div class="col-xs-8">
-                    {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'submitsubjectschoolname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. Lexington High School']) !!}
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-xs-4">
-                    {!! Form::label('subject', 'Subject Name') !!} <span class="text text-danger">*</span>
-                  </div>
-                  <div class="col-xs-8">
-                    {!! Form::text('subject', null, ['class' => 'form-control', 'id' => 'submitsubjectname', 'autocomplete' => 'off', 'placeholder' => 'e.g. English']) !!}
-                  </div>
-                </div>
-                <hr>
-                <span class="text text-danger">* = Required</span>
-                {!! Form::submit('Submit', ['class' => 'btn btn-success pull-right']); !!}
-              </div>
-            </div>
+      <div class="col-md-8">
+        <div class="panel panel-default">
+          <div class="panel-heading"> <!-- <i class="fa fa-bars"></i> School Classes -->
+            Submit/Edit/Delete a Subject
           </div>
-        </div>
-        <div role="tabpanel" class="tab-pane fade in" id="edit">
-          <div class="col-md-8">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                Edit an Existing Subject
+          <div class="panel-body">
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-success" id="submitbutton">Submit</button>
+              <button type="button" class="btn btn-primary" id="editbutton">Edit</button>
+              <button type="button" class="btn btn-danger" id="deletebutton">Delete</button>
+            </div>
+            <div class="row">
+              <div class="col-xs-4">
+                {!! Form::label('name', 'Search School') !!}
               </div>
-              <div class="panel-body">
-                <div class="row">
-                  <div class="col-xs-4">
-                    {!! Form::label('name', 'School Name') !!} <span class="text text-danger">*</span>
-                  </div>
-                  <div class="col-xs-8">
-                    {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'editsubjectschoolname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. Lexington High School']) !!}
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-xs-4">
-                    {!! Form::label('name', 'Subject Name') !!} <span class="text text-danger">*</span>
-                  </div>
-                  <div class="col-xs-8">
-                    {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'editsubjectname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. English']) !!}
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-xs-4">
-                    {!! Form::label('name', 'New Subject Name') !!} <span class="text text-danger">*</span>
-                  </div>
-                  <div class="col-xs-8">
-                    {!! Form::text('name', null, ['class' => 'form-control', 'id' => 'editedsubjectname', 'autocomplete' => 'off', 'placeholder' => 'e.g. English']) !!}
-                  </div>
-                </div>
-                <hr>
-                <span class="text text-danger">* = Required</span>
-                {!! Form::submit('Submit', ['class' => 'btn btn-success pull-right']); !!}
+              <div class="col-xs-8">
+                {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'schoolname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. Lexington High School']) !!}
               </div>
             </div>
-          </div>
-        </div>
-        <div role="tabpanel" class="tab-pane fade in" id="delete">
-          <div class="col-md-8">
-            <div class="panel panel-default">
-              <div class="panel-heading"> <!-- <i class="fa fa-bars"></i> School Classes -->
-                Delete an Existing Subject
+            <div class="row">
+              <div class="col-xs-4">
+                {!! Form::label('name', 'Search Subject') !!}
               </div>
-              <div class="panel-body">
-                <div class="row">
-                  <div class="col-xs-4">
-                    {!! Form::label('name', 'School Name') !!} <span class="text text-danger">*</span>
-                  </div>
-                  <div class="col-xs-8">
-                    {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'deletesubjectschoolname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. Lexington High School']) !!}
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-xs-4">
-                    {!! Form::label('name', 'Subject Name') !!} <span class="text text-danger">*</span>
-                  </div>
-                  <div class="col-xs-8">
-                    {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'deletesubjectname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. English']) !!}
-                  </div>
-                </div>
-                <hr>
-                <span class="text text-danger">* = Required</span>
-                {!! Form::submit('Delete', ['class' => 'btn btn-danger pull-right']); !!}
+              <div class="col-xs-8">
+                {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'subjectname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. Math']) !!}
               </div>
             </div>
+            <div class="row">
+              <div class="col-xs-4">
+                {!! Form::label('address', 'New Subject Name') !!}
+              </div>
+              <div class="col-xs-8">
+                {!! Form::text('address', null, ['class' => 'form-control typeahead', 'id' => 'newsubjectname', 'autocomplete' => 'off', 'placeholder' => 'e.g. Math']) !!}
+              </div>
+            </div>
+            <hr>
+            {!! Form::submit('Submit', ['class' => 'btn btn-success pull-right']); !!}
           </div>
         </div>
       </div>
@@ -148,22 +80,40 @@ $( document ).ready(function() {
       wildcard: '%QUERY'
     },
   });
-  $('.typeahead').not('#deletesubjectname,#editsubjectname').typeahead(null, //instantiate submit typeahead
-    {
-      source: schools.ttAdapter(),
-      display: 'response',
-      limit: 5,
-      templates: {
-        notFound: [
-          '<p class="empty-message tt-suggestion">',
-          '<strong>No schools with that name.</strong>',
-          '</p>'
-        ].join('\n'),
-        suggestion: function(data) {
-          return '<p><strong>' + data.school_name + ',</strong> <small>' + data.city + ', '+ data.state_prefix + ' '+ data.zip_code + '</small></p>';
-        }
+  $('#schoolname').typeahead(null, {//instantiate submit typeahead
+    source: schools.ttAdapter(),
+    display: 'response',
+    limit: 5,
+    templates: {
+      notFound: [
+        '<p class="empty-message tt-suggestion">',
+        '<strong>No schools with that name.</strong>',
+        '</p>'
+      ].join('\n'),
+      suggestion: function(data) {
+        return '<p><strong>' + data.school_name + ',</strong> <small>' + data.city + ', '+ data.state_prefix + ' '+ data.zip_code + '</small></p>';
       }
-    });
+    }
   });
-  </script>
+  $('#schoolname').prop('disabled', true); //disable all buttons by default
+  $('#subjectname').prop('disabled', true);
+  $('#newsubjectname').prop('disabled', true);
+
+  $('#submitbutton').click(function() {
+    $('#schoolname').prop('disabled', false);
+    $('#subjectname').prop('disabled', true);
+    $('#newsubjectname').prop('disabled', false);
+  });
+  $('#editbutton').click(function() {
+    $('#schoolname').prop('disabled', false);
+    $('#subjectname').prop('disabled', false);
+    $('#newsubjectname').prop('disabled', false);
+  });
+  $('#deletebutton').click(function() {
+    $('#schoolname').prop('disabled', false);
+    $('#subjectname').prop('disabled', false);
+    $('#newsubjectname').prop('disabled', true);
+  });
+});
+</script>
   @stop
