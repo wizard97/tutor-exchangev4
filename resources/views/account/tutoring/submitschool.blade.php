@@ -25,7 +25,7 @@
           <div class="col-md-8">
             <div class="panel panel-default">
               <div class="panel-heading"> <!-- <i class="fa fa-bars"></i> School Classes -->
-                Enter School Info
+                Submit a New School
               </div>
               <div class="panel-body">
                 <div class="row">
@@ -55,7 +55,7 @@
           <div class="col-md-8">
             <div class="panel panel-default">
               <div class="panel-heading">
-                Enter School Info
+                Edit an Existing School
               </div>
               <div class="panel-body">
                 <div class="row">
@@ -93,7 +93,7 @@
           <div class="col-md-8">
             <div class="panel panel-default">
               <div class="panel-heading"> <!-- <i class="fa fa-bars"></i> School Classes -->
-                Enter School Info
+                Delete an Existing School
               </div>
               <div class="panel-body">
                 <div class="row">
