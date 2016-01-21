@@ -28,7 +28,7 @@
               <div class="col-md-12">
                 <div class="panel panel-default">
                   <div class="panel-heading"> <!-- <i class="fa fa-bars"></i> School Classes -->
-                    Enter School Info
+                    Submit a New Class
                   </div>
                   <div class="panel-body">
                     <div class="row">
@@ -66,7 +66,7 @@
               <div class="col-md-12">
                 <div class="panel panel-default">
                   <div class="panel-heading">
-                    Enter School Info
+                    Edit an Existing Class
                   </div>
                   <div class="panel-body">
                     <div class="row">
@@ -112,7 +112,7 @@
               <div class="col-md-12">
                 <div class="panel panel-default">
                   <div class="panel-heading"> <!-- <i class="fa fa-bars"></i> School Classes -->
-                    Enter School Info
+                    Delete an Existing Class
                   </div>
                   <div class="panel-body">
                     <div class="row">
@@ -144,9 +144,7 @@
       <div class="col-md-6">
         <div class="panel panel-default">
           <div class="panel-heading"> <!-- <i class="fa fa-bars"></i> School Classes -->
-            <div class="row">
               Edit Levels
-            </div>
           </div>
           <div class="panel-body">
             <div class="row">
@@ -243,7 +241,7 @@ $( document ).ready(function() {
       wildcard: '%QUERY'
     },
   });
-  $('.typeahead').typeahead(null, //instantiate submit typeahead
+  $('.typeahead').not('#editclassname,#deleteclassname').typeahead(null, //instantiate submit typeahead
     {
       source: schools.ttAdapter(),
       display: 'response',
