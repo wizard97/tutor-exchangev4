@@ -103,8 +103,21 @@ $( document ).ready(function() {
 
 
 
-  $("#newschoolname").addClass("disabled"); //BROKEN?
-
+$('#submitbutton').click(function() {
+  $('#schoolname').prop('disabled', false);
+  $('#newschoolname').prop('disabled', true);
+  $('#schooladdress').prop('disabled', false);
+});
+$('#editbutton').click(function() {
+  $('#schoolname').prop('disabled', false);
+  $('#newschoolname').prop('disabled', false);
+  $('#schooladdress').prop('disabled', false);
+});
+$('#deletebutton').click(function() {
+  $('#schoolname').prop('disabled', false);
+  $('#newschoolname').prop('disabled', true);
+  $('#schooladdress').prop('disabled', true);
+});
 
 
   });
