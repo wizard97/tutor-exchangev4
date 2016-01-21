@@ -83,44 +83,42 @@ $( document ).ready(function() {
     },
   });
 
-  $('#schoolname').typeahead(null, //instantiate submit typeahead
-    {
-      source: schools.ttAdapter(),
-      display: 'response',
-      limit: 5,
-      templates: {
-        notFound: [
-          '<p class="empty-message tt-suggestion">',
-          '<strong>No schools with that name.</strong>',
-          '</p>'
-        ].join('\n'),
-        suggestion: function(data) {
-          return '<p><strong>' + data.school_name + ',</strong> <small>' + data.city + ', '+ data.state_prefix + ' '+ data.zip_code + '</small></p>';
-        }
+  $('#schoolname').typeahead(null, {//instantiate submit typeahead
+    source: schools.ttAdapter(),
+    display: 'response',
+    limit: 5,
+    templates: {
+      notFound: [
+        '<p class="empty-message tt-suggestion">',
+        '<strong>No schools with that name.</strong>',
+        '</p>'
+      ].join('\n'),
+      suggestion: function(data) {
+        return '<p><strong>' + data.school_name + ',</strong> <small>' + data.city + ', '+ data.state_prefix + ' '+ data.zip_code + '</small></p>';
       }
     }
   });
 
 
 
-$('#submitbutton').click(function() {
-  $('#schoolname').prop('disabled', false);
-  $('#newschoolname').prop('disabled', true);
-  $('#schooladdress').prop('disabled', false);
-});
-$('#editbutton').click(function() {
-  $('#schoolname').prop('disabled', false);
-  $('#newschoolname').prop('disabled', false);
-  $('#schooladdress').prop('disabled', false);
-});
-$('#deletebutton').click(function() {
-  $('#schoolname').prop('disabled', false);
-  $('#newschoolname').prop('disabled', true);
-  $('#schooladdress').prop('disabled', true);
-});
-
-
+  $('#submitbutton').click(function() {
+    $('#schoolname').prop('disabled', false);
+    $('#newschoolname').prop('disabled', true);
+    $('#schooladdress').prop('disabled', false);
   });
+  $('#editbutton').click(function() {
+    $('#schoolname').prop('disabled', false);
+    $('#newschoolname').prop('disabled', false);
+    $('#schooladdress').prop('disabled', false);
+  });
+  $('#deletebutton').click(function() {
+    $('#schoolname').prop('disabled', false);
+    $('#newschoolname').prop('disabled', true);
+    $('#schooladdress').prop('disabled', true);
+  });
+
+
+});
 
 </script>
 @stop
