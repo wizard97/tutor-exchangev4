@@ -98,14 +98,20 @@ $( document ).ready(function() {
           return '<p><strong>' + data.school_name + ',</strong> <small>' + data.city + ', '+ data.state_prefix + ' '+ data.zip_code + '</small></p>';
         }
       }
-    });
-
-
-
-    $("#newschoolname").addClass("disabled"); //BROKEN?
-
-
-
+    }
   });
+
+
+
+  $("#newschoolname").addClass("disabled"); //BROKEN?
+
+
+
+<<<<<<< HEAD
+  });
+=======
+});
+
+>>>>>>> 3de359a6fb69076de3870e3d4b04d49479250555
 </script>
 @stop
