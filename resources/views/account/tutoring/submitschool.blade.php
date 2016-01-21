@@ -59,6 +59,7 @@
 <script>
 // instantiate the bloodhound suggestion engine
 $( document ).ready(function() {
+
   var schools = new Bloodhound({
     sufficient: 10,
     identify: function(obj) { return obj.id; },
@@ -81,6 +82,7 @@ $( document ).ready(function() {
       wildcard: '%QUERY'
     },
   });
+
   $('#schoolname').typeahead(null, //instantiate submit typeahead
     {
       source: schools.ttAdapter(),
@@ -105,6 +107,5 @@ $( document ).ready(function() {
 
 
   });
-});
 </script>
 @stop

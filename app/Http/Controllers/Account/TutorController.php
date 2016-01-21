@@ -458,7 +458,7 @@ class TutorController extends Controller
       ->get();
     return view('/account/tutoring/submitclass')->with('schools', $schools)->with('tutor', $tutor);
   }
-  public function getsubmitschool(ProposeSchoolRequest $request)
+  public function getsubmitschool(Request $request)
   {
     $tutor = \App\Tutor::findOrFail($this->id);
     //get tutor schools
