@@ -59,6 +59,7 @@
 <script>
 // instantiate the bloodhound suggestion engine
 $( document ).ready(function() {
+
   var schools = new Bloodhound({
     sufficient: 10,
     identify: function(obj) { return obj.id; },
@@ -81,19 +82,21 @@ $( document ).ready(function() {
       wildcard: '%QUERY'
     },
   });
-  $('#schoolname').typeahead(null, {//instantiate submit typeahead
 
-    source: schools.ttAdapter(),
-    display: 'response',
-    limit: 5,
-    templates: {
-      notFound: [
-        '<p class="empty-message tt-suggestion">',
-        '<strong>No schools with that name.</strong>',
-        '</p>'
-      ].join('\n'),
-      suggestion: function(data) {
-        return '<p><strong>' + data.school_name + ',</strong> <small>' + data.city + ', '+ data.state_prefix + ' '+ data.zip_code + '</small></p>';
+  $('#schoolname').typeahead(null, //instantiate submit typeahead
+    {
+      source: schools.ttAdapter(),
+      display: 'response',
+      limit: 5,
+      templates: {
+        notFound: [
+          '<p class="empty-message tt-suggestion">',
+          '<strong>No schools with that name.</strong>',
+          '</p>'
+        ].join('\n'),
+        suggestion: function(data) {
+          return '<p><strong>' + data.school_name + ',</strong> <small>' + data.city + ', '+ data.state_prefix + ' '+ data.zip_code + '</small></p>';
+        }
       }
     }
   });
@@ -117,7 +120,11 @@ $('#deletebutton').click(function() {
 });
 
 
+<<<<<<< HEAD
+  });
+=======
 });
 
+>>>>>>> 3de359a6fb69076de3870e3d4b04d49479250555
 </script>
 @stop

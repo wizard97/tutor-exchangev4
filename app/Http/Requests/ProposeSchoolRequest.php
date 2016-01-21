@@ -38,21 +38,9 @@ class ProposeSchoolRequest extends Request
      *
      *
      */
-    public function extendValidator(SchoolProposal $sp, $validator)
+    public function extendValidator($validator)
     {
-      $input = $this->all();
-      // Make sure the school proposal works
-      $validator->after(function($validator) use ($sp, $input)  {
-          try
-          {
-            $sp->create_new($input);
-          }
-          catch (\Exception $e)
-          {
-            $msg = $e->getMessage();
-            $validator->errors()
-            ->add('proposal', "Your proposal was rejected due to the following error: \"{$msg}\"");
-          }
+      $validator->after(function($validator){
 
       });
     }
