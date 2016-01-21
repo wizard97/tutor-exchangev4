@@ -102,8 +102,8 @@ $( document ).ready(function() {
 
 
   $('#submitbutton').click(function() {
-    $('#schoolname').prop('disabled', false);
-    $('#newschoolname').prop('disabled', true);
+    $('#schoolname').prop('disabled', true);
+    $('#newschoolname').prop('disabled', false);
     $('#schooladdress').prop('disabled', false);
   });
   $('#editbutton').click(function() {
