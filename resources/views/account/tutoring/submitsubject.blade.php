@@ -19,9 +19,9 @@
           </div>
           <div class="panel-body">
             <div class="btn-group" role="group">
-              <button type="button" class="btn btn-success" id="submitbutton">Submit</button>
-              <button type="button" class="btn btn-primary" id="editbutton">Edit</button>
-              <button type="button" class="btn btn-danger" id="deletebutton">Delete</button>
+              {!! Form::button('Submit', ['class' => 'btn btn-success', 'id' => 'submitbutton']); !!}
+              {!! Form::button('Edit', ['class' => 'btn btn-primary', 'id' => 'editbutton']); !!}
+              {!! Form::button('Delete', ['class' => 'btn btn-danger', 'id' => 'deletebutton']); !!}
             </div>
             <div class="row">
               <div class="col-xs-4">
