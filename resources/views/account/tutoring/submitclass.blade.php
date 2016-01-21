@@ -15,22 +15,27 @@
     <div class="col-md-6">
       <div class="panel panel-default">
         <div class="panel-heading"> <!-- <i class="fa fa-bars"></i> School Classes -->
-          Submit/Edit/Delete a Subject
+          Submit/Edit/Delete a Class
         </div>
         <div class="panel-body">
-          <div class="btn-group" role="group">
-            <div class="btn-group" data-toggle="buttons">
-              <label class="btn btn-success" id="submitbutton">
-                {!! Form::radio(null) !!} Submit
-              </label>
-              <label class="btn btn-primary" id="editbutton">
-                {!! Form::radio(null) !!} Edit
-              </label>
-              <label class="btn btn-danger" id="deletebutton">
-                {!! Form::radio(null) !!} Delete
-              </label>
+          <div class="row">
+            <div class="col-md-7">
+            <div class="btn-group" role="group">
+              <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-success" id="submitbutton">
+                  {!! Form::radio(null) !!} Submit
+                </label>
+                <label class="btn btn-primary" id="editbutton">
+                  {!! Form::radio(null) !!} Edit
+                </label>
+                <label class="btn btn-danger" id="deletebutton">
+                  {!! Form::radio(null) !!} Delete
+                </label>
+              </div>
+            </div>
             </div>
           </div>
+          <br>
           <div class="row">
             <div class="col-xs-4">
               {!! Form::label('name', 'Search School') !!}
@@ -125,24 +130,23 @@
           <div class="row">
             <div class="col-md-12">
               <div class="input-group">
-              {!! Form::text('level_name', 'mydefaultvalue', ['class' => 'form-control', 'placeholder' => 'Level Name', 'aria-describedby' => 'basic-addon2']); !!}
-              <div class="input-group-btn">
+                {!! Form::text('level_name', null, ['class' => 'form-control', 'placeholder' => 'Level Name', 'aria-describedby' => 'basic-addon2']); !!}
+                <div class="input-group-btn">
                   {!! Form::button('<i class="fa fa-plus"></i>', ['class' => 'btn btn-default']) !!}
+                </div>
               </div>
             </div>
           </div>
+          <div class="table-responsive">
+            <table id="add-classes" class="table table-striped table-bordered table-hover"></table>
+          </div>
+          <button class="btn btn-success pull-right" type="button">
+            Submit
+          </button>
         </div>
-        <div class="table-responsive">
-          <table id="add-classes" class="table table-striped table-bordered table-hover"></table>
-        </div>
-        <button class="btn btn-success pull-right" type="button">
-          Submit
-        </button>
       </div>
     </div>
   </div>
-</div>
-</div>
 </div>
 <script>
 $( document ).ready(function() {

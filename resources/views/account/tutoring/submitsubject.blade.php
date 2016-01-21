@@ -18,19 +18,24 @@
             Submit/Edit/Delete a Subject
           </div>
           <div class="panel-body">
-            <div class="btn-group" role="group">
-              <div class="btn-group" data-toggle="buttons">
-                <label class="btn btn-success" id="submitbutton">
-                  {!! Form::radio(null) !!} Submit
-                </label>
-                <label class="btn btn-primary" id="editbutton">
-                  {!! Form::radio(null) !!} Edit
-                </label>
-                <label class="btn btn-danger" id="deletebutton">
-                  {!! Form::radio(null) !!} Delete
-                </label>
+            <div class="row">
+              <div class="col-md-7">
+                <div class="btn-group" role="group">
+                  <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-success" id="submitbutton">
+                      {!! Form::radio(null) !!} Submit
+                    </label>
+                    <label class="btn btn-primary" id="editbutton">
+                      {!! Form::radio(null) !!} Edit
+                    </label>
+                    <label class="btn btn-danger" id="deletebutton">
+                      {!! Form::radio(null) !!} Delete
+                    </label>
+                  </div>
+                </div>
               </div>
             </div>
+            <br>
             <div class="row">
               <div class="col-xs-4">
                 {!! Form::label('name', 'Search School') !!}
@@ -124,4 +129,4 @@ $( document ).ready(function() {
   });
 });
 </script>
-  @stop
+@stop
