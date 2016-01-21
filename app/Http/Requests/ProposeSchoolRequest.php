@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
+use App\Repositories\Proposals\SchoolProposal;
 
 class ProposeSchoolRequest extends Request
 {
@@ -24,21 +25,35 @@ class ProposeSchoolRequest extends Request
     public function rules()
     {
         return [
-            //
+            'uid',
+            'school_id',
+            'to_delete',
+            'school_name',
+            'zip_id'
         ];
     }
 
     /**
-     * Apply further validation on the $validator
+     * Apply further actions on the $validator
      *
      *
      */
-    public function furtherValidation($validator)
+    public function extendValidator(SchoolProposal $sp, $validator)
     {
-      $validator->after(function($validator) {
-          if (false) {
-              $validator->errors()->add('field', 'Something is wrong with this field!');
+      $input = $this->all();
+      // Make sure the school proposal works
+      $validator->after(function($validator) use ($sp, $input)  {
+          try
+          {
+            $sp->create_new($input);
           }
+          catch (\Exception $e)
+          {
+            $msg = $e->getMessage();
+            $validator->errors()
+            ->add('proposal', "Your proposal was rejected due to the following error: \"{$msg}\"");
+          }
+
       });
     }
 }

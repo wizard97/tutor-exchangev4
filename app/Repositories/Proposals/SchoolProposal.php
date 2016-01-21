@@ -38,24 +38,24 @@ class SchoolProposal extends BaseProposal implements ProposalContract
     $this->validate();
   }
 
-  public function create_new($uid = null, $name=null, $zip_id = null, $school_id=null, $to_delete = false)
+  public function create_new($input)
   {
-    Parent::create_new($uid);
+    Parent::create_new($input['uid']);
 
     $this->pend_school_model = new $this->pend_school;
     $this->pend_school_model->to_delete = $to_delete;
 
-    if (!is_null($school_id)) $this->pend_school_model->school_id = $school_id;
+    if (!is_null($input['school_id'])) $this->pend_school_model->school_id = $input['school_id'];
 
-    if ($to_delete)
+    if ($input['to_delete'])
     {
-      $scl = $this->schl->findOrFail($school_id);
+      $scl = $this->schl->findOrFail($input['school_id']);
       $this->pend_school_model->school_name = $scl->school_name;
       $this->pend_school_model->zip_id = $scl->zip_id;
     }
     else {
-      $this->pend_school_model->school_name = $name;
-      $this->pend_school_model->zip_id = $this->zip->findOrFail($zip_id)->id;
+      $this->pend_school_model->school_name = $input['school_name'];
+      $this->pend_school_model->zip_id = $this->zip->findOrFail($input['zip_id'])->id;
     }
     $this->update();
     $this->validate();
