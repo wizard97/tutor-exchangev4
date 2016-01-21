@@ -59,7 +59,6 @@
 <script>
 // instantiate the bloodhound suggestion engine
 $( document ).ready(function() {
-
   var schools = new Bloodhound({
     sufficient: 10,
     identify: function(obj) { return obj.id; },
@@ -82,7 +81,6 @@ $( document ).ready(function() {
       wildcard: '%QUERY'
     },
   });
-
   $('#schoolname').typeahead(null, {//instantiate submit typeahead
     source: schools.ttAdapter(),
     display: 'response',
@@ -98,9 +96,6 @@ $( document ).ready(function() {
       }
     }
   });
-
-
-
   $('#submitbutton').click(function() {
     $('#schoolname').prop('disabled', true);
     $('#newschoolname').prop('disabled', false);
@@ -116,9 +111,6 @@ $( document ).ready(function() {
     $('#newschoolname').prop('disabled', true);
     $('#schooladdress').prop('disabled', true);
   });
-
-
 });
-
 </script>
 @stop
