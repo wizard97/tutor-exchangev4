@@ -61,80 +61,80 @@
         </div>
       </div>
     </div>
-      <div class="col-md-6">
-        <div class="panel panel-default">
-          <div class="panel-heading"> <!-- <i class="fa fa-bars"></i> School Classes -->
-              Edit Levels
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading"> <!-- <i class="fa fa-bars"></i> School Classes -->
+          Edit Levels
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-4">
+              {!! Form::label('name', 'School Name') !!}
+            </div>
+            <div class="col-xs-8">
+              {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'schoolname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. Lexington High School']) !!}
+            </div>
           </div>
-          <div class="panel-body">
-            <div class="row">
-              <div class="col-xs-4">
-                {!! Form::label('name', 'School Name') !!}
-              </div>
-              <div class="col-xs-8">
-                {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'schoolname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. Lexington High School']) !!}
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-xs-4">
-                <div class="dropdown">
-                  <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    Subject
-                    <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                    <li><a href="#">English</a></li>
-                    <li><a href="#">Social Studies</a></li>
-                    <li><a href="#">Science</a></li>
-                    <li><a href="#">Math</a></li>
-                    <li><a href="#">Foreign Language</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li><a href="#">Elementary/Middle School English</a></li>
-                    <li><a href="#">Elementary/Middle School Social Studies</a></li>
-                    <li><a href="#">Elementary/Middle School Science</a></li>
-                    <li><a href="#">Elementary/Middle School Math</a></li>
-                    <li><a href="#">Elementary/Middle School Foreign Language</a></li>
-                  </ul>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="dropdown">
-                  <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    Class
-                    <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
-                    <li><a href="#">Dystopias</a></li>
-                    <li><a href="#">Economics</a></li>
-                    <li><a href="#">Biology</a></li>
-                    <li><a href="#">Chemistry</a></li>
-                    <li><a href="#">Calculus</a></li>
-                  </ul>
-                </div>
+          <div class="row">
+            <div class="col-xs-4">
+              <div class="dropdown">
+                <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                  Subject
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                  <li><a href="#">English</a></li>
+                  <li><a href="#">Social Studies</a></li>
+                  <li><a href="#">Science</a></li>
+                  <li><a href="#">Math</a></li>
+                  <li><a href="#">Foreign Language</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">Elementary/Middle School English</a></li>
+                  <li><a href="#">Elementary/Middle School Social Studies</a></li>
+                  <li><a href="#">Elementary/Middle School Science</a></li>
+                  <li><a href="#">Elementary/Middle School Math</a></li>
+                  <li><a href="#">Elementary/Middle School Foreign Language</a></li>
+                </ul>
               </div>
             </div>
-            <br>
-            <div class="row">
-              <div class="col-md-12">
-                <div class="input-group">
-                  <input type="text" class="form-control" placeholder="Level Name" aria-describedby="basic-addon2">
-                  <span class="input-group-btn">
-                    <button class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
-                  </span>
-                </div>
+            <div class="col-md-4">
+              <div class="dropdown">
+                <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                  Class
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
+                  <li><a href="#">Dystopias</a></li>
+                  <li><a href="#">Economics</a></li>
+                  <li><a href="#">Biology</a></li>
+                  <li><a href="#">Chemistry</a></li>
+                  <li><a href="#">Calculus</a></li>
+                </ul>
               </div>
             </div>
-            <div class="table-responsive">
-              <table id="add-classes" class="table table-striped table-bordered table-hover"></table>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="input-group">
+              {!! Form::text('level_name', 'mydefaultvalue', ['class' => 'form-control', 'placeholder' => 'Level Name', 'aria-describedby' => 'basic-addon2']); !!}
+              <div class="input-group-btn">
+                  {!! Form::button('<i class="fa fa-plus"></i>', ['class' => 'btn btn-default']) !!}
+              </div>
             </div>
-            <button class="btn btn-success pull-right" type="button">
-              Submit
-            </button>
           </div>
         </div>
+        <div class="table-responsive">
+          <table id="add-classes" class="table table-striped table-bordered table-hover"></table>
+        </div>
+        <button class="btn btn-success pull-right" type="button">
+          Submit
+        </button>
       </div>
     </div>
   </div>
+</div>
+</div>
 </div>
 <script>
 $( document ).ready(function() {
