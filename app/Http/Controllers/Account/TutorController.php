@@ -475,7 +475,7 @@ class TutorController extends Controller
     return view('/account/tutoring/submitschool');
   }
 
-  public function postsubmitschool(Request $request, SchoolProposalRepository $spr)
+  public function postsubmitschool(ProposeSchoolRequest $request, SchoolProposalRepository $spr)
   {
     $spr->create($request->all(), $this->id);
     return redirect(route('tutoring.submitschool'));
