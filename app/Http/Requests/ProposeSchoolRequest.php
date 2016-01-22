@@ -25,13 +25,27 @@ class ProposeSchoolRequest extends Request
     public function rules()
     {
         return [
-            'uid',
-            'school_id',
-            'to_delete',
-            'school_name',
-            'zip_id'
+            'proposal_type' => 'required|in:create,edit,delete|string',
+            'address' => 'required_unless:proposal_type,delete|string',
+            'school_name' => 'required_unless:proposal_type,delete|string',
+            'school_search' => 'required_unless:proposal_type,create|string',
         ];
     }
+
+    /**
+     * Add custom messages
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'address.required_unless' => 'The address field is required unless deleting.',
+            'school_name.required_unless' => 'The school name field is required unless deleting.',
+            'school_search.required_unless' => 'We need to know the school you are trying to edit/delete.',
+        ];
+    }
+
 
     /**
      * Apply further actions on the $validator
