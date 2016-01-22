@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
 
 use App\Models\User\User;
+use App\Models\Zip\Zip;
 
 class AuthController extends Controller {
 
@@ -63,7 +64,7 @@ class AuthController extends Controller {
         }
       }
 
-      $zip_model = \App\Zip::where('zip_code', '=', $zip)->firstOrFail();
+      $zip_model = Zip::where('zip_code', '=', $zip)->firstOrFail();
 
 
       $new_user = $zip_model->users()->create([

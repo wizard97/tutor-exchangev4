@@ -10,7 +10,7 @@ class PendingClass extends PendingBase
 
     public function school_class()
     {
-        return $this->belongsTo('App\SchoolClass', 'class_id', 'id');
+        return $this->belongsTo('App\Models\SchoolClass\SchoolClass', 'class_id', 'id');
     }
 
     public function pending_levels()
@@ -20,7 +20,7 @@ class PendingClass extends PendingBase
 
     public function school()
     {
-        return $this->belongsTo('App\School', 'school_id', 'id');
+        return $this->belongsTo('App\Models\School\School', 'school_id', 'id');
     }
 
     public function pending_school()
@@ -30,7 +30,7 @@ class PendingClass extends PendingBase
 
     public function subject()
     {
-        return $this->belongsTo('App\SchoolSubject', 'subject_id', 'id');
+        return $this->belongsTo('App\Models\SchoolSubject\SchoolSubject', 'subject_id', 'id');
     }
 
     public function pending_subject()

@@ -31,6 +31,11 @@ echo "Starting migration of pictures\n";
 $old_dir = './pics/';
 $directory = '../storage/app/images/';
 
+$default = '../public/img/';
+
+copy($default.'default.jpg', $directory.'default.jpg');
+copy($default.'default_thumb.jpg', $directory.'default_thumb.jpg');
+
 //under development
 $fetch = $old->prepare("SELECT * from users WHERE user_has_avatar='1'");
 $fetch->execute();

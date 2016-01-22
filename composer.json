@@ -17,7 +17,8 @@
         "patricktalmadge/bootstrapper": "~5",
         "intervention/image": "dev-master",
         "laracasts/utilities": "~2.0",
-        "barryvdh/laravel-debugbar": "^2.1"
+        "barryvdh/laravel-debugbar": "^2.1",
+        "toin0u/geocoder-laravel": "@stable"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

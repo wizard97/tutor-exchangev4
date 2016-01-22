@@ -10,12 +10,12 @@ class PendingSchoolSubject extends PendingBase
 
     public function school_subject()
     {
-        return $this->belongsTo('App\SchoolSubject', 'school_subject_id', 'id');
+        return $this->belongsTo('App\Models\SchoolSubject\SchoolSubject', 'school_subject_id', 'id');
     }
 
     public function school()
     {
-        return $this->belongsTo('App\School', 'school_id', 'id');
+        return $this->belongsTo('App\Models\School\School', 'school_id', 'id');
     }
 
     public function pending_school()

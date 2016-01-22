@@ -256,6 +256,9 @@ Route::group(['prefix' => 'account', 'middleware' => 'auth'], function() {
     Route::get('submitschool', [
       'as' => 'tutoring.submitschool', 'uses' => 'Account\TutorController@getsubmitschool'
     ]);
+    Route::post('submitschoolproposal', [
+      'as' => 'tutoring.submitschoolproposal', 'uses' => 'Account\TutorController@postsubmitschool'
+    ]);
     Route::get('submitsubject', [
         'as' => 'tutoring.submitsubject', 'uses' => 'Account\TutorController@getsubmitsubject'
     ]);

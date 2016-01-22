@@ -18,18 +18,19 @@
             Submit/Edit/Delete a School
           </div>
           <div class="panel-body">
+            {!! Form::open(array('url' => route('tutoring.submitschoolproposal'))) !!}
             <div class="row">
               <div class="col-md-7">
                 <div class="btn-group" role="group">
                   <div class="btn-group" data-toggle="buttons">
                     <label class="btn btn-success" id="submitbutton">
-                      {!! Form::radio(null) !!} Submit
+                      {!! Form::radio('proposal_type', 'create') !!} Create
                     </label>
                     <label class="btn btn-primary" id="editbutton">
-                      {!! Form::radio(null) !!} Edit
+                      {!! Form::radio('proposal_type', 'edit') !!} Edit
                     </label>
                     <label class="btn btn-danger" id="deletebutton">
-                      {!! Form::radio(null) !!} Delete
+                      {!! Form::radio('proposal_type', 'delete') !!} Delete
                     </label>
                   </div>
                 </div>
@@ -38,18 +39,18 @@
             <br>
             <div class="row">
               <div class="col-xs-4">
-                {!! Form::label('name', 'Search School') !!}
+                {!! Form::label('school_search', 'Search School') !!}
               </div>
               <div class="col-xs-8">
-                {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'schoolname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. Lexington High School']) !!}
+                {!! Form::text('school_search', null, ['class' => 'form-control typeahead', 'id' => 'schoolname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. Lexington High School']) !!}
               </div>
             </div>
             <div class="row">
               <div class="col-xs-4">
-                {!! Form::label('name', 'New Name') !!}
+                {!! Form::label('school_name', 'School Name') !!}
               </div>
               <div class="col-xs-8">
-                {!! Form::text('name', null, ['class' => 'form-control typeahead', 'id' => 'newschoolname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. Lexington High School']) !!}
+                {!! Form::text('school_name', null, ['class' => 'form-control typeahead', 'id' => 'newschoolname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. Lexington High School']) !!}
               </div>
             </div>
             <div class="row">

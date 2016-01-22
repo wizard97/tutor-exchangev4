@@ -10,12 +10,12 @@ class PendingMiddleClass extends PendingBase
 
     public function middle_class()
     {
-        return $this->belongsTo('App\MiddleClass', 'middle_class_id', 'id');
+        return $this->belongsTo('App\Models\MiddleClass\MiddleClass', 'middle_class_id', 'id');
     }
 
     public function subject()
     {
-      return $this->belongsTo('App\MiddleSubject', 'middle_subject_id', 'id');
+      return $this->belongsTo('App\Models\MiddleSubject\MiddleSubject', 'middle_subject_id', 'id');
     }
 
     public function pending_subject()

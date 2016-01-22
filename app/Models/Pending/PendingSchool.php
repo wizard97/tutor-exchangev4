@@ -10,12 +10,12 @@ class PendingSchool extends PendingBase
 
     public function school()
     {
-        return $this->belongsTo('App\School', 'school_id', 'id');
+        return $this->belongsTo('App\Models\School\School', 'school_id', 'id');
     }
 
     public function zip()
     {
-        return $this->belongsTo('App\Zip', 'zip_id', 'id');
+        return $this->belongsTo('App\Models\Zip\Zip', 'zip_id', 'id');
     }
 
     public function pending_classes()
@@ -27,5 +27,6 @@ class PendingSchool extends PendingBase
     {
       return $this->hasMany('App\Models\Pending\PendingSchoolSubject', 'pending_school_id', 'id');
     }
+
 
 }

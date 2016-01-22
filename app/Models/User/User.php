@@ -58,4 +58,5 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
       return $this->hasMany('App\Models\TutorContact\TutorContact', 'user_id', 'id');
     }
+
 }

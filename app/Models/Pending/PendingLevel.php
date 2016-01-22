@@ -10,12 +10,12 @@ class PendingLevel extends PendingBase
 
     public function level()
     {
-        return $this->belongsTo('App\Level', 'level_id', 'id');
+        return $this->belongsTo('App\Models\Level\Level', 'level_id', 'id');
     }
 
     public function school_class()
     {
-      return $this->belongsTo('App\SchoolClass', 'class_id', 'id');
+      return $this->belongsTo('App\Models\SchoolClass\SchoolClass', 'class_id', 'id');
     }
 
     public function pending_school_class()

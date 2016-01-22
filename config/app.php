@@ -160,6 +160,7 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Laracasts\Utilities\JavaScript\JavascriptServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
+        Toin0u\Geocoder\GeocoderServiceProvider::class,
 
     ],
 
@@ -213,6 +214,7 @@ return [
         'Form'      => Collective\Html\FormFacade::class,
         'Html'      => Collective\Html\HtmlFacade::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        'Geocoder' => Toin0u\Geocoder\Facade\Geocoder::class,
 
     ],
 

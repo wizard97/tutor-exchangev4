@@ -28,4 +28,9 @@ class School extends Model
   {
     return $this->hasMany('App\Models\SchoolSubject\SchoolSubject', 'school_id', 'id');
   }
+
+  public function school_proposals()
+  {
+    return $this->hasMany('App\Models\Pending\PendingSchool', 'school_id', 'id');
+  }
 }

@@ -10,7 +10,7 @@ class PendingMusic extends PendingBase
 
     public function music()
     {
-        return $this->belongsTo('App\Music', 'music_id', 'id');
+        return $this->belongsTo('App\Models\Music\Music', 'music_id', 'id');
     }
 
 }
