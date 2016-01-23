@@ -26,20 +26,15 @@ class MessagesController extends Controller
      *
      * @return mixed
      */
-    public function index(ThreadRepository $threadRepository, MessageRepository $sessageRepository)
+    public function index(ThreadRepository $threadRepository, MessageRepository $messageRepository)
     {
         $currentUserId = Auth::user()->id;
 
-        // All threads, ignore deleted/archived participants
-        $threads = $threadRepository->getAllLatest()->get();
-        $messages = $sessageRepository->getAllUsersLatest($currentUserId);
+        $messages = $messageRepository->getAllUsersLatest($currentUserId, 15);
+        $unread =$messageRepository->countUsersUnread($currentUserId);
 
-        // All threads that user is participating in
-        // $threads = Thread::forUser($currentUserId)->latest('updated_at')->get();
 
-        // All threads that user is participating in, with new messages
-        // $threads = Thread::forUserWithNewMessages($currentUserId)->latest('updated_at')->get();
-        return view('account.messenger.index', compact('threads', 'currentUserId', 'messages'));
+        return view('account.messenger.index', compact('messages', 'currentUserId', 'unread'));
     }
 
     /**

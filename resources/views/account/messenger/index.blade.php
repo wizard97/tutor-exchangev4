@@ -3,7 +3,6 @@
 @section('content')
 
 <style>
-body{ margin-top:50px;}
 .nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }
 .tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}
 .tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}
@@ -21,10 +20,13 @@ hr { margin-top: 5px;margin-bottom: 10px; }
 </style>
 
 <div class="container">
+  <div class="page-header">
+    <h1>Messages</h1>
+  </div>
     <div class="row">
         <div class="col-sm-3 col-md-2">
             <div class="btn-group">
-              <button type="button" class="btn btn-primary"><i class="fa fa-home fa-fw"></i> Dashboard</button>
+              <a href="{{ route('myaccount.dashboard') }}"type="button" class="btn btn-primary"><i class="fa fa-home fa-fw"></i> Dashboard</a>
               <!--
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                     Mail <span class="caret"></span>
@@ -61,8 +63,8 @@ hr { margin-top: 5px;margin-bottom: 10px; }
                 </ul>
             </div>
           -->
-            <button type="button" class="btn btn-default" data-toggle="tooltip" title="Refresh">
-                   <span class="glyphicon glyphicon-refresh"></span>   </button>
+            <a href="{{route('messages')}}" type="button" class="btn btn-default" data-toggle="tooltip" title="Refresh">
+                   <span class="glyphicon glyphicon-refresh"></span>   </a>
             <!-- Single button -->
             <!--
             <div class="btn-group">
@@ -77,25 +79,24 @@ hr { margin-top: 5px;margin-bottom: 10px; }
             </div>
           -->
             <div class="pull-right">
-                <span class="text-muted"><b>1</b>–<b>50</b> of <b>277</b></span>
-                <div class="btn-group btn-group-sm">
-                    <button type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-chevron-left"></span>
-                    </button>
-                    <button type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-chevron-right"></span>
-                    </button>
-                </div>
+                <span class="text-muted">
+                  @if($messages->count() > 0)
+                    <b>{{ $messages->firstItem() }}</b>–<b>{{ $messages->lastItem() }}</b> of <b>{{ $messages->total() }}</b>
+                  @else
+                    <b>0 of 0</b>
+                  @endif
+                </span>
+
             </div>
         </div>
     </div>
     <hr />
     <div class="row">
         <div class="col-sm-3 col-md-2">
-            <a href="#" class="btn btn-danger btn-sm btn-block" role="button">COMPOSE</a>
+            <a href="{{ route('messages.create') }}" class="btn btn-danger btn-sm btn-block" role="button">COMPOSE</a>
             <hr />
             <ul class="nav nav-pills nav-stacked">
-                <li class="active"><a href="#"><span class="badge pull-right">42</span> Inbox </a>
+                <li class="active"><a href="{{route('messages')}}"><span class="badge pull-right">{{ $unread }}</span> Inbox </a>
                 </li>
                 <li><a href="">Sent Mail</a></li>
             </ul>
@@ -147,12 +148,18 @@ hr { margin-top: 5px;margin-bottom: 10px; }
                             </a>
                           @endforeach
                       @else
-                          <p>Sorry, no threads.</p>
+                      <br>
+                      <div class="alert alert-info" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                          Sorry, you have no messages.
+                      </div>
                       @endif
                     </div>
                 </div>
+                @if($messages->count() > 0)
+                  {!! $messages->links() !!}
+                @endif
             </div>
-
         </div>
     </div>
 </div>

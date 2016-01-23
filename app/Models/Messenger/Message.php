@@ -105,6 +105,18 @@ class Message extends Eloquent
           ->select($this->getTable().'.*');
     }
 
+    public function scopeForUserUnread($query, $userId)
+    {
+      return $query->forUser($userId)->where('messages.updated_at', '>', \DB::raw("`participants`.`last_read`"));
+      /*
+      return $query->join('participants', function ($join) {
+              $join->on('messages.thread_id', '=', 'participants.thread_id')
+                  ->on('messages.updated_at', '>', 'participants.last_read');
+          })->where('messages.user_id', '!=', $userId)
+          ->where('participants.user_id', $userId)
+          ->latest($this->getTable().'.updated_at');
+          */
+    }
     /**
      * See if the current thread is unread by the user.
      *

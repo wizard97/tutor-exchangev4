@@ -18,9 +18,19 @@ class MessageRepository extends BaseRepository implements MessageRepositoryContr
    *
    * @return mixed
    */
-  public function getAllUsersLatest($user_id)
+  public function getAllUsersLatest($user_id, $num_page=15)
   {
-      return $this->model->with('thread')->forUser($user_id)->get();
+      return $this->model->with('thread')->forUser($user_id)->paginate($num_page);
+  }
+
+  public function usersUnread($user_id)
+  {
+    return $this->model->forUserUnread($user_id)->get();
+  }
+
+  public function countUsersUnread($user_id)
+  {
+    return $this->model->forUserUnread($user_id)->count();
   }
 
 }
