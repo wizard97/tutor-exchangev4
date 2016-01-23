@@ -87,15 +87,6 @@ class Thread extends Eloquent
         return $this->messages()->oldest()->first()->user;
     }
 
-    /**
-     * Returns all of the latest threads by updated_at date.
-     *
-     * @return mixed
-     */
-    public static function getAllLatest()
-    {
-        return self::latest('updated_at');
-    }
 
     /**
      * Returns an array of user ids that are associated with the thread.

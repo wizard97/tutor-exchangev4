@@ -13,18 +13,14 @@ class ThreadRepository extends BaseRepository implements ThreadRepositoryContrac
     $this->model = $model;
   }
 
-  public function create()
+  /**
+   * Returns all of the latest threads by updated_at date.
+   *
+   * @return mixed
+   */
+  public function getAllLatest()
   {
-
+      return $this->model->latest('updated_at');
   }
 
-  public function findBySearch()
-  {
-
-  }
-
-  public function matchBySearch()
-  {
-
-  }
 }

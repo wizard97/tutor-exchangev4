@@ -13,18 +13,14 @@ class MessageRepository extends BaseRepository implements MessageRepositoryContr
     $this->model = $model;
   }
 
-  public function create()
+  /**
+   * Returns all of the latest threads by updated_at date.
+   *
+   * @return mixed
+   */
+  public function getAllUsersLatest($user_id)
   {
-
+      return $this->model->with('thread')->forUser($user_id)->get();
   }
 
-  public function findBySearch()
-  {
-
-  }
-
-  public function matchBySearch()
-  {
-
-  }
 }

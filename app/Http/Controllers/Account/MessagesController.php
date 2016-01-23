@@ -9,6 +9,9 @@ use App\Models\Messenger\Message;
 use App\Models\Messenger\Participant;
 use App\Models\Messenger\Thread;
 
+use App\Repositories\Messenger\Thread\ThreadRepository;
+use App\Repositories\Messenger\Message\MessageRepository;
+
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
@@ -23,20 +26,20 @@ class MessagesController extends Controller
      *
      * @return mixed
      */
-    public function index()
+    public function index(ThreadRepository $threadRepository, MessageRepository $sessageRepository)
     {
         $currentUserId = Auth::user()->id;
 
         // All threads, ignore deleted/archived participants
-        $threads = Thread::getAllLatest()->get();
+        $threads = $threadRepository->getAllLatest()->get();
+        $messages = $sessageRepository->getAllUsersLatest($currentUserId);
 
         // All threads that user is participating in
         // $threads = Thread::forUser($currentUserId)->latest('updated_at')->get();
 
         // All threads that user is participating in, with new messages
         // $threads = Thread::forUserWithNewMessages($currentUserId)->latest('updated_at')->get();
-
-        return view('account.messenger.index', compact('threads', 'currentUserId'));
+        return view('account.messenger.index', compact('threads', 'currentUserId', 'messages'));
     }
 
     /**

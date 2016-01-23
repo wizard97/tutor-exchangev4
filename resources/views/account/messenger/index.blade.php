@@ -97,7 +97,7 @@ hr { margin-top: 5px;margin-bottom: 10px; }
             <ul class="nav nav-pills nav-stacked">
                 <li class="active"><a href="#"><span class="badge pull-right">42</span> Inbox </a>
                 </li>
-                <li><a href="http://www.jquery2dotnet.com">Sent Mail</a></li>
+                <li><a href="">Sent Mail</a></li>
             </ul>
         </div>
         <div class="col-sm-9 col-md-10">
@@ -120,15 +120,27 @@ hr { margin-top: 5px;margin-bottom: 10px; }
             <div class="tab-content">
                 <div class="tab-pane fade in active" id="home">
                     <div class="list-group">
-                      @if($threads->count() > 0)
-                          @foreach($threads as $thread)
-                          <?php $class = $thread->isUnread($currentUserId) ? 'read' : ''; ?>
+                      @if($messages->count() > 0)
+                          @foreach($messages as $m)
+                          <?php $class = $m->isUnread($currentUserId) ? '' : 'read'; ?>
+                          <?php $r = $m->isReplyForUser($currentUserId); ?>
 
-                          <a href="" class="list-group-item {{ $class }}">
-                              <span class="name" style="min-width: 120px; display: inline-block; padding-right: 25px">{!! $thread->participantsString(Auth::id()) !!}</span>
-                              <span class="">{{ $thread->subject }}</span>
-                              <span class="text-muted" style="font-size: 11px;">- {!! substr($thread->latestMessage->body, 0, 40) !!}</span>
-                              <span class="badge">12:10 AM</span>
+                          <a href="{{ route('messages.show', ['id' => $m->thread->id]) }}" class="list-group-item {{ $class }}">
+                              <span class="name" style="min-width: 120px; display: inline-block">{!! $m->user->getName()!!}</span>
+                              <span class="">
+                                @if($m->isReplyForUser($currentUserId))
+                                Re:
+                                @endif
+                                {{ $m->thread->subject }}
+                              </span>
+                              <span class="text-muted" style="font-size: 12px;">
+                                - {!! substr(strip_tags($m->body), 0, 30) !!}...
+                              </span>
+                              @if ($m->updated_at->isToday())
+                              <span class="badge">{{ $m->updated_at->format('h:i A') }}</span>
+                              @else
+                              <span class="badge">{{ $m->updated_at->toFormattedDateString()  }}</span>
+                              @endif
                                 <span class="pull-right">
                                   <span class="glyphicon glyphicon-paperclip"></span>
                                 </span>
@@ -144,21 +156,4 @@ hr { margin-top: 5px;margin-bottom: 10px; }
         </div>
     </div>
 </div>
-
-
-
-
-    @if($threads->count() > 0)
-        @foreach($threads as $thread)
-        <?php $class = $thread->isUnread($currentUserId) ? 'alert-info' : ''; ?>
-        <div class="media alert {!!$class!!}">
-            <h4 class="media-heading">{!! link_to('account/messages/' . $thread->id, $thread->subject) !!}</h4>
-            <p>{!! $thread->latestMessage->body !!}</p>
-            <p><small><strong>Creator:</strong> {!! $thread->creator()->fname !!}</small></p>
-            <p><small><strong>Participants:</strong> {!! $thread->participantsString(Auth::id()) !!}</small></p>
-        </div>
-        @endforeach
-    @else
-        <p>Sorry, no threads.</p>
-    @endif
 @stop
