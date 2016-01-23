@@ -154,6 +154,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\MessengerServiceProvider::class,
 
         //added by application
         Intervention\Image\ImageServiceProvider::class,
@@ -161,7 +162,6 @@ return [
         Laracasts\Utilities\JavaScript\JavascriptServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
         Toin0u\Geocoder\GeocoderServiceProvider::class,
-        Cmgmyr\Messenger\MessengerServiceProvider::class,
 
     ],
 

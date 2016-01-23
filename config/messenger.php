@@ -3,9 +3,9 @@
 return [
     'user_model' => 'App\Models\User\User',
 
-    'message_model' => 'Cmgmyr\Messenger\Models\Message',
+    'message_model' => 'App\Models\Messenger\Message',
 
-    'participant_model' => 'Cmgmyr\Messenger\Models\Participant',
+    'participant_model' => 'App\Models\Messenger\Participant',
 
-    'thread_model' => 'Cmgmyr\Messenger\Models\Thread',
+    'thread_model' => 'App\Models\Messenger\Thread',
 ];

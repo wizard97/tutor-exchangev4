@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Account;
 
 use App\Models\User\User;
 use Carbon\Carbon;
-use Cmgmyr\Messenger\Models\Message;
-use Cmgmyr\Messenger\Models\Participant;
-use Cmgmyr\Messenger\Models\Thread;
+
+use App\Models\Messenger\Message;
+use App\Models\Messenger\Participant;
+use App\Models\Messenger\Thread;
+
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;

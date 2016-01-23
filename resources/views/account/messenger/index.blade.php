@@ -124,7 +124,7 @@ hr { margin-top: 5px;margin-bottom: 10px; }
                           @foreach($threads as $thread)
                           <?php $class = $thread->isUnread($currentUserId) ? 'read' : ''; ?>
 
-                          <a href="#" class="list-group-item {{ $class }}">
+                          <a href="" class="list-group-item {{ $class }}">
                               <span class="name" style="min-width: 120px; display: inline-block; padding-right: 25px">{!! $thread->participantsString(Auth::id()) !!}</span>
                               <span class="">{{ $thread->subject }}</span>
                               <span class="text-muted" style="font-size: 11px;">- {!! substr($thread->latestMessage->body, 0, 40) !!}</span>
