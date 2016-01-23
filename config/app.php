@@ -161,6 +161,7 @@ return [
         Laracasts\Utilities\JavaScript\JavascriptServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
         Toin0u\Geocoder\GeocoderServiceProvider::class,
+        Cmgmyr\Messenger\MessengerServiceProvider::class,
 
     ],
 
