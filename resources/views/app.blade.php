@@ -91,7 +91,7 @@
       .table tbody>tr>td.vert-align{
           vertical-align: middle;
       }
-      body { padding-bottom: 100px;}
+      body { padding-bottom: 150px;}
 
       .btn { white-space: normal; }
 

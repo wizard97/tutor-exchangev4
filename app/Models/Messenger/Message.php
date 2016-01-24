@@ -136,6 +136,12 @@ class Message extends Eloquent
         return false;
     }
 
+    public function hasReply($userId)
+    {
+      return $this->where('messages.thread_id', $this->thread_id)->where('messages.user_id', $userId)
+          ->where('messages.created_at', '>=', $this->created_at)->count() > 0;
+    }
+
     /**
      * Returns the "participant" model for this message with $user_id
      *

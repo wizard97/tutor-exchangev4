@@ -23,6 +23,7 @@ hr { margin-top: 5px;margin-bottom: 10px; }
   <div class="page-header">
     <h1>Messages</h1>
   </div>
+  @include('templates/feedback')
     <div class="row">
         <div class="col-sm-3 col-md-2">
             <div class="btn-group">
@@ -127,6 +128,11 @@ hr { margin-top: 5px;margin-bottom: 10px; }
                           <?php $r = $m->isReplyForUser($currentUserId); ?>
 
                           <a href="{{ route('messages.show', ['id' => $m->thread->id]) }}" class="list-group-item {{ $class }}">
+                              @if($m->hasReply($currentUserId))
+                              <i class="fa fa-reply fa-fw" data-toggle="tooltip" title="Replied"></i>
+                              @else
+                              <i class="fa fa-reply fa-fw" style="visibility: hidden;"></i>
+                              @endif
                               <span class="name" style="min-width: 120px; display: inline-block">{!! $m->user->getName()!!}</span>
                               <span class="">
                                 @if($m->isReplyForUser($currentUserId))
@@ -143,7 +149,7 @@ hr { margin-top: 5px;margin-bottom: 10px; }
                               <span class="badge">{{ $m->updated_at->toFormattedDateString()  }}</span>
                               @endif
                                 <span class="pull-right">
-                                  <span class="glyphicon glyphicon-paperclip"></span>
+                                  <!-- <span class="glyphicon glyphicon-paperclip"></span> -->
                                 </span>
                             </a>
                           @endforeach
@@ -163,4 +169,10 @@ hr { margin-top: 5px;margin-bottom: 10px; }
         </div>
     </div>
 </div>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
 @stop

@@ -1,41 +1,87 @@
 @extends('app')
 
 @section('content')
-    <div class="col-md-6">
-        <h1>{!! $thread->subject !!}</h1>
+<style>
+#editor {overflow:scroll; max-height:300px}
+#messages {overflow-y:scroll; overflow-x: hidden; max-height:500px}
+</style>
 
-        @foreach($thread->messages as $message)
-            <div class="media">
-                <a class="pull-left" href="#">
-                    <img src="//www.gravatar.com/avatar/{!! md5($message->user->email) !!}?s=64" alt="{!! $message->user->name !!}" class="img-circle">
-                </a>
-                <div class="media-body">
-                    <h5 class="media-heading">{!! $message->user->name !!}</h5>
-                    <p>{!! $message->body !!}</p>
-                    <div class="text-muted"><small>Posted {!! $message->created_at->diffForHumans() !!}</small></div>
-                </div>
+<div class="container">
+  <br>
+    <button class="btn btn-default">Message Inbox</button>
+
+  <h2 class="page-header">{{ $thread->subject }}</h2>
+  <h4 class="text-info">Participants: {{ $thread->participantsString() }} </h4>
+  @include('templates/feedback')
+  <hr>
+  <div id="messages">
+  @foreach($thread->messages as $m)
+  <div class="row">
+
+    @if($m->user->id == $userId)
+      <div class="col-xs-offset-1 col-xs-11">
+    @else
+      <div class="col-xs-11">
+    @endif
+
+      <?php $c = $m->user->id == $userId ? 'panel-info' : 'panel-default'?>
+      <div class="panel hideable {{ $c }}">
+
+        <div class="panel-body" style="">
+          <div class="row col-xs-12">
+            <span class="text-info">{{ $m->user->getName() }}</span> <small class="pull-right">Sent {!! $m->created_at->diffForHumans() !!}</small>
+          </div>
+          <div class="row">
+            <div class="col-xs-3 col-sm-1">
+              <img src="/img/default_thumb.jpg" class="img-rounded" width="50" height="50">
             </div>
-        @endforeach
+            <div class="col-xs-7 col-sm-11">
+              {!! nl2br(strip_tags($m->body)) !!}
+            </div>
 
-        <h2>Add a new message</h2>
-        {!! Form::open(['route' => ['messages.update', $thread->id], 'method' => 'PUT']) !!}
-        <!-- Message Form Input -->
-        <div class="form-group">
-            {!! Form::textarea('message', null, ['class' => 'form-control']) !!}
+          </div>
         </div>
+      </div>
+    </div>
+  </div>
+@endforeach
 
-        @if($users->count() > 0)
-        <div class="checkbox">
-            @foreach($users as $user)
-                <label title="{!! $user->name !!}"><input type="checkbox" name="recipients[]" value="{!! $user->id !!}">{!! $user->name !!}</label>
-            @endforeach
+</div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="well">
+        <div class="">
+          {!! Form::open(['route' => ['messages.update', $thread->id], 'method' => 'PUT']) !!}
+
+          <!-- Message Form Input -->
+          <div class="form-group">
+              {!! Form::textarea('message', null, ['class' => 'form-control', 'placeholder' => 'Write a reply...']) !!}
+          </div>
+
         </div>
-        @endif
-
         <!-- Submit Form Input -->
         <div class="form-group">
-            {!! Form::submit('Submit', ['class' => 'btn btn-primary form-control']) !!}
+            {!! Form::submit('Submit', ['class' => 'btn btn-info form-control']) !!}
         </div>
         {!! Form::close() !!}
+      </div>
     </div>
+  </div>
+</div>
+
+<script type='text/javascript'>
+$(function () {
+  // Scroll to bottom
+  var d = $("#messages");
+  d.scrollTop(d.prop("scrollHeight"));
+
+  $('html, body').animate({
+    scrollTop: $(document).height()
+}, 'slow');
+
+});
+
+</script>
+
 @stop

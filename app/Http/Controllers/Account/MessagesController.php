@@ -62,7 +62,7 @@ class MessagesController extends Controller
 
         $thread->markAsRead($userId);
 
-        return view('account.messenger.show', compact('thread', 'users'));
+        return view('account.messenger.show', compact('thread', 'users', 'userId'));
     }
 
     /**
