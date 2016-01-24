@@ -8,7 +8,7 @@
 
 <div class="container">
   <br>
-    <button class="btn btn-default">Message Inbox</button>
+    <a href="{{ route('messages') }}" class="btn btn-default"><i class="fa fa-chevron-left fa-fw"></i> Message Inbox</a>
 
   <h2 class="page-header">{{ $thread->subject }}</h2>
   <h4 class="text-info">Participants: {{ $thread->participantsString() }} </h4>
@@ -33,7 +33,7 @@
           </div>
           <div class="row">
             <div class="col-xs-3 col-sm-1">
-              <img src="/img/default_thumb.jpg" class="img-rounded" width="50" height="50">
+              <img src="{{ route('profileimage.showfull', ['id' => $m->user_id]) }}" class="img-rounded" width="50" height="50">
             </div>
             <div class="col-xs-7 col-sm-11">
               {!! nl2br(strip_tags($m->body)) !!}
@@ -75,11 +75,11 @@ $(function () {
   // Scroll to bottom
   var d = $("#messages");
   d.scrollTop(d.prop("scrollHeight"));
-
+/*
   $('html, body').animate({
     scrollTop: $(document).height()
 }, 'slow');
-
+*/
 });
 
 </script>

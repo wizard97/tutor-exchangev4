@@ -125,7 +125,6 @@ hr { margin-top: 5px;margin-bottom: 10px; }
                       @if($messages->count() > 0)
                           @foreach($messages as $m)
                           <?php $class = $m->isUnread($currentUserId) ? '' : 'read'; ?>
-                          <?php $r = $m->isReplyForUser($currentUserId); ?>
 
                           <a href="{{ route('messages.show', ['id' => $m->thread->id]) }}" class="list-group-item {{ $class }}">
                               @if($m->hasReply($currentUserId))

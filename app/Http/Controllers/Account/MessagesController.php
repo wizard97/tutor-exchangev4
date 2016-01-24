@@ -26,7 +26,7 @@ class MessagesController extends Controller
      *
      * @return mixed
      */
-    public function index(ThreadRepository $threadRepository, MessageRepository $messageRepository)
+    public function index(MessageRepository $messageRepository)
     {
         $currentUserId = Auth::user()->id;
 
@@ -43,26 +43,28 @@ class MessagesController extends Controller
      * @param $id
      * @return mixed
      */
-    public function show($id)
+    public function show(ThreadRepository $threadRepository, $id)
     {
+        $userId = Auth::user()->id;
         try {
-            $thread = Thread::findOrFail($id);
+            //Make sure user has permission
+            $thread =$threadRepository->getById($id);
+            if (!$thread->hasParticipant($userId)) throw new ModelNotFoundException;
+
         } catch (ModelNotFoundException $e) {
             Session::flash('error_message', 'The thread with ID: ' . $id . ' was not found.');
 
-            return redirect('messages');
+            return redirect(route('messages'));
         }
 
         // show current user in list if not a current participant
         // $users = User::whereNotIn('id', $thread->participantsUserIds())->get();
 
         // don't show the current user in list
-        $userId = Auth::user()->id;
-        $users = User::whereNotIn('id', $thread->participantsUserIds($userId))->get();
 
         $thread->markAsRead($userId);
 
-        return view('account.messenger.show', compact('thread', 'users', 'userId'));
+        return view('account.messenger.show', compact('thread', 'userId'));
     }
 
     /**
@@ -128,6 +130,7 @@ class MessagesController extends Controller
     {
         try {
             $thread = Thread::findOrFail($id);
+            if (!$thread->hasParticipant($userId)) throw new ModelNotFoundException;
         } catch (ModelNotFoundException $e) {
             Session::flash('error_message', 'The thread with ID: ' . $id . ' was not found.');
 
