@@ -287,8 +287,8 @@ Route::group(['prefix' => 'auth'], function() {
       'as' => 'auth.logout', 'uses' => 'Auth\AuthController@getLogout'
   ]);
   // Registration routes...
-  Route::get('register', 'AuthController@getRegister');
-  Route::post('register', 'AuthController@store');
+  Route::get('register', 'Auth\AuthController@getRegister');
+  Route::post('register', 'Auth\AuthController@store');
   Route::get('verify/{confirmationCode}', [
       'as' => 'confirmation_path',
       'uses' => 'Auth\AuthController@confirm'
