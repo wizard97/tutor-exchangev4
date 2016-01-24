@@ -18,9 +18,24 @@ class MessageRepository extends BaseRepository implements MessageRepositoryContr
    *
    * @return mixed
    */
+   public function create($inputs, $thread, $user_id)
+   {
+     $m = new $this->model;
+     $m->thread_id = $thread->id;
+     $m->user_id = $user_id;
+     $m->body = $inputs['message'];
+     $m->save();
+     return $m;
+   }
+
+  /**
+   * Returns all of the latest threads by updated_at date.
+   *
+   * @return mixed
+   */
   public function getAllUsersLatest($user_id, $num_page=15)
   {
-      return $this->model->with('thread')->forUser($user_id)->paginate($num_page);
+      return $this->model->with('thread')->latest('messages.updated_at')->forUser($user_id)->paginate($num_page);
   }
 
   public function usersUnread($user_id)

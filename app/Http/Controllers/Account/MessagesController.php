@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Account;
 
+use Illuminate\Http\Request;
+use App\Http\Requests;
 use App\Models\User\User;
 use Carbon\Carbon;
 
@@ -11,6 +13,7 @@ use App\Models\Messenger\Thread;
 
 use App\Repositories\Messenger\Thread\ThreadRepository;
 use App\Repositories\Messenger\Message\MessageRepository;
+use App\Repositories\Messenger\Participant\ParticipantRepository;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
@@ -84,36 +87,17 @@ class MessagesController extends Controller
      *
      * @return mixed
      */
-    public function store()
+    public function store(ThreadRepository $threadRepository, MessageRepository $messageRepository, Request $request)
     {
-        $input = Input::all();
+        $userId = Auth::id();
+        $input = $request->all();
+        //Create the new thread
+        $thread = $threadRepository->create($input, $userId);
 
-        $thread = Thread::create(
-            [
-                'subject' => $input['subject'],
-            ]
-        );
-
-        // Message
-        Message::create(
-            [
-                'thread_id' => $thread->id,
-                'user_id'   => Auth::user()->id,
-                'body'      => $input['message'],
-            ]
-        );
-
-        // Sender
-        Participant::create(
-            [
-                'thread_id' => $thread->id,
-                'user_id'   => Auth::user()->id,
-                'last_read' => new Carbon,
-            ]
-        );
+        $messageRepository->create($input, $thread, $userId);
 
         // Recipients
-        if (Input::has('recipients')) {
+        if ($request->has('recipients')) {
             $thread->addParticipants($input['recipients']);
         }
 
@@ -128,6 +112,7 @@ class MessagesController extends Controller
      */
     public function update($id)
     {
+      $userId = Auth::id();
         try {
             $thread = Thread::findOrFail($id);
             if (!$thread->hasParticipant($userId)) throw new ModelNotFoundException;
@@ -143,7 +128,7 @@ class MessagesController extends Controller
         Message::create(
             [
                 'thread_id' => $thread->id,
-                'user_id'   => Auth::id(),
+                'user_id'   => $userId,
                 'body'      => Input::get('message'),
             ]
         );

@@ -175,6 +175,7 @@ class Thread extends Eloquent
                 $participantModel::firstOrCreate([
                     'user_id' => $user_id,
                     'thread_id' => $this->id,
+                    'last_read' => NULL,
                 ]);
             }
         }

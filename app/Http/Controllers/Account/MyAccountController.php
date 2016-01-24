@@ -10,6 +10,9 @@ use App\Models\User\User;
 use App\Models\Tutor\Tutor;
 use App\Models\Review\Review;
 
+use App\Repositories\Messenger\Thread\ThreadRepository;
+use App\Repositories\Messenger\Message\MessageRepository;
+
 class MyAccountController extends Controller
 {
     public function __construct()
@@ -73,14 +76,26 @@ class MyAccountController extends Controller
         }
 
 
-      public function sendmessage(Request $request)
+      public function sendmessage(ThreadRepository $threadRepository, MessageRepository $messageRepository, Request $request)
       {
+        $userId = \Auth::id();
         $this->validate($request, [
-          'user_id' => 'required|exists:tutors,user_id',
+          'user_id' => 'required|exists:tutors,user_id|different:'.$userId,
           'subject' => 'required|string',
           'message' => 'required|string',
         ]);
 
+        $tutor = Tutor::findOrFail($request->get('user_id'));
+
+        $input = $request->all();
+        //Create the new thread
+        $thread = $threadRepository->create($input, $userId);
+        $thread->addParticipants([$tutor->user_id]);
+
+        $messageRepository->create($input, $thread, $userId);
+
+
+        /*
         $tutor = Tutor::get_tutor_profile($request->input('user_id'));
         $user = \Auth::user();
         //queue only works with arrays
@@ -104,6 +119,8 @@ class MyAccountController extends Controller
       $contact->message = $request->input('message');
       $contact->subject = $request->input('subject');
       $contact->save();
+      */
+      \Session::put('feedback_positive', 'Your email to '.$tutor->fname.' '.$tutor->lname.' has been successfully sent!');
 
       return view('templates/feedback');
     }

@@ -101,14 +101,16 @@ class Message extends Eloquent
           ->where($participantTable . '.user_id', $userId)
           ->whereNull($participantTable . '.deleted_at')
           ->where($this->getTable().'.user_id', '!=', $userId)
-          ->latest($this->getTable().'.updated_at')
           ->select($this->getTable().'.*');
     }
 
     public function scopeForUserUnread($query, $userId)
     {
       return $query->forUser($userId)
-          ->where('messages.updated_at', '>', \DB::raw("`participants`.`last_read`"));
+        ->where(function ($query) {
+          $query->where('messages.updated_at', '>', \DB::raw("`participants`.`last_read`"))
+            ->orWhereNull('participants.last_read');
+      });
     }
     /**
      * See if the current thread is unread by the user.

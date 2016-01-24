@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateParticipantsTable extends Migration
+class CreateMessagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,11 +12,13 @@ class CreateParticipantsTable extends Migration
      */
     public function up()
     {
-        Schema::create('participants', function (Blueprint $table) {
+        Schema::create('messages', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('thread_id')->unsigned();
+            $table->foreign('thread_id')->references('id')->on('threads')->onDelete('cascade');
             $table->integer('user_id')->unsigned();
-            $table->timestamp('last_read');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->text('body');
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ class CreateParticipantsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('participants');
+        Schema::drop('messages');
     }
 }

@@ -13,7 +13,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     $this->model = $model;
   }
 
-  public function create()
+  public function create($inputs)
   {
 
   }
