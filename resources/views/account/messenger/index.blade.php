@@ -64,7 +64,7 @@ hr { margin-top: 5px;margin-bottom: 10px; }
                 </ul>
             </div>
           -->
-            <a href="{{route('messages')}}" type="button" class="btn btn-default" data-toggle="tooltip" title="Refresh">
+            <a href="{{route('messages.index')}}" type="button" class="btn btn-default" data-toggle="tooltip" title="Refresh">
                    <span class="glyphicon glyphicon-refresh"></span>   </a>
             <!-- Single button -->
             <!--
@@ -97,7 +97,7 @@ hr { margin-top: 5px;margin-bottom: 10px; }
             <a href="{{ route('messages.create') }}" class="btn btn-danger btn-sm btn-block" role="button">COMPOSE</a>
             <hr />
             <ul class="nav nav-pills nav-stacked">
-                <li class="active"><a href="{{route('messages')}}"><span class="badge pull-right">{{ $unread }}</span> Inbox </a>
+                <li class="active"><a href="{{route('messages.index')}}"><span class="badge pull-right">{{ $unread }}</span> Inbox </a>
                 </li>
                 <li><a href="">Sent Mail</a></li>
             </ul>

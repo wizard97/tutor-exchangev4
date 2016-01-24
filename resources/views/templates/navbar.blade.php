@@ -43,6 +43,7 @@
           <ul class="dropdown-menu">
             @if(Auth::user()->account_type > 1)<li class="{{ isActiveRoute('account/tutoring') }}"><a href="{{ route('tutoring.dashboard') }}"><i class="fa fa-graduation-cap fa-fw"></i> My Tutoring</a></li>@endif
             <li class="{{ isActiveRoute('account/myaccount') }}"><a href="{{ route('myaccount.dashboard') }}"><i class="fa fa-users fa-fw"></i> Dashboard</a></li>
+            <li class="{{ isActiveRoute('messages.index') }}"><a href="{{ route('messages.index') }}"><i class="fa fa fa-envelope fa-fw"></i> Messages</a></li>
             <li role="separator" class="divider"></li>
 
             <li class="{{ isActiveRoute('account/settings') }}"><a href="{{ route('accountsettings.index') }}"><i class="fa fa-cog fa-fw"></i> Settings</a></li>

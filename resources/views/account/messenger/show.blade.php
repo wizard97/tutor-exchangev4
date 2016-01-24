@@ -8,7 +8,7 @@
 
 <div class="container">
   <br>
-    <a href="{{ route('messages') }}" class="btn btn-default"><i class="fa fa-chevron-left fa-fw"></i> Message Inbox</a>
+    <a href="{{ route('messages.index') }}" class="btn btn-default"><i class="fa fa-chevron-left fa-fw"></i> Message Inbox</a>
 
   <h2 class="page-header">{{ $thread->subject }}</h2>
   <h4 class="text-info">Participants: {{ $thread->participantsString() }} </h4>
