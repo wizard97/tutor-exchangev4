@@ -80,7 +80,7 @@ class MyAccountController extends Controller
       {
         $userId = \Auth::id();
         $this->validate($request, [
-          'user_id' => 'required|exists:tutors,user_id|different:'.$userId,
+          'user_id' => 'required|exists:tutors,user_id|not_in:'.$userId,
           'subject' => 'required|string',
           'message' => 'required|string',
         ]);

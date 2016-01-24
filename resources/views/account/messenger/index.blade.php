@@ -20,10 +20,10 @@ hr { margin-top: 5px;margin-bottom: 10px; }
 </style>
 
 <div class="container">
+  @include('templates/feedback')
   <div class="page-header">
     <h1>Messages</h1>
   </div>
-  @include('templates/feedback')
     <div class="row">
         <div class="col-sm-3 col-md-2">
             <div class="btn-group">
