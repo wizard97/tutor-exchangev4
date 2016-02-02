@@ -111,7 +111,7 @@ class ProfileImageController extends Controller
       $image->fit(min($image->width(), $image->height()));
       $image->resize(720, 720)->save($directory.'/profile_full.png');
       $image->resize(100, 100)->save($directory.'/profile_thumb.jpg');
-      $user = \App\User::findOrFail($this->id);
+      $user = User::findOrFail($this->id);
       $user->has_picture = true;
       $user->save();
       \Session::put('feedback_positive', 'You successfully uploaded your profile picture.');
