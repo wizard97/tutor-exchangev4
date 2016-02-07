@@ -61,7 +61,7 @@ class Message extends Eloquent
      */
     public function user()
     {
-        return $this->belongsTo(Config::get('messenger.user_model'), 'user_id');
+        return $this->belongsTo(Config::get('messenger.user_model'), 'user_id', 'id');
     }
 
     /**
@@ -86,7 +86,7 @@ class Message extends Eloquent
 
 
     /**
-     * Returns threads that the user is associated with.
+     * Returns messages adressed for user.
      *
      * @param $query
      * @param $userId
@@ -146,6 +146,16 @@ class Message extends Eloquent
     public function getParticipant($userId)
     {
       return $this->participants()->where('participants.user_id', '=', $userId)->firstOrFail();
+    }
+
+    /**
+     * Returns the "participant" models for all recepients
+     *
+     * @return string
+     */
+    public function getRecipientParticipants()
+    {
+      return $this->participants()->where('participants.user_id', '!=', $this->user_id)->get();
     }
 
     public function isReplyForUser($userId)

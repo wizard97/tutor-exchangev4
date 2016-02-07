@@ -7,10 +7,12 @@ use App\Http\Requests;
 use App\Models\User\User;
 use Carbon\Carbon;
 
+// Remove later
 use App\Models\Messenger\Message;
 use App\Models\Messenger\Participant;
 use App\Models\Messenger\Thread;
 
+use App\Repositories\User\UserRepository;
 use App\Repositories\Messenger\Thread\ThreadRepository;
 use App\Repositories\Messenger\Message\MessageRepository;
 use App\Repositories\Messenger\Participant\ParticipantRepository;
@@ -19,11 +21,18 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
+use Mail;
 
 use App\Http\Controllers\Controller;
 
 class MessagesController extends Controller
 {
+
+    public function __construct(UserRepository $userRepository)
+    {
+      $this->userRepository = $userRepository;
+    }
+
     /**
      * Show all of the message threads to the user.
      *
@@ -87,19 +96,22 @@ class MessagesController extends Controller
      *
      * @return mixed
      */
-    public function store(ThreadRepository $threadRepository, MessageRepository $messageRepository, Request $request)
+    public function store(ThreadRepository $threadRepository, MessageRepository $messageRepository,
+            Request $request)
     {
         $userId = Auth::id();
         $input = $request->all();
         //Create the new thread
         $thread = $threadRepository->create($input, $userId);
 
-        $messageRepository->create($input, $thread, $userId);
-
+        $messageModel = $messageRepository->create($input, $thread, $userId);
         // Recipients
         if ($request->has('recipients')) {
             $thread->addParticipants($input['recipients']);
         }
+
+        $this->sendNewMessageEmail($messageModel);
+
 
         return redirect(route('messages.index'));
     }
@@ -110,44 +122,62 @@ class MessagesController extends Controller
      * @param $id
      * @return mixed
      */
-    public function update($id)
+    public function update(ThreadRepository $threadRepository,
+          MessageRepository $messageRepository, Request $request, $id)
     {
       $userId = Auth::id();
         try {
-            $thread = Thread::findOrFail($id);
+            $thread = $threadRepository->getById($id);
             if (!$thread->hasParticipant($userId)) throw new ModelNotFoundException;
         } catch (ModelNotFoundException $e) {
-            Session::flash('error_message', 'The thread with ID: ' . $id . ' was not found.');
+            Session::flash('feedback_negative', 'The thread with ID: ' . $id . ' was not found.');
 
             return redirect(route('messages.index'));
         }
 
         $thread->activateAllParticipants();
 
-        // Message
-        Message::create(
+        $messageModel = $messageRepository->create($request->all(), $thread, $userId);
+
+
+        // Add replier as a participant
+        $participant = $thread->participants()->firstOrCreate(
             [
                 'thread_id' => $thread->id,
                 'user_id'   => $userId,
-                'body'      => Input::get('message'),
-            ]
-        );
-
-        // Add replier as a participant
-        $participant = Participant::firstOrCreate(
-            [
-                'thread_id' => $thread->id,
-                'user_id'   => Auth::user()->id,
             ]
         );
         $participant->last_read = new Carbon;
         $participant->save();
 
         // Recipients
-        if (Input::has('recipients')) {
-            $thread->addParticipants(Input::get('recipients'));
+        if ($request->has('recipients')) {
+            $thread->addParticipants($request->get('recipients'));
         }
 
+        $this->sendNewMessageEmail($messageModel);
+
         return redirect('account/messages/' . $id);
+    }
+
+    /*
+    * Sends user email with new message
+    */
+    protected function sendNewMessageEmail($messageModel)
+    {
+      //var_dump($message->user());
+      $user = $messageModel->user;
+      $from = $user->getName();
+
+      foreach ($messageModel->getRecipientParticipants() as $participant)
+      {
+        $to = $participant->user;
+
+        Mail::queue('emails.messaging.recievedmessage', compact('messageModel'), function ($m) use ($to, $from) {
+          $m->from('noreply@lextutorexchange.com', 'Lexington Tutor Exchange');
+          $m->to($to->email, $to->getName());
+          $m->subject("New Message From {$from}");
+        });
+      }
     }
 }
