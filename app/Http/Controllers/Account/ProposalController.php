@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
-
+use App\Repositories\Proposals\School\SchoolProposalRepository;
+use App\Http\Requests\ProposeSchoolRequest;
 
 class ProposalController extends Controller
 {
@@ -18,10 +18,43 @@ class ProposalController extends Controller
 
     public function index()
     {
+      /*
       $g = \Geocoder::geocode('909 talamore drive ambler');
       echo sprintf("%s %s, %s, %s %s", $g->getStreetNumber(), $g->getStreetName(),
           $g->getCity(), $g->getRegionCode(), $g->getZipCode());
+          */
 
       //var_dump($g->first()->getLatitude());
+    }
+
+    public function getsubmitclass()
+    {
+      return view('/account/proposals/submitclass');
+    }
+    public function getSubmitSchool(Request $request)
+    {
+      return view('/account/proposals/submitschool');
+    }
+
+    public function postSubmitSchool(ProposeSchoolRequest $request, SchoolProposalRepository $spr)
+    {
+      try
+      {
+        $spr->create($request->all(), \Auth::id());
+      }
+      catch(\Exception $e)
+      {
+        $error = $e->getMessage();
+        $request->session()->put('feedback_negative', "An unexspected error occured.");
+        return back();
+      }
+
+      $request->session()->put('feedback_positive', 'Your proposal was recorded.');
+      return back();
+    }
+
+    public function getsubmitsubject()
+    {
+      return view('/account/proposals/submitsubject');
     }
 }

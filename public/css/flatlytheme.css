@@ -6807,10 +6807,14 @@ button.close {
   background-color: #fff;
   color: #2c3e50;
 }
+
+/*
 .navbar-inverse .badge {
   background-color: #fff;
   color: #18bc9c;
 }
+*/
+
 .navbar-brand {
   line-height: 1;
 }

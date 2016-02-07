@@ -1,9 +1,8 @@
 <!-- resources/views/auth/register.blade.php -->
 @extends('app')
 @section('content')
-<div class="container-fluid">
-  @include('/account/tutoring/sidebar')
-  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+<div class="container">
+  <div class="">
 
     <div class="row">
       @include('templates/feedback')

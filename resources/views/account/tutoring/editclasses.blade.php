@@ -129,7 +129,7 @@
       <div class="col-md-6">
         <div class="alert alert-danger" role="alert">
           <span>If you don't see your class, submit one</span>
-          <a href="{{ route('tutoring.submitclass') }}" role="button">here</a><span>.</span>
+          <a href="{{ route('proposals.submitclass') }}" role="button">here</a><span>.</span>
         </div>
       </div>
     </div>
