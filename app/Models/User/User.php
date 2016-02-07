@@ -8,9 +8,11 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
+
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
     use Authenticatable, CanResetPassword;
+    use Messagable;
 
     /**
      * The database table used by the model.
@@ -57,6 +59,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function tutor_contacts()
     {
       return $this->hasMany('App\Models\TutorContact\TutorContact', 'user_id', 'id');
+    }
+
+    public function getName()
+    {
+      return $this->fname.' '.$this->lname;
     }
 
 }

@@ -154,8 +154,11 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
-        //added by application
+        App\Providers\MessengerServiceProvider::class,
+        App\Providers\ComposerServiceProvider::class,
+        /*
+         * Third party Providers...
+         */
         Intervention\Image\ImageServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Laracasts\Utilities\JavaScript\JavascriptServiceProvider::class,

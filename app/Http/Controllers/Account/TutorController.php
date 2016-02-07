@@ -5,10 +5,8 @@ namespace App\Http\Controllers\Account;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ProposeSchoolRequest;
 use \stdClass;
 
-use \App\Repositories\Proposals\School\SchoolProposalRepository;
 use App\Models\User\User;
 use App\Models\Tutor\Tutor;
 use App\Models\Music\Music;
@@ -451,56 +449,6 @@ class TutorController extends Controller
     return view('/account/tutoring/runlisting')->with('tutor', $tutor);
   }
 
-  public function getsubmitclass()
-  {
-    $tutor = Tutor::findOrFail($this->id);
-    //get tutor schools
-    $schools = $tutor->schools()
-      ->leftJoin('school_subjects', 'school_subjects.school_id', '=', 'schools.id')
-      ->leftJoin('classes', 'classes.subject_id', '=', 'school_subjects.id')
-      ->leftJoin('levels', 'levels.class_id', '=', 'classes.id')
-      ->leftJoin('tutor_levels', function($join)
-      {
-        $join->on('levels.id', '=', 'tutor_levels.level_id');
-        $join->on('tutor_levels.user_id','=', \DB::raw($this->id));
-      })
-      ->groupBy('schools.id')
-      ->orderBy('num_classes', 'desc')
-      ->select('schools.school_name', 'schools.id', \DB::raw('COUNT(DISTINCT tutor_levels.id) AS num_classes'))
-      ->get();
-    return view('/account/tutoring/submitclass')->with('schools', $schools)->with('tutor', $tutor);
-  }
-  public function getsubmitschool(Request $request)
-  {
-    return view('/account/tutoring/submitschool');
-  }
-
-  public function postsubmitschool(Request $request, SchoolProposalRepository $spr)
-  {
-    $spr->create($request->all(), $this->id);
-    return redirect(route('tutoring.submitschool'));
-  }
-
-  public function getsubmitsubject(ProposeSchoolRequest $request)
-  {
-    $tutor = Tutor::findOrFail($this->id);
-    //get tutor schools
-    $schools = $tutor->schools()
-      ->leftJoin('school_subjects', 'school_subjects.school_id', '=', 'schools.id')
-      ->leftJoin('classes', 'classes.subject_id', '=', 'school_subjects.id')
-      ->leftJoin('levels', 'levels.class_id', '=', 'classes.id')
-      ->leftJoin('tutor_levels', function($join)
-      {
-        $join->on('levels.id', '=', 'tutor_levels.level_id');
-        $join->on('tutor_levels.user_id','=', \DB::raw($this->id));
-      })
-      ->groupBy('schools.id')
-      ->orderBy('num_classes', 'desc')
-      ->select('schools.school_name', 'schools.id', \DB::raw('COUNT(DISTINCT tutor_levels.id) AS num_classes'))
-      ->get();
-
-    return view('/account/tutoring/submitsubject')->with('schools', $schools)->with('tutor', $tutor);
-  }
 
   public function submitlisting(Request $request)
   {

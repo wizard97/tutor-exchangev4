@@ -1,9 +1,8 @@
 <!-- resources/views/auth/register.blade.php -->
 @extends('app')
 @section('content')
-<div class="container-fluid">
-  @include('/account/tutoring/sidebar')
-  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+<div class="container">
+  <div class="">
     <div class="row">
       @include('templates/feedback')
       <div class="page-header">
@@ -18,7 +17,7 @@
             Submit/Edit/Delete a School
           </div>
           <div class="panel-body">
-            {!! Form::open(array('url' => route('tutoring.submitschoolproposal'))) !!}
+            {!! Form::open(array('url' => route('proposals.submitschoolproposal'))) !!}
             <div class="row">
               <div class="col-md-7">
                 <div class="btn-group" role="group">
