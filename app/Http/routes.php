@@ -153,6 +153,23 @@ Route::group(['prefix' => 'account', 'middleware' => 'auth', 'namespace' => 'Acc
 
   });
 
+  Route::group(['prefix' => 'proposals'], function() {
+
+  Route::get('submitclass', [
+      'as' => 'proposals.submitclass', 'uses' => 'ProposalController@getSubmitClass'
+  ]);
+  Route::get('submitschool', [
+    'as' => 'proposals.submitschool', 'uses' => 'ProposalController@getSubmitSchool'
+  ]);
+  Route::post('submitschoolproposal', [
+    'as' => 'proposals.submitschoolproposal', 'uses' => 'ProposalController@postSubmitSchool'
+  ]);
+  Route::get('submitsubject', [
+      'as' => 'proposals.submitsubject', 'uses' => 'ProposalController@getSubmitSubject'
+  ]);
+
+  });
+
   // Settings
   Route::group(['prefix' => 'settings'], function() {
     Route::get('index', [
@@ -255,19 +272,6 @@ Route::group(['prefix' => 'account', 'middleware' => 'auth', 'namespace' => 'Acc
     ]);
     Route::get('ajaxgetmiddleclasses', [
         'as' => 'tutoring.ajaxgetmiddleclasses', 'uses' => 'TutorController@ajaxgetmiddleclasses'
-    ]);
-    Route::get('submitclass', [
-        'as' => 'tutoring.submitclass',
-        'uses' => 'TutorController@getsubmitclass'
-    ]);
-    Route::get('submitschool', [
-      'as' => 'tutoring.submitschool', 'uses' => 'TutorController@getsubmitschool'
-    ]);
-    Route::post('submitschoolproposal', [
-      'as' => 'tutoring.submitschoolproposal', 'uses' => 'TutorController@postsubmitschool'
-    ]);
-    Route::get('submitsubject', [
-        'as' => 'tutoring.submitsubject', 'uses' => 'TutorController@getsubmitsubject'
     ]);
 
   });
