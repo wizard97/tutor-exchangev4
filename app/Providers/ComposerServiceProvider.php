@@ -26,9 +26,6 @@ class ComposerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-      // Give access to user model on every page
-      view()->composer('*', function ($view) {
-        $view->with('user', $this->app->make('auth')->user());
-      });
+      
     }
 }
