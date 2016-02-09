@@ -17,6 +17,7 @@ class ComposerServiceProvider extends ServiceProvider
       view()->composer(
         'templates.navbar', 'App\Http\ViewComposers\NavbarComposer'
       );
+
     }
 
     /**
@@ -26,6 +27,8 @@ class ComposerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+      view()->composer('*', function ($view) {
+        $view->with('user', \Auth::user());
+      });
     }
 }

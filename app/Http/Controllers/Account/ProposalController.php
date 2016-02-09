@@ -25,6 +25,7 @@ class ProposalController extends Controller
           */
 
       //var_dump($g->first()->getLatitude());
+      return view('/account/proposals/index');
     }
 
     public function getsubmitclass()
