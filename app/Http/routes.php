@@ -153,8 +153,11 @@ Route::group(['prefix' => 'account', 'middleware' => 'auth', 'namespace' => 'Acc
 
   });
 
-  Route::group(['prefix' => 'proposals'], function() {
-
+  // Proposals
+  Route::group(['prefix' => 'contributing'], function() {
+  Route::get('/', [
+        'as' => 'proposals.index', 'uses' => 'ProposalController@index'
+  ]);
   Route::get('submitclass', [
       'as' => 'proposals.submitclass', 'uses' => 'ProposalController@getSubmitClass'
   ]);
@@ -167,7 +170,6 @@ Route::group(['prefix' => 'account', 'middleware' => 'auth', 'namespace' => 'Acc
   Route::get('submitsubject', [
       'as' => 'proposals.submitsubject', 'uses' => 'ProposalController@getSubmitSubject'
   ]);
-
   });
 
   // Settings

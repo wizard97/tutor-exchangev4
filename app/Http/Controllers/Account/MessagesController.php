@@ -173,7 +173,7 @@ class MessagesController extends Controller
       {
         $to = $participant->user;
 
-        Mail::queue('emails.messaging.recievedmessage', compact('messageModel'), function ($m) use ($to, $from) {
+        Mail::queue('emails.messaging.recievedmessage', compact('messageModel', 'user', 'to'), function ($m) use ($to, $from) {
           $m->from('noreply@lextutorexchange.com', 'Lexington Tutor Exchange');
           $m->to($to->email, $to->getName());
           $m->subject("New Message From {$from}");
