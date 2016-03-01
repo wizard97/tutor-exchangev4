@@ -70,7 +70,7 @@ class MyAccountController extends Controller
 
           $data['name'] = $tutor->fname.' '.$tutor->lname;
           $data['tutor_profile'] = route('search.showtutorprofile', ['id' => $request->input('userid')]);
-          $data['post_url'] = route('myaccount.sendmessage');
+          $data['post_url'] = route('messages.storeAjax');
 
           return response()->json($data);
         }

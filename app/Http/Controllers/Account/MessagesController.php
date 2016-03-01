@@ -117,6 +117,39 @@ class MessagesController extends Controller
     }
 
     /**
+    * Store method through ajax
+    */
+    public function storeAjax(ThreadRepository $threadRepository, MessageRepository $messageRepository,
+            Request $request)
+    {
+      $userId = \Auth::id();
+      $this->validate($request, [
+        'user_id' => 'required|exists:tutors,user_id|not_in:'.$userId,
+        'subject' => 'required|string',
+        'message' => 'required|string',
+      ]);
+
+      $tutor = Tutor::findOrFail($request->get('user_id'));
+
+      $input = $request->all();
+      //Create the new thread
+      $thread = $threadRepository->create($input, $userId);
+      // Add Tutor
+      $thread->addParticipants([$tutor->user_id]);
+      // Create the message
+      $messageRepository->create($input, $thread, $userId);
+      //Send notification email
+      $this->sendNewMessageEmail($messageModel);
+
+      \Session::put('feedback_positive', 'Your email to '.$tutor->fname.' '.$tutor->lname.' has been successfully sent!');
+
+      return view('templates/feedback');
+
+    }
+
+
+
+    /**
      * Adds a new message to a current thread.
      *
      * @param $id
