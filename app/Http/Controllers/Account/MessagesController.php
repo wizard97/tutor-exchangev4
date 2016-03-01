@@ -13,6 +13,7 @@ use App\Models\Messenger\Participant;
 use App\Models\Messenger\Thread;
 
 use App\Repositories\User\UserRepository;
+use App\Repositories\Tutor\TutorRepository;
 use App\Repositories\Messenger\Thread\ThreadRepository;
 use App\Repositories\Messenger\Message\MessageRepository;
 use App\Repositories\Messenger\Participant\ParticipantRepository;
@@ -120,7 +121,7 @@ class MessagesController extends Controller
     * Store method through ajax
     */
     public function storeAjax(ThreadRepository $threadRepository, MessageRepository $messageRepository,
-            Request $request)
+            TutorRepository $tutorRepository, Request $request)
     {
       $userId = \Auth::id();
       $this->validate($request, [
@@ -129,7 +130,7 @@ class MessagesController extends Controller
         'message' => 'required|string',
       ]);
 
-      $tutor = Tutor::findOrFail($request->get('user_id'));
+      $tutor = $tutorRepository->getById($request->get('user_id'));
 
       $input = $request->all();
       //Create the new thread
@@ -137,7 +138,7 @@ class MessagesController extends Controller
       // Add Tutor
       $thread->addParticipants([$tutor->user_id]);
       // Create the message
-      $messageRepository->create($input, $thread, $userId);
+      $messageModel = $messageRepository->create($input, $thread, $userId);
       //Send notification email
       $this->sendNewMessageEmail($messageModel);
 
