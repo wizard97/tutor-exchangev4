@@ -37,7 +37,7 @@ $( document ).ready(function() {
     // process the form
     $.ajax({
         type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
-        url         : '{{ route('myaccount.sendmessage') }}',
+        url         : '{{ route('messages.storeAjax') }}',
         data        : formData, // our data object
         //callback
         success : function(data){

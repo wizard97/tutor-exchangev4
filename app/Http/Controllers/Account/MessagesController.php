@@ -13,6 +13,7 @@ use App\Models\Messenger\Participant;
 use App\Models\Messenger\Thread;
 
 use App\Repositories\User\UserRepository;
+use App\Repositories\Tutor\TutorRepository;
 use App\Repositories\Messenger\Thread\ThreadRepository;
 use App\Repositories\Messenger\Message\MessageRepository;
 use App\Repositories\Messenger\Participant\ParticipantRepository;
@@ -115,6 +116,39 @@ class MessagesController extends Controller
 
         return redirect(route('messages.index'));
     }
+
+    /**
+    * Store method through ajax
+    */
+    public function storeAjax(ThreadRepository $threadRepository, MessageRepository $messageRepository,
+            TutorRepository $tutorRepository, Request $request)
+    {
+      $userId = \Auth::id();
+      $this->validate($request, [
+        'user_id' => 'required|exists:tutors,user_id|not_in:'.$userId,
+        'subject' => 'required|string',
+        'message' => 'required|string',
+      ]);
+
+      $tutor = $tutorRepository->getById($request->get('user_id'));
+
+      $input = $request->all();
+      //Create the new thread
+      $thread = $threadRepository->create($input, $userId);
+      // Add Tutor
+      $thread->addParticipants([$tutor->user_id]);
+      // Create the message
+      $messageModel = $messageRepository->create($input, $thread, $userId);
+      //Send notification email
+      $this->sendNewMessageEmail($messageModel);
+
+      \Session::put('feedback_positive', 'Your email to '.$tutor->fname.' '.$tutor->lname.' has been successfully sent!');
+
+      return view('templates/feedback');
+
+    }
+
+
 
     /**
      * Adds a new message to a current thread.
