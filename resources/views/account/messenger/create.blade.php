@@ -7,6 +7,11 @@
   <div class="col-md-6">
       <!-- Subject Form Input -->
       <div class="form-group">
+        {!! Form::label('recipients', 'Recipients', ['class' => 'control-label']) !!}
+        {!! Form::text('recipients', null, ['class' => 'form-control typeahead', 'id' => 'schoolname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. John Smith']) !!}
+
+      </div>
+      <div class="form-group">
           {!! Form::label('subject', 'Subject', ['class' => 'control-label']) !!}
           {!! Form::text('subject', null, ['class' => 'form-control']) !!}
       </div>
@@ -19,13 +24,13 @@
   </div>
   <div class="col-md-12">
 
-      @if($users->count() > 0)
+    <!--  @if($users->count() > 0)
       <div class="checkbox">
           @foreach($users as $user)
               <label title="{!!$user->name!!}"><input type="checkbox" name="recipients[]" value="{!!$user->id!!}">{!!$user->fname!!}</label>
           @endforeach
       </div>
-      @endif
+      @endif-->
 
       <!-- Submit Form Input -->
       <div class="form-group">
@@ -34,4 +39,5 @@
   </div>
   {!! Form::close() !!}
 </div>
+
 @stop
