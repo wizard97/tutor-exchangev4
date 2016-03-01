@@ -9,23 +9,35 @@ body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
 }
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  /* Set the fixed height of the footer here */
-  height: 60px;
-  background-color: #f5f5f5;
+@media (min-width: 0px) {
+  .footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 96px;
+    background-color: #f5f5f5;
+  }
+}
+@media (min-width: 507px) {
+  .footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+    background-color: #f5f5f5;
+  }
 }
 </style>
 <footer class="footer">
   <div class="container">
     <div class="col-md-9 col-md-offset-2">
-      <p class="navbar-text text-muted">Copyright ©  {{ Date("Y") }}. <a href="http://lextutorexchange.com">Lexington Tutor Exchange</a>. All rights reserved.
+      <p class="navbar-text text-muted"><a href="http://lextutorexchange.com">Lexington Tutor Exchange</a> ©  {{ Date("Y") }}. All rights reserved.
         <button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#Donate">
-          Help Support Us
+          Donate
         </button>
-      </p>
+        </p>
     </div>
   </div>
 </footer>
