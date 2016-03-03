@@ -32,7 +32,7 @@ class ProposalController extends Controller
     {
       return view('/account/proposals/submitclass');
     }
-    public function getSubmitSchool(Request $request)
+    public function getSubmitSchool()
     {
       return view('/account/proposals/submitschool');
     }
