@@ -136,8 +136,6 @@ class MessagesController extends Controller
     return view('templates/feedback');
   }
 
-
-
   /**
   * Adds a new message to a current thread.
   *
