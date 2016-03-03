@@ -100,6 +100,12 @@ class MessagesController extends Controller
     public function store(ThreadRepository $threadRepository, MessageRepository $messageRepository,
             Request $request)
     {
+      $this->validate($request, [
+        'subject' => 'required|string',
+        'message' => 'required|string',
+        'recipients' => 'array'
+      ]);
+      
         $userId = Auth::id();
         $input = $request->all();
         //Create the new thread

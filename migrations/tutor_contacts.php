@@ -44,8 +44,28 @@ foreach ($contacts as $c)
   $tutor = $user_fetch->fetch();
 
   //insert review into new db
-  $insert = $new->prepare("INSERT INTO tutor_contacts (user_id, tutor_id, message, subject, created_at, updated_at)
-    VALUES (?, ?, ?, ?, ?, ?)");
+  $createThread = $new->prepare("INSERT INTO threads (subject, created_at, updated_at)
+    VALUES (?, ?, ?)");
+
+  $addParticipant = $new->prepare("INSERT INTO participants (thread_id, user_id, last_read, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?)");
+
+  $newMessage = $new->prepare("INSERT INTO messages (thread_id, user_id, body, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?)");
+
+  $createThread->execute([$c->subject, date("Y-m-d H:i:s", $c->time_sent), date("Y-m-d H:i:s", $c->time_sent)]);
+  echo "Created thread for '{$c->subject} ($c->message_num)'\n";
+
+  $threadId = $new->lastInsertId();
+
+  // Add both participants
+  $addParticipant->execute([$threadId, get_new_id_by_email($contacter->user_email, $new),
+      NULL, date("Y-m-d H:i:s", $c->time_sent), date("Y-m-d H:i:s", $c->time_sent)]);
+
+
+  $addParticipant->execute([$threadId, get_new_id_by_email($tutor->user_email, $new),
+      NULL, date("Y-m-d H:i:s", $c->time_sent), date("Y-m-d H:i:s", $c->time_sent)]);
+
 
     //remove everything before forwarded message
   $message_array = explode("Begin Forwarded Message_____", $c->message);
@@ -56,9 +76,10 @@ foreach ($contacts as $c)
   }
   else $message = $c->message;
 
-  $insert->execute([get_new_id_by_email($contacter->user_email, $new), get_new_id_by_email($tutor->user_email, $new), $message, $c->subject,
-    date("Y-m-d H:i:s", $c->time_sent), date("Y-m-d H:i:s", $c->time_sent)]);
-    echo "Migrated tutor contact '{$c->subject} ($c->message_num)'\n";
+  $newMessage->execute([$threadId, get_new_id_by_email($contacter->user_email, $new),
+      $message, date("Y-m-d H:i:s", $c->time_sent), date("Y-m-d H:i:s", $c->time_sent)]);
+
+  echo "Migrated tutor message for '{$c->subject} ($c->message_num)'\n";
 
 }
 echo "Finished migration of tutor contacts \n\n";
