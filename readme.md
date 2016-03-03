@@ -28,12 +28,21 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 ### ToDo
 We need to break up the controllers into front-end and backend controllers.
+
 All the database stuff has to be moved into a repository.
+
 We need to name our functions and routes in a consistent way.
+
 We need to use dependency injection for our controller methods.
+
 Next form validation for each method needs to be moved out of the controller into a subclass of FormRequest.
+
 Then the class will be injected into the method.
+
 Then we need to make better use of the blade engines capabilities for object orientation in views.
+
 Then we also need better exception handling.
+
 So we need to subclass exception and use those.
+
 Error views.
