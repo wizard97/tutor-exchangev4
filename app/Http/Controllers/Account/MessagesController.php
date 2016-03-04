@@ -220,35 +220,15 @@ class MessagesController extends Controller
         });
       }
     }
-    public function recipientquery($query)
+    public function recipientquery(UserRepository $userRepository, $query)
     {
-      $keys = preg_split("/[,.]+/", trim(urldecode($query)));
-      $num_keys = count($keys);
-      $search = User::where(function ($query) use($keys){
-        foreach($keys as $key) {
-          $query->orWhere('fname', 'LIKE', '%'.$key.'%')
-          ->orWhere('lname', 'LIKE', '%'.$key.'%');
-        }
-      })->get();
-      $matches = $search
-      ->take(10);
+      $matches = $userRepository
+      ->possibleRecipientsQuery($query);
       return $matches;
     }
-    public function recipientprefetch(ThreadRepository $threadRepository, $id)
+    public function recipientprefetch(UserRepository $userRepository)
     {
-      $userId = Auth::id();
-        try {
-            $thread = $threadRepository->getById($id);
-            if (!$thread->hasParticipant($userId)) throw new ModelNotFoundException;
-        } catch (ModelNotFoundException $e) {
-            Session::flash('feedback_negative', 'The thread with ID: ' . $id . ' was not found.');
-
-            return redirect(route('messages.index'));
-        }
-
-      $prefetch = $thread->participants()
-      ->take(30);
-      //->all();
+      $prefetch = $userRepository->possibleRecipientsPrefetch();
       return $prefetch->toJson();
     }
 }
