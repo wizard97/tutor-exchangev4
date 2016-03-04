@@ -105,7 +105,7 @@ class MessagesController extends Controller
         'message' => 'required|string',
         'recipients' => 'array'
       ]);
-      
+
         $userId = Auth::id();
         $input = $request->all();
         //Create the new thread
@@ -219,5 +219,36 @@ class MessagesController extends Controller
           $m->subject("New Message From {$from}");
         });
       }
+    }
+    public function recipientquery($query)
+    {
+      $keys = preg_split("/[,.]+/", trim(urldecode($query)));
+      $num_keys = count($keys);
+      $search = User::where(function ($query) use($keys){
+        foreach($keys as $key) {
+          $query->orWhere('fname', 'LIKE', '%'.$key.'%')
+          ->orWhere('lname', 'LIKE', '%'.$key.'%');
+        }
+      })->get();
+      $matches = $search
+      ->take(10);
+      return $matches;
+    }
+    public function recipientprefetch(ThreadRepository $threadRepository, $id)
+    {
+      $userId = Auth::id();
+        try {
+            $thread = $threadRepository->getById($id);
+            if (!$thread->hasParticipant($userId)) throw new ModelNotFoundException;
+        } catch (ModelNotFoundException $e) {
+            Session::flash('feedback_negative', 'The thread with ID: ' . $id . ' was not found.');
+
+            return redirect(route('messages.index'));
+        }
+
+      $prefetch = $thread->participants()
+      ->take(30);
+      //->all();
+      return $prefetch->toJson();
     }
 }
