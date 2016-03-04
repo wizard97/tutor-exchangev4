@@ -8,7 +8,7 @@
       <!-- Subject Form Input -->
       <div class="form-group">
         {!! Form::label('recipients', 'Recipients', ['class' => 'control-label']) !!}
-        {!! Form::text('recipients', null, ['class' => 'form-control typeahead', 'id' => 'schoolname', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. John Smith']) !!}
+        {!! Form::text('recipients', null, ['class' => 'form-control typeahead', 'id' => 'recipients', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. John Smith']) !!}
 
       </div>
       <div class="form-group">
@@ -40,4 +40,37 @@
   {!! Form::close() !!}
 </div>
 
+<script>
+$(document).ready(function() {
+  var recipientshound = new Bloodhound({
+    sufficient: 10,
+    identify: function(obj) { return obj.title; },
+    queryTokenizer: function(query) {
+      var no_commas = query.replace(/,/g, '');
+      return Bloodhound.tokenizers.whitespace(no_commas);
+    },
+    datumTokenizer: function(datum) {
+      var tokens = [];
+      tokens.push(String(datum.title));
+      return tokens;
+    },
+    prefetch: "{{ route('messages.prefetch') }}",
+    remote: {
+      url: '{{ route('messages.query', ['query' => '%QUERY']) }}',
+      wildcard: '%QUERY'
+    },
+  });
+  $('#recipients').tagsinput({
+    //itemValue: 'id',
+    //itemText: 'fname',
+    typeaheadjs: {
+      name: 'name',
+      displayKey: 'fname',
+      valueKey: 'fname',
+      source: recipientshound.ttAdapter()
+    }
+  });
+});
+
+</script>
 @stop
