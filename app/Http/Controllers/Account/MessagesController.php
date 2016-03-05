@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Session;
 use Mail;
 
 use App\Http\Controllers\Controller;
+use Debugbar;
 
 class MessagesController extends Controller
 {
@@ -187,50 +188,52 @@ class MessagesController extends Controller
     [
       'thread_id' => $thread->id,
       'user_id'   => $userId,
-    ]
-  );
-  $participant->last_read = new Carbon;
-  $participant->save();
+    ]);
+    $participant->last_read = new Carbon;
+    $participant->save();
 
-  // Recipients
-  if ($request->has('recipients')) {
-    $thread->addParticipants($request->get('recipients'));
+    // Recipients
+    if ($request->has('recipients')) {
+      $thread->addParticipants($request->get('recipients'));
+    }
+
+    $this->sendNewMessageEmail($messageModel);
+
+    return redirect('account/messages/' . $id);
   }
 
-  $this->sendNewMessageEmail($messageModel);
-
-  return redirect('account/messages/' . $id);
-}
-
-/*
-* Sends user email with new message
-*/
-protected function sendNewMessageEmail($messageModel)
-{
-  //var_dump($message->user());
-  $user = $messageModel->user;
-  $from = $user->getName();
-
-  foreach ($messageModel->getRecipientParticipants() as $participant)
+  /*
+  * Sends user email with new message
+  */
+  protected function sendNewMessageEmail($messageModel)
   {
-    $to = $participant->user;
+    //var_dump($message->user());
+    $user = $messageModel->user;
+    $from = $user->getName();
 
-    Mail::queue('emails.messaging.recievedmessage', compact('messageModel', 'user', 'to'), function ($m) use ($to, $from) {
-      $m->from('noreply@lextutorexchange.com', 'Lexington Tutor Exchange');
-      $m->to($to->email, $to->getName());
-      $m->subject("New Message From {$from}");
-    });
+    foreach ($messageModel->getRecipientParticipants() as $participant)
+    {
+      $to = $participant->user;
+
+      Mail::queue('emails.messaging.recievedmessage', compact('messageModel', 'user', 'to'), function ($m) use ($to, $from) {
+        $m->from('noreply@lextutorexchange.com', 'Lexington Tutor Exchange');
+        $m->to($to->email, $to->getName());
+        $m->subject("New Message From {$from}");
+      });
+    }
   }
-}
-public function recipientquery(UserRepository $userRepository, $query)
-{
-  $matches = $userRepository
-  ->possibleRecipientsQuery($query);
-  return $matches;
-}
-public function recipientprefetch(UserRepository $userRepository)
-{
-  $prefetch = $userRepository->possibleRecipientsPrefetch();
-  return $prefetch->toJson();
-}
+  public function recipientquery(UserRepository $userRepository, $query)
+  {
+
+    $matches = $userRepository
+    ->possibleRecipientsQuery($query);
+    Debugbar::info($matches);
+    return $matches->toJson();
+  }
+  public function recipientprefetch(UserRepository $userRepository)
+  {
+    $prefetch = $userRepository->possibleRecipientsPrefetch();
+    Debugbar::info($prefetch);
+    return $prefetch->toJson();
+  }
 }
