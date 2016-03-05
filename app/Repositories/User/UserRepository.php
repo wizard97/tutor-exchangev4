@@ -4,7 +4,8 @@ namespace App\Repositories\User;
 use App\Repositories\BaseRepository;
 
 use App\Models\User\User;
-
+use DB;
+use Debugbar;
 class UserRepository extends BaseRepository implements UserRepositoryContract
 {
 
@@ -14,6 +15,7 @@ class UserRepository extends BaseRepository implements UserRepositoryContract
   }
   public function possibleRecipientsQuery($query)
   {
+    $user = \Auth::user();
     $keys = preg_split("/[,.]+/", trim(urldecode($query)));
     $num_keys = count($keys);
     $search = User::where(function ($query) use($keys){
@@ -21,15 +23,23 @@ class UserRepository extends BaseRepository implements UserRepositoryContract
         $query->orWhere('fname', 'LIKE', '%'.$key.'%')
         ->orWhere('lname', 'LIKE', '%'.$key.'%');
       }
-    })->select('fname', 'lname', 'id')
+    })
+    //->select('fname', 'lname', 'id')
+    ->where('users.id', '!=', $user->id)
+    ->select(DB::raw("CONCAT(users.fname,' ',users.lname) AS full_name"), 'id', 'account_type', 'address')
     ->take(10)
     ->get();
+    //Debugbar::info($search);
+    //Debugbar::warning('Watch out…');
     return $search;
   }
   public function possibleRecipientsPrefetch()
   {
+    $user = \Auth::user();
     $prefetch = User::all()
-    ->select('fname', 'lname', 'id')
+    //->select('fname', 'lname', 'id')
+    ->where('users.id', '!=', $user->id)
+    ->select(DB::raw("CONCAT(users.fname,' ',users.lname) AS full_name"), 'id', 'account_type', 'address')
     ->take(100);
     return $prefetch;
   }
