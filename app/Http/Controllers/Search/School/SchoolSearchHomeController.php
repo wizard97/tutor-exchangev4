@@ -19,30 +19,28 @@ class SchoolSearchHomeController extends Controller
   {
     if(\Auth::check())
     {
-      $this->validate($request, [
-      'school_type' => 'required|in:middle,high',
-      'tutor_type' => 'required|in:standard,professional,all',
-      'start_rate' => 'numeric|between:0,200',
-      'end_rate' => 'numeric|between:0,200',
-      'max_dist' => 'numeric|between:1,200',
+      $this->validate($request, [ //verify form validity if logged in
+        'school_type' => 'required|in:middle,high',
+        'tutor_type' => 'required|in:standard,professional,all',
+        'start_rate' => 'numeric|between:0,200',
+        'end_rate' => 'numeric|between:0,200',
+        'max_dist' => 'numeric|between:1,200',
       ]);
     }
     else {
-      $this->validate($request, [
-      'zip' => 'required|digits:5|numeric|exists:zips,zip_code',
-      'school_type' => 'required|in:middle,high',
-      'tutor_type' => 'required|in:standard,professional,all',
-      'start_rate' => 'numeric|between:0,200',
-      'end_rate' => 'numeric|between:0,200',
-      'max_dist' => 'numeric|between:1,200',
+      $this->validate($request, [ //verify form validity if not logged in
+        'zip' => 'required|digits:5|numeric|exists:zips,zip_code',
+        'school_type' => 'required|in:middle,high',
+        'tutor_type' => 'required|in:standard,professional,all',
+        'start_rate' => 'numeric|between:0,200',
+        'end_rate' => 'numeric|between:0,200',
+        'max_dist' => 'numeric|between:1,200',
       ]);
     }
-
     $input = $request->all();
     //flash form data into session
     $request->session()->forget('school_search_inputs');
     $request->session()->put('school_search_inputs', $input);
-
     //high school or above for standard tutors
     if ($request->input('school_type') == 'high')
     {
@@ -54,5 +52,4 @@ class SchoolSearchHomeController extends Controller
     }
     return view('search/school/searchform');
   }
-
 }

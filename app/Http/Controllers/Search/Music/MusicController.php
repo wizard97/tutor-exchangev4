@@ -28,7 +28,7 @@ class MusicController extends Controller
   {
     if(\Auth::check())
     {
-        $this->validate($request, [
+      $this->validate($request, [ //verify form validity if logged in
         'instrument' => 'required|exists:music,id',
         'years_playing' => 'required|numeric|min:0',
         'school_type' => 'required|in:middle,high',
@@ -36,18 +36,18 @@ class MusicController extends Controller
         'start_rate' => 'numeric|between:0,200',
         'end_rate' => 'numeric|between:0,200',
         'max_dist' => 'numeric|between:1,200',
-        ]);
+      ]);
     }
     else {
-      $this->validate($request, [
-      'instrument' => 'required|exists:music,id',
-      'years_playing' => 'required|numeric|min:0',
-      'zip' => 'required|digits:5|numeric|exists:zips,zip_code',
-      'school_type' => 'required|in:middle,high',
-      'tutor_type' => 'required|in:standard,professional',
-      'start_rate' => 'numeric|between:0,200',
-      'end_rate' => 'numeric|between:0,200',
-      'max_dist' => 'numeric|between:1,200',
+      $this->validate($request, [ //verify form validity if not logged in
+        'instrument' => 'required|exists:music,id',
+        'years_playing' => 'required|numeric|min:0',
+        'zip' => 'required|digits:5|numeric|exists:zips,zip_code',
+        'school_type' => 'required|in:middle,high',
+        'tutor_type' => 'required|in:standard,professional',
+        'start_rate' => 'numeric|between:0,200',
+        'end_rate' => 'numeric|between:0,200',
+        'max_dist' => 'numeric|between:1,200',
       ]);
     }
 
@@ -115,7 +115,7 @@ class MusicController extends Controller
     if (!empty($hs_id)) $search->where('music.id', '=', $inst_id);
 
 
-      //handle times
+    //handle times
     $time_array = array();
     $search->where(function ($query) use($form_inputs, $time_alias, &$time_array){
       $days = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun'];
@@ -142,14 +142,14 @@ class MusicController extends Controller
     switch ($form_inputs['tutor_type'])
     {
       case 'standard':
-        $search->where('users.account_type', '2');
-        break;
+      $search->where('users.account_type', '2');
+      break;
       case 'professional':
-        $search->where('users.account_type', '3');
-        break;
+      $search->where('users.account_type', '3');
+      break;
       case 'all':
-        $search->where('users.account_type', '>=', '2');
-        break;
+      $search->where('users.account_type', '>=', '2');
+      break;
     }
 
     //finish building search
@@ -202,80 +202,80 @@ class MusicController extends Controller
 
     $sort_by = 'best_match'; //default sort
 
-    switch ($request->get('sort'))
+    switch ($request->get('sort')) //sorting cases
     {
 
       case 'best_match':
-        $search
-        ->orderBy('upto_years', 'desc')
-        ->orderBy('times_match', 'desc')
-        ->orderBy('distance_match', 'desc')
-        ->orderBy('lname', 'asc');
-        $sort_by = 'best_match';
-        break;
+      $search
+      ->orderBy('upto_years', 'desc')
+      ->orderBy('times_match', 'desc')
+      ->orderBy('distance_match', 'desc')
+      ->orderBy('lname', 'asc');
+      $sort_by = 'best_match';
+      break;
       case 'experience':
-        $search
-        ->orderBy('years_experiance', 'desc')
-        ->orderBy('upto_years', 'desc')
-        ->orderBy('times_match', 'desc')
-        ->orderBy('distance_match', 'desc')
-        ->orderBy('lname', 'asc');
-        $sort_by = 'experience';
-        break;
+      $search
+      ->orderBy('years_experiance', 'desc')
+      ->orderBy('upto_years', 'desc')
+      ->orderBy('times_match', 'desc')
+      ->orderBy('distance_match', 'desc')
+      ->orderBy('lname', 'asc');
+      $sort_by = 'experience';
+      break;
       case 'name':
-        $search
-        ->orderBy('lname', 'asc')
-        ->orderBy('fname', 'asc')
-        ->orderBy('times_match', 'desc')
-        ->orderBy('distance_match', 'desc');
-        $sort_by = 'name';
-        break;
+      $search
+      ->orderBy('lname', 'asc')
+      ->orderBy('fname', 'asc')
+      ->orderBy('times_match', 'desc')
+      ->orderBy('distance_match', 'desc');
+      $sort_by = 'name';
+      break;
       case 'proximity':
-        $search
-        ->orderBy('distance_match', 'desc')
-        ->orderBy('times_match', 'desc')
-        ->orderBy('lname', 'asc');
-        $sort_by = 'proximity';
-        break;
+      $search
+      ->orderBy('distance_match', 'desc')
+      ->orderBy('times_match', 'desc')
+      ->orderBy('lname', 'asc');
+      $sort_by = 'proximity';
+      break;
       case 'joined':
-        $search
-        ->orderBy('users.created_at', 'asc')
-        ->orderBy('upto_years', 'desc')
-        ->orderBy('times_match', 'desc')
-        ->orderBy('distance_match', 'desc')
-        ->orderBy('lname', 'asc');
-        $sort_by = 'joined';
-        break;
+      $search
+      ->orderBy('users.created_at', 'asc')
+      ->orderBy('upto_years', 'desc')
+      ->orderBy('times_match', 'desc')
+      ->orderBy('distance_match', 'desc')
+      ->orderBy('lname', 'asc');
+      $sort_by = 'joined';
+      break;
       case 'schedule':
-        $search
-        ->orderBy('times_match', 'desc')
-        ->orderBy('distance_match', 'desc')
-        ->orderBy('lname', 'asc');
-        $sort_by = 'schedule';
-        break;
+      $search
+      ->orderBy('times_match', 'desc')
+      ->orderBy('distance_match', 'desc')
+      ->orderBy('lname', 'asc');
+      $sort_by = 'schedule';
+      break;
       case 'rate':
-        $search
-        ->orderBy('tutors.rate', 'asc')
-        ->orderBy('times_match', 'desc')
-        ->orderBy('distance_match', 'desc')
-        ->orderBy('lname', 'asc');
-        $sort_by = 'rate';
-        break;
+      $search
+      ->orderBy('tutors.rate', 'asc')
+      ->orderBy('times_match', 'desc')
+      ->orderBy('distance_match', 'desc')
+      ->orderBy('lname', 'asc');
+      $sort_by = 'rate';
+      break;
       case 'rating':
-        $search
-        ->orderBy('avg_rating', 'desc')
-        ->orderBy('times_match', 'desc')
-        ->orderBy('distance_match', 'desc')
-        ->orderBy('lname', 'asc');
-        $sort_by = 'rating';
-        break;
+      $search
+      ->orderBy('avg_rating', 'desc')
+      ->orderBy('times_match', 'desc')
+      ->orderBy('distance_match', 'desc')
+      ->orderBy('lname', 'asc');
+      $sort_by = 'rating';
+      break;
       default:
-        $search
-        ->orderBy('times_match', 'desc')
-        ->orderBy('distance_match', 'desc')
-        ->orderBy('lname', 'asc');
-        $sort_by = 'best_match';
-        break;
+      $search
+      ->orderBy('times_match', 'desc')
+      ->orderBy('distance_match', 'desc')
+      ->orderBy('lname', 'asc');
+      $sort_by = 'best_match';
+      break;
     }
 
     if ($request->get('page') > 1)
@@ -296,7 +296,7 @@ class MusicController extends Controller
       $tutor_contacts = \Auth::user()->tutor_contacts()->select('tutor_id')->get()->pluck('tutor_id')->toArray();
       $saved_tutors = \Auth::user()->saved_tutors()->join('users', 'tutor_id', '=', 'users.id')->get()->pluck('tutor_id')->toArray();
       return view('search/music/showmusicresults', ['results' => $results, 'num_results' => $num_rows, 'paginator' => $paginator, 'sort_options' => $sort_options,
-       'sort_by' => $sort_by, 'num_availability' => $num_availability, 'tutor_contacts' => $tutor_contacts]);
+      'sort_by' => $sort_by, 'num_availability' => $num_availability, 'tutor_contacts' => $tutor_contacts]);
     }
     else $saved_tutors = array();
     \Session::put('feedback_warning', "For the protection of our site's tutors, we are blocking most of the site's functionality including the ability to view their profile, see reviews, and contact them. Please <a href=\"".route('auth.login')."\">login/register</a>.");

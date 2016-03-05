@@ -12,10 +12,10 @@ use App\Models\Tutor\Tutor;
 
 class HomeController extends Controller
 {
-  public function index()
+  public function index() //home page
   {
     Stat::incr_visitors();
-    $stats = Stat::firstOrFail();
+    $stats = Stat::firstOrFail(); //get statistics for carousel
     $stats->std_members = User::where('account_type', 1)->count();
     $stats->tutor_members = User::where('account_type', '>=', 2)->count();
     $stats->active_tutors = Tutor::where('tutor_active', '1')->count();

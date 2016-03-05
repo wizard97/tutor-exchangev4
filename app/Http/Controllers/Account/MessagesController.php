@@ -168,7 +168,7 @@ class MessagesController extends Controller
     if ($request->has('recipients')) {
       $thread->addParticipants($request->get('recipients'));
     }
-    $this->sendNewMessageEmail($messageModel);
+    $this->sendNewMessageEmail($messageModel); //send message
     return redirect('account/messages/' . $id);
   }
 
@@ -182,7 +182,8 @@ class MessagesController extends Controller
     $from = $user->getName();
     foreach ($messageModel->getRecipientParticipants() as $participant)
     {
-      $to = $participant->user;
+      $to = $participant->user; //set recipient
+      //sent email
       Mail::queue('emails.messaging.recievedmessage', compact('messageModel', 'user', 'to'), function ($m) use ($to, $from) {
         $m->from('noreply@lextutorexchange.com', 'Lexington Tutor Exchange');
         $m->to($to->email, $to->getName());

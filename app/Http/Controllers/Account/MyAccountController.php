@@ -64,13 +64,10 @@ class MyAccountController extends Controller
     $this->validate($request, [
       'userid' => 'required|exists:tutors,user_id'
     ]);
-
     $tutor = Tutor::get_tutor_profile($request->input('userid'));
-
     $data['name'] = $tutor->fname.' '.$tutor->lname;
     $data['tutor_profile'] = route('search.showtutorprofile', ['id' => $request->input('userid')]);
     $data['post_url'] = route('messages.storeAjax');
-
     return response()->json($data);
   }
 

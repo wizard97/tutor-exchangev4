@@ -18,11 +18,11 @@ class SearchHomeController extends Controller
   }
 
   /**
-   * Show tutor profile
-   *
-   * @param  int  $id
-   * @return Response
-   */
+  * Show tutor profile
+  *
+  * @param  int  $id
+  * @return Response
+  */
   public function showtutorprofile($id)
   {
     $tutor = Tutor::findOrFail($id);
@@ -34,28 +34,25 @@ class SearchHomeController extends Controller
     ->select('school_subjects.school_id', 'classes.subject_id', 'subject_name', \DB::raw('count(*) AS num_classes'))
     ->get()
     ->groupBy('school_id');
-
     //get tutor schools
     $schools = $tutor->schools()
-      ->leftJoin('school_subjects', 'school_subjects.school_id', '=', 'schools.id')
-      ->leftJoin('classes', 'classes.subject_id', '=', 'school_subjects.id')
-      ->leftjoin('levels', 'levels.class_id', '=', 'classes.id')
-      ->join('tutor_levels', 'tutor_levels.level_id', '=', 'levels.id')
-      ->where('tutor_levels.user_id', $tutor->user_id)
-      ->groupBy('schools.id')
-      ->orderBy('num_classes', 'desc')
-      ->select('schools.school_name', 'schools.id', \DB::raw('COUNT(*) AS num_classes'))
-      ->get();
-
-      $reviews = $tutor->reviews()->join('users', 'users.id', '=', 'reviews.tutor_id')
-        ->select('reviews.*', 'users.fname', 'users.lname')
-        ->orderBy('reviews.created_at', 'desc')
-        ->get();
-
+    ->leftJoin('school_subjects', 'school_subjects.school_id', '=', 'schools.id')
+    ->leftJoin('classes', 'classes.subject_id', '=', 'school_subjects.id')
+    ->leftjoin('levels', 'levels.class_id', '=', 'classes.id')
+    ->join('tutor_levels', 'tutor_levels.level_id', '=', 'levels.id')
+    ->where('tutor_levels.user_id', $tutor->user_id)
+    ->groupBy('schools.id')
+    ->orderBy('num_classes', 'desc')
+    ->select('schools.school_name', 'schools.id', \DB::raw('COUNT(*) AS num_classes'))
+    ->get();
+    $reviews = $tutor->reviews()->join('users', 'users.id', '=', 'reviews.tutor_id')
+    ->select('reviews.*', 'users.fname', 'users.lname')
+    ->orderBy('reviews.created_at', 'desc')
+    ->get();
     $tutor = Tutor::get_tutor_profile($id);
     $saved_tutors = \Auth::user()->saved_tutors()->get()->pluck('tutor_id')->toArray();
     return view('search/showtutorprofile')->with('tutor', $tutor)->with('subjects', $subjects)->with('saved_tutors', $saved_tutors)->with('schools', $schools)
-      ->with('reviews', $reviews);
+    ->with('reviews', $reviews);
   }
 
   //ajax stuff
@@ -64,7 +61,7 @@ class SearchHomeController extends Controller
     $this->validate($request, [
       'school_id' => 'required|exists:schools,id',
       'tutor_id' => 'required|exists:tutors,user_id',
-      ]);
+    ]);
     $tutor = Tutor::findOrFail($request->get('tutor_id'));
     $tutor_classes = $tutor->levels()
     ->join('classes', 'classes.id', '=', 'levels.class_id')
@@ -77,4 +74,4 @@ class SearchHomeController extends Controller
 
   }
 
-  }
+}
