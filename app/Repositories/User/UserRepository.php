@@ -5,7 +5,7 @@ use App\Repositories\BaseRepository;
 
 use App\Models\User\User;
 use DB;
-
+use Debugbar;
 class UserRepository extends BaseRepository implements UserRepositoryContract
 {
 
@@ -26,9 +26,11 @@ class UserRepository extends BaseRepository implements UserRepositoryContract
     })
     //->select('fname', 'lname', 'id')
     ->where('users.id', '!=', $user->id)
-    ->select(DB::raw("CONCAT(users.fname,' ',users.lname) AS full_name"), 'id')
+    ->select(DB::raw("CONCAT(users.fname,' ',users.lname) AS full_name"), 'id', 'account_type', 'address')
     ->take(10)
     ->get();
+    //Debugbar::info($search);
+    //Debugbar::warning('Watch out…');
     return $search;
   }
   public function possibleRecipientsPrefetch()
@@ -37,7 +39,7 @@ class UserRepository extends BaseRepository implements UserRepositoryContract
     $prefetch = User::all()
     //->select('fname', 'lname', 'id')
     ->where('users.id', '!=', $user->id)
-    ->select(DB::raw("CONCAT(users.fname,' ',users.lname) AS full_name"), 'id')
+    ->select(DB::raw("CONCAT(users.fname,' ',users.lname) AS full_name"), 'id', 'account_type', 'address')
     ->take(100);
     return $prefetch;
   }
