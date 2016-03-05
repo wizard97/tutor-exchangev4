@@ -12,312 +12,314 @@
 */
 
 Route::get('/', function () {
-return redirect('home');
+  return redirect('home');
 });
 
 //some static pages
 Route::get('test', [
-    'as' => 'test', 'uses' => 'Account\ProposalController@index'
+  'as' => 'test', 'uses' => 'Account\ProposalController@index'
 ]);
 Route::get('mess', ['as' => 'messenger.index', function() { return View::make('account.messages.test'); }]);
 
 //some static pages
 Route::get('home', [
-    'as' => 'home', 'uses' => 'HomeController@index'
+  'as' => 'home', 'uses' => 'HomeController@index'
 ]);
 Route::get('about', ['as' => 'about.index', function() { return View::make('about'); }]);
 Route::get('contact/index', [
-    'as' => 'contact.index', 'uses' => 'ContactController@index'
+  'as' => 'contact.index', 'uses' => 'ContactController@index'
 ]);
 Route::post('contact/send', [
-    'as' => 'contact.send', 'uses' => 'ContactController@send'
+  'as' => 'contact.send', 'uses' => 'ContactController@send'
 ]);
 Route::get('user/feedback', [
-    'as' => 'feedback', function() { return View::make('/templates/feedback'); }]);
+  'as' => 'feedback', function() { return View::make('/templates/feedback'); }]);
 
-//Anything search related
-Route::group(['prefix' => 'search'], function() {
+  //Anything search related
+  Route::group(['prefix' => 'search'], function() {
 
-  // Only members can see these search pages
-  Route::group(['prefix' => 'showtutorprofile', 'middleware' => 'auth'], function() {
+    // Only members can see these search pages
+    Route::group(['prefix' => 'showtutorprofile', 'middleware' => 'auth'], function() {
 
-    Route::get('getclassesbyschool', [
+      Route::get('getclassesbyschool', [
         'as' => 'search.tutorclasses', 'uses' => 'Search\SearchHomeController@ajaxtutorclasses'
-    ]);
-    Route::get('{id}', [
+      ]);
+      Route::get('{id}', [
         'as' => 'search.showtutorprofile', 'uses' => 'Search\SearchHomeController@showtutorprofile'
-    ]);
-  });
+      ]);
+    });
 
-  //search home
-  Route::get('index', [
+    //search home
+    Route::get('index', [
       'as' => 'search.index', 'uses' => 'Search\SearchHomeController@index'
-  ]);
-  //school tutoring
-  Route::get('school/index', [
+    ]);
+    //school tutoring
+    Route::get('school/index', [
       'as' => 'school.index', 'uses' => 'Search\School\SchoolSearchHomeController@searchform'
-  ]);
-  Route::post('school/submitsearch', [
+    ]);
+    Route::post('school/submitsearch', [
       'as' => 'school.submitsearch', 'uses' => 'Search\School\SchoolSearchHomeController@searchformsubmit'
-  ]);
+    ]);
 
-  //hs tutoring
-  Route::get('school/hsorabove/classes', [
+    //hs tutoring
+    Route::get('school/hsorabove/classes', [
       'as' => 'hs.classes', 'uses' => 'Search\School\HsSearchController@classes'
-  ]);
-  Route::post('school/hsorabove/submitclasses', [
+    ]);
+    Route::post('school/hsorabove/submitclasses', [
       'as' => 'hs.submitclasses', 'uses' => 'Search\School\HsSearchController@submit_classes'
-  ]);
-  Route::get('school/hsorabove/showresults', [
+    ]);
+    Route::get('school/hsorabove/showresults', [
       'as' => 'hs.showresults', 'uses' => 'Search\School\HsSearchController@run_hs_search'
-  ]);
-  //school search related routes
-  Route::get('school/hsorabove/myschool', [
+    ]);
+    //school search related routes
+    Route::get('school/hsorabove/myschool', [
       'as' => 'hs.index', 'uses' => 'Search\School\HsSearchController@index'
-  ]);
-  Route::post('school/hsorabove/submitschool', [
+    ]);
+    Route::post('school/hsorabove/submitschool', [
       'as' => 'hs.submitschool', 'uses' => 'Search\School\HsSearchController@submit_school'
-  ]);
-  Route::get('school/hsorabove/find/remote/{query}', [
+    ]);
+    Route::get('school/hsorabove/find/remote/{query}', [
       'as' => 'hs.query', 'uses' => 'Search\School\HsSearchController@query'
-  ]);
-  Route::get('school/hsorabove/find/prefetch', [
+    ]);
+    Route::get('school/hsorabove/find/prefetch', [
       'as' => 'hs.prefetch', 'uses' => 'Search\School\HsSearchController@prefetch'
-  ]);
+    ]);
 
-  //ms tutoring
-  Route::get('school/middleorbelow/classes', [
+    //ms tutoring
+    Route::get('school/middleorbelow/classes', [
       'as' => 'middle.classes', 'uses' => 'Search\School\MiddleSearchController@classes'
-  ]);
-  Route::post('school/middleorbelow/submitclasses', [
+    ]);
+    Route::post('school/middleorbelow/submitclasses', [
       'as' => 'middle.submitclasses', 'uses' => 'Search\School\MiddleSearchController@submit_classes'
-  ]);
-  Route::get('school/middleorbelow/showresults', [
+    ]);
+    Route::get('school/middleorbelow/showresults', [
       'as' => 'middle.showresults', 'uses' => 'Search\School\MiddleSearchController@run_search'
-  ]);
+    ]);
 
-  //music
-  Route::get('music/index', [
+    //music
+    Route::get('music/index', [
       'as' => 'music.index', 'uses' => 'Search\Music\MusicController@index'
-  ]);
-  Route::post('music/submitsearch', [
+    ]);
+    Route::post('music/submitsearch', [
       'as' => 'music.submitsearch', 'uses' => 'Search\Music\MusicController@searchformsubmit'
-  ]);
-  Route::get('music/showresults', [
+    ]);
+    Route::get('music/showresults', [
       'as' => 'music.showresults', 'uses' => 'Search\Music\MusicController@showresults'
-  ]);
-});
-
-
-// Anything that requires an account
-Route::group(['prefix' => 'account', 'middleware' => 'auth', 'namespace' => 'Account'], function() {
-
-  // Messaging
-  Route::group(['prefix' => 'messages'], function () {
-    Route::get('/', ['as' => 'messages.index', 'uses' => 'MessagesController@index']);
-    Route::get('create', ['as' => 'messages.create', 'uses' => 'MessagesController@create']);
-    Route::post('/', ['as' => 'messages.store', 'uses' => 'MessagesController@store']);
-    Route::post('ajax/store', ['as' => 'messages.storeAjax', 'uses' => 'MessagesController@storeAjax']);
-    Route::get('{id}', ['as' => 'messages.show', 'uses' => 'MessagesController@show']);
-    Route::put('{id}', ['as' => 'messages.update', 'uses' => 'MessagesController@update']);
+    ]);
   });
 
-  // Myaccount
-  Route::group(['prefix' => 'myaccount'], function() {
-    //user dashboard
-    Route::get('index', [
+
+  // Anything that requires an account
+  Route::group(['prefix' => 'account', 'middleware' => 'auth', 'namespace' => 'Account'], function() {
+
+    // Messaging
+    Route::group(['prefix' => 'messages'], function () {
+      Route::get('/', ['as' => 'messages.index', 'uses' => 'MessagesController@index']);
+      Route::get('create', ['as' => 'messages.create', 'uses' => 'MessagesController@create']);
+      Route::post('/', ['as' => 'messages.store', 'uses' => 'MessagesController@store']);
+      Route::post('ajax/store', ['as' => 'messages.storeAjax', 'uses' => 'MessagesController@storeAjax']);
+      Route::get('{id}', ['as' => 'messages.show', 'uses' => 'MessagesController@show']);
+      Route::put('{id}', ['as' => 'messages.update', 'uses' => 'MessagesController@update']);
+      Route::get('query/{query?}', ['as' => 'messages.query', 'uses' => 'MessagesController@recipientquery']);
+      Route::get('prefetch', ['as' => 'messages.prefetch', 'uses' => 'MessagesController@recipientprefetch']);
+    });
+
+    // Myaccount
+    Route::group(['prefix' => 'myaccount'], function() {
+      //user dashboard
+      Route::get('index', [
         'as' => 'myaccount.dashboard', 'uses' => 'MyAccountController@index'
-    ]);
-    //submit review
-    Route::post('posttutorreview', [
+      ]);
+      //submit review
+      Route::post('posttutorreview', [
         'as' => 'myaccount.posttutorreview', 'uses' => 'MyAccountController@posttutorreview'
-    ]);
-    //ajax methods
-    Route::post('sendmessage', [
+      ]);
+      //ajax methods
+      Route::post('sendmessage', [
         'as' => 'myaccount.sendmessage', 'uses' => 'MyAccountController@sendmessage'
-    ]);
-    Route::post('savetutor', [
+      ]);
+      Route::post('savetutor', [
         'as' => 'myaccount.ajaxsavetutor', 'uses' => 'MyAccountController@ajaxsavetutor'
-    ]);
-    Route::get('contacttutor', [
+      ]);
+      Route::get('contacttutor', [
         'as' => 'myaccount.ajaxcontacttutor', 'uses' => 'MyAccountController@ajaxcontactjson'
-    ]);
-    Route::get('savedtutors', [
+      ]);
+      Route::get('savedtutors', [
         'as' => 'myaccount.ajaxsavedtutors', 'uses' => 'MyAccountController@ajaxsavedtutors'
-    ]);
-    Route::get('tutorcontacts', [
+      ]);
+      Route::get('tutorcontacts', [
         'as' => 'myaccount.ajaxtutorcontacts', 'uses' => 'MyAccountController@ajaxtutorcontacts'
-    ]);
-    Route::get('tutorreviews', [
+      ]);
+      Route::get('tutorreviews', [
         'as' => 'myaccount.ajaxtutorreviews', 'uses' => 'MyAccountController@ajaxtutorreviews'
-    ]);
+      ]);
 
-  });
+    });
 
-  // Proposals
-  Route::group(['prefix' => 'contributing'], function() {
-  Route::get('/', [
+    // Proposals
+    Route::group(['prefix' => 'contributing'], function() {
+      Route::get('/', [
         'as' => 'proposals.index', 'uses' => 'ProposalController@index'
-  ]);
-  Route::get('submitclass', [
-      'as' => 'proposals.submitclass', 'uses' => 'ProposalController@getSubmitClass'
-  ]);
-  Route::get('submitschool', [
-    'as' => 'proposals.submitschool', 'uses' => 'ProposalController@getSubmitSchool'
-  ]);
-  Route::post('submitschoolproposal', [
-    'as' => 'proposals.submitschoolproposal', 'uses' => 'ProposalController@postSubmitSchool'
-  ]);
-  Route::get('submitsubject', [
-      'as' => 'proposals.submitsubject', 'uses' => 'ProposalController@getSubmitSubject'
-  ]);
-  });
+      ]);
+      Route::get('submitclass', [
+        'as' => 'proposals.submitclass', 'uses' => 'ProposalController@getSubmitClass'
+      ]);
+      Route::get('submitschool', [
+        'as' => 'proposals.submitschool', 'uses' => 'ProposalController@getSubmitSchool'
+      ]);
+      Route::post('submitschoolproposal', [
+        'as' => 'proposals.submitschoolproposal', 'uses' => 'ProposalController@postSubmitSchool'
+      ]);
+      Route::get('submitsubject', [
+        'as' => 'proposals.submitsubject', 'uses' => 'ProposalController@getSubmitSubject'
+      ]);
+    });
 
-  // Settings
-  Route::group(['prefix' => 'settings'], function() {
-    Route::get('index', [
+    // Settings
+    Route::group(['prefix' => 'settings'], function() {
+      Route::get('index', [
         'as' => 'accountsettings.index', 'uses' => 'SettingsController@index'
-    ]);
-    Route::post('editname', [
+      ]);
+      Route::post('editname', [
         'as' => 'accountsettings.editname', 'uses' => 'SettingsController@editname'
-    ]);
-    Route::post('editemail', [
+      ]);
+      Route::post('editemail', [
         'as' => 'accountsettings.editemail', 'uses' => 'SettingsController@editemail'
-    ]);
-    Route::post('editaddress', [
+      ]);
+      Route::post('editaddress', [
         'as' => 'accountsettings.editaddress', 'uses' => 'SettingsController@editaddress'
-    ]);
-    Route::post('editaccounttype', [
+      ]);
+      Route::post('editaccounttype', [
         'as' => 'accountsettings.editaccounttype', 'uses' => 'SettingsController@editaccounttype'
-    ]);
-    Route::post('editpassword', [
+      ]);
+      Route::post('editpassword', [
         'as' => 'accountsettings.editpassword', 'uses' => 'SettingsController@editpassword'
-    ]);
-  });
+      ]);
+    });
 
-  //Tutoring
-  Route::group(['prefix' => 'tutoring'], function() {
+    //Tutoring
+    Route::group(['prefix' => 'tutoring'], function() {
 
-    Route::get('index', [
+      Route::get('index', [
         'as' => 'tutoring.dashboard', 'uses' => 'TutorController@getindex'
-    ]);
-    Route::get('info', [
+      ]);
+      Route::get('info', [
         'as' => 'tutoring.info', 'uses' => 'TutorController@geteditinfo'
-    ]);
-    Route::post('editinfo', [
+      ]);
+      Route::post('editinfo', [
         'as' => 'tutoring.editinfo', 'uses' => 'TutorController@posteditinfo'
-    ]);
-    Route::get('classes', [
+      ]);
+      Route::get('classes', [
         'as' => 'tutoring.classes', 'uses' => 'TutorController@geteditclasses'
-    ]);
-    Route::post('editclasses', [
+      ]);
+      Route::post('editclasses', [
         'as' => 'tutoring.editclasses', 'uses' => 'TutorController@posteditclasses'
-    ]);
-    Route::get('myprofile', [
+      ]);
+      Route::get('myprofile', [
         'as' => 'tutoring.myprofile', 'uses' => 'TutorController@getmyprofile'
-    ]);
-    Route::get('runlisting', [
+      ]);
+      Route::get('runlisting', [
         'as' => 'tutoring.runlisting', 'uses' => 'TutorController@runlisting'
-    ]);
-    Route::get('settings', [
+      ]);
+      Route::get('settings', [
         'as' => 'tutoring.settings', 'uses' => 'TutorController@getsettings'
-    ]);
-    Route::post('runlisting', [
+      ]);
+      Route::post('runlisting', [
         'as' => 'tutoring.submitlisting', 'uses' => 'TutorController@submitlisting'
-    ]);
-    Route::get('pauselisting', [
+      ]);
+      Route::get('pauselisting', [
         'as' => 'tutoring.pauselisting', 'uses' => 'TutorController@pauselisting'
-    ]);
-    Route::get('schedule', [
+      ]);
+      Route::get('schedule', [
         'as' => 'tutoring.schedule', 'uses' => 'TutorController@geteditschedule'
-    ]);
-    Route::post('editschedule', [
+      ]);
+      Route::post('editschedule', [
         'as' => 'tutoring.editschedule', 'uses' => 'TutorController@posteditschedule'
-    ]);
-    Route::get('music', [
+      ]);
+      Route::get('music', [
         'as' => 'tutoring.music', 'uses' => 'TutorController@getmusic'
-    ]);
-    //add school
-    Route::post('addschool', [
+      ]);
+      //add school
+      Route::post('addschool', [
         'as' => 'tutoring.addschool', 'uses' => 'TutorController@addschool'
-    ]);
-    //remove school
-    Route::post('removeschool', [
+      ]);
+      //remove school
+      Route::post('removeschool', [
         'as' => 'tutoring.removeschool', 'uses' => 'TutorController@removeschool'
-    ]);
+      ]);
 
-    //ajax
-    Route::get('ajaxgetschools', [
+      //ajax
+      Route::get('ajaxgetschools', [
         'as' => 'tutoring.ajaxgetschools', 'uses' => 'TutorController@ajaxgetschools'
-    ]);
-    //get classes for school
-    Route::get('ajaxgetschoolclasses', [
+      ]);
+      //get classes for school
+      Route::get('ajaxgetschoolclasses', [
         'as' => 'tutoring.ajaxgetschoolclasses', 'uses' => 'TutorController@ajaxgetschoolclasses'
-    ]);
-    //get tutor classes for school
-    Route::get('ajaxgettutorschoolclasses', [
+      ]);
+      //get tutor classes for school
+      Route::get('ajaxgettutorschoolclasses', [
         'as' => 'tutoring.ajaxgettutorschoolclasses', 'uses' => 'TutorController@ajaxgettutorschoolclasses'
-    ]);
-    Route::post('ajaxstartstopmusic', [
+      ]);
+      Route::post('ajaxstartstopmusic', [
         'as' => 'tutoring.ajaxstartstopmusic', 'uses' => 'TutorController@ajaxstartstopmusic'
-    ]);
-    Route::post('ajaxremovemusic', [
+      ]);
+      Route::post('ajaxremovemusic', [
         'as' => 'tutoring.ajaxremovemusic', 'uses' => 'TutorController@ajaxremovemusic'
-    ]);
-    Route::post('addmusic', [
+      ]);
+      Route::post('addmusic', [
         'as' => 'tutoring.addmusic', 'uses' => 'TutorController@addmusic'
-    ]);
-    Route::get('ajaxgettutormiddleclasses', [
+      ]);
+      Route::get('ajaxgettutormiddleclasses', [
         'as' => 'tutoring.ajaxgettutormiddleclasses', 'uses' => 'TutorController@ajaxgettutormiddleclasses'
-    ]);
-    Route::post('editmiddleclasses', [
+      ]);
+      Route::post('editmiddleclasses', [
         'as' => 'tutoring.editmiddleclasses', 'uses' => 'TutorController@posteditmiddleclasses'
-    ]);
-    Route::get('ajaxgetmiddleclasses', [
+      ]);
+      Route::get('ajaxgetmiddleclasses', [
         'as' => 'tutoring.ajaxgetmiddleclasses', 'uses' => 'TutorController@ajaxgetmiddleclasses'
-    ]);
+      ]);
+
+    });
 
   });
 
-});
+  // Authentication routes...
+  Route::group(['prefix' => 'auth'], function() {
 
-// Authentication routes...
-Route::group(['prefix' => 'auth'], function() {
-
-  Route::get('login', [
+    Route::get('login', [
       'as' => 'auth.login', 'uses' => 'Auth\AuthController@getLogin'
-  ]);
-  Route::post('login', [
+    ]);
+    Route::post('login', [
       'as' => 'auth.postlogin', 'uses' => 'Auth\AuthController@postLogin'
-  ]);
-  Route::get('logout', [
+    ]);
+    Route::get('logout', [
       'as' => 'auth.logout', 'uses' => 'Auth\AuthController@getLogout'
-  ]);
-  // Registration routes...
-  Route::get('register', 'Auth\AuthController@getRegister');
-  Route::post('register', 'Auth\AuthController@store');
-  Route::get('verify/{confirmationCode}', [
+    ]);
+    // Registration routes...
+    Route::get('register', 'Auth\AuthController@getRegister');
+    Route::post('register', 'Auth\AuthController@store');
+    Route::get('verify/{confirmationCode}', [
       'as' => 'confirmation_path',
       'uses' => 'Auth\AuthController@confirm'
-  ]);
+    ]);
 
-});
+  });
 
-// Password reset link request routes...
-Route::group(['prefix' => 'password'], function() {
-  Route::get('email', 'Auth\PasswordController@getEmail');
-  Route::post('email', 'Auth\PasswordController@postEmail');
+  // Password reset link request routes...
+  Route::group(['prefix' => 'password'], function() {
+    Route::get('email', 'Auth\PasswordController@getEmail');
+    Route::post('email', 'Auth\PasswordController@postEmail');
 
-  // Password reset routes...
-  Route::get('reset/{token}', 'Auth\PasswordController@getReset');
-  Route::post('reset', 'Auth\PasswordController@postReset');
-});
+    // Password reset routes...
+    Route::get('reset/{token}', 'Auth\PasswordController@getReset');
+    Route::post('reset', 'Auth\PasswordController@postReset');
+  });
 
 
-//images
-Route::controller('profileimage', 'Account\ProfileImageController', [
+  //images
+  Route::controller('profileimage', 'Account\ProfileImageController', [
     'getShowFull' => 'profileimage.showfull',
     'getShowSmall' => 'profileimage.showsmall',
     'postStore' => 'profileimage.store',
     'getDestroy' => 'profileimage.destroy',
-]);
+  ]);

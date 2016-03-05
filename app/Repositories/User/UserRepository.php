@@ -12,5 +12,25 @@ class UserRepository extends BaseRepository implements UserRepositoryContract
   {
     $this->model = $model;
   }
-
+  public function possibleRecipientsQuery($query)
+  {
+    $keys = preg_split("/[,.]+/", trim(urldecode($query)));
+    $num_keys = count($keys);
+    $search = User::where(function ($query) use($keys){
+      foreach($keys as $key) {
+        $query->orWhere('fname', 'LIKE', '%'.$key.'%')
+        ->orWhere('lname', 'LIKE', '%'.$key.'%');
+      }
+    })->select('fname', 'lname', 'id')
+    ->take(10)
+    ->get();
+    return $search;
+  }
+  public function possibleRecipientsPrefetch()
+  {
+    $prefetch = User::all()
+    ->select('fname', 'lname', 'id')
+    ->take(100);
+    return $prefetch;
+  }
 }
