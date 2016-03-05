@@ -15,6 +15,7 @@ class UserRepository extends BaseRepository implements UserRepositoryContract
   }
   public function possibleRecipientsQuery($query)
   {
+    $user = \Auth::user();
     $keys = preg_split("/[,.]+/", trim(urldecode($query)));
     $num_keys = count($keys);
     $search = User::where(function ($query) use($keys){
@@ -24,6 +25,7 @@ class UserRepository extends BaseRepository implements UserRepositoryContract
       }
     })
     //->select('fname', 'lname', 'id')
+    ->where('users.id', '!=', $user->id)
     ->select(DB::raw("CONCAT(users.fname,' ',users.lname) AS full_name"), 'id')
     ->take(10)
     ->get();
@@ -31,8 +33,10 @@ class UserRepository extends BaseRepository implements UserRepositoryContract
   }
   public function possibleRecipientsPrefetch()
   {
+    $user = \Auth::user();
     $prefetch = User::all()
     //->select('fname', 'lname', 'id')
+    ->where('users.id', '!=', $user->id)
     ->select(DB::raw("CONCAT(users.fname,' ',users.lname) AS full_name"), 'id')
     ->take(100);
     return $prefetch;
