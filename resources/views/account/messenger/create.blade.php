@@ -36,6 +36,7 @@ $(document).ready(function() {
     datumTokenizer: function(datum) {
       var tokens = [];
       tokens.push(String(datum.full_name));
+      tokens.push(String(datum.address));
       tokens.push(datum.id);
       return tokens;
     },
@@ -56,9 +57,9 @@ $(document).ready(function() {
       }
     },
     typeaheadjs: {
-      name: 'name',
-      displayKey: 'full_name',
-      //display: 'users',
+      name: 'user',
+      //displayKey: 'full_name',
+      //display: 'user',
       //valueKey: 'id',
       source: recipientshound.ttAdapter(),
       templates: {
