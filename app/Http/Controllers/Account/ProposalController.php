@@ -46,7 +46,7 @@ class ProposalController extends Controller
       catch(\Exception $e)
       {
         $error = $e->getMessage();
-        $request->session()->put('feedback_negative', "An unexspected error occured.");
+        $request->session()->put('feedback_negative', "An unexpected error occured.");
         return back();
       }
 
