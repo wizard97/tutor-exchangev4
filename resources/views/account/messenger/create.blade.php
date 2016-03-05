@@ -49,11 +49,11 @@ $(document).ready(function() {
     //itemText: 'fname',
     typeaheadjs: {
       name: 'name',
-      displayKey: 'fname',
+      displayKey: 'full_name',
       valueKey: 'id',
       source: recipientshound.ttAdapter(),
       suggestion: function (user) {
-            return '<p>' + user.fname + '</p>';
+            return '<p>' + user.full_name + '</p>';
         }
     }
   });
