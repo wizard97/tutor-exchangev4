@@ -3,11 +3,18 @@
 <div class="container">
     @include('templates/feedback')
     <h1>Create a new message</h1>
+    <hr>
     {!! Form::open(['route' => 'messages.store']) !!}
     <div class="col-md-6">
         <div class="form-group">
             {!! Form::label('recipients', 'Recipients', ['class' => 'control-label']) !!}
             {!! Form::select('recipients[]', [], null, ['class' => 'form-control typeahead', 'id' => 'recipients', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'multiple' => 'multiple']) !!}
+            <p class="help-block">
+                Key:
+                <span class="label label-warning">Standard Users</span>
+                <span class="label label-info">Tutors</span>
+                <span class="label label-success">Professional Tutors</span>
+            </p>
         </div>
         <div class="form-group">
             {!! Form::label('subject', 'Subject', ['class' => 'control-label']) !!}
@@ -53,8 +60,8 @@ $(document).ready(function() {
         itemText: 'full_name',
         tagClass: function(user) {
             switch (user.account_type) {
-                case 1  : return 'label label-primary';
-                case 2  : return 'label label-warning';
+                case 1  : return 'label label-warning';
+                case 2  : return 'label label-info';
                 case 3  : return 'label label-success';
             }
         },
@@ -69,7 +76,13 @@ $(document).ready(function() {
                     '</p>'
                 ].join('\n'),
                 suggestion: function (user) {
-                    return '<p><strong>' + user.full_name + ',</strong> <small>' + user.city  + ' ' + user.state_prefix + '</small></p>';
+                    var $element = $('<p><strong>' + user.full_name + ',</strong> <small>' + user.city  + ' ' + user.state_prefix + '</small></p>');
+                    switch (user.account_type) {
+                        case 1  : $element.find('strong').addClass('text-warning'); break;
+                        case 2  : $element.find('strong').addClass('text-info'); break;
+                        case 3  : $element.find('strong').addClass('text-success'); break;
+                    }
+                    return $element;
                 }
             }
         }
