@@ -1,12 +1,13 @@
 @extends('app')
 @section('content')
 <div class="container">
+    @include('templates/feedback')
     <h1>Create a new message</h1>
     {!! Form::open(['route' => 'messages.store']) !!}
     <div class="col-md-6">
         <div class="form-group">
             {!! Form::label('recipients', 'Recipients', ['class' => 'control-label']) !!}
-            {!! Form::text('recipients', null, ['class' => 'form-control typeahead', 'id' => 'recipients', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'placeholder' => 'e.g. John Smith']) !!}
+            {!! Form::select('recipients[]', [], null, ['class' => 'form-control typeahead', 'id' => 'recipients', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'multiple' => 'multiple']) !!}
         </div>
         <div class="form-group">
             {!! Form::label('subject', 'Subject', ['class' => 'control-label']) !!}
@@ -36,7 +37,8 @@ $(document).ready(function() {
         datumTokenizer: function(datum) {
             var tokens = [];
             tokens.push(String(datum.full_name));
-            tokens.push(String(datum.address));
+            tokens.push(String(datum.city));
+            tokens.push(String(datum.state_prefix));
             tokens.push(datum.id);
             return tokens;
         },

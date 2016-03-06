@@ -104,10 +104,8 @@ class MessagesController extends Controller
         $this->validate($request, [
             'subject' => 'required|string',
             'message' => 'required|string',
-            'recipients' => 'string'
+            'recipients' => 'required|array|not_in:'.\Auth::id()
         ]);
-        $recipients = $request->input('recipients');
-        $recipients = explode(',', $recipients);
 
         $userId = Auth::id();
         $input = $request->all();
@@ -117,12 +115,12 @@ class MessagesController extends Controller
         $messageModel = $messageRepository->create($input, $thread, $userId);
         // Recipients
         if ($request->has('recipients')) {
-            $thread->addParticipants($recipients); // FIX
+            $thread->addParticipants($request->input('recipients')); // FIX
         }
 
         $this->sendNewMessageEmail($messageModel);
 
-
+        \Session::put('feedback_positive', 'Your message has been successfully sent!');
         return redirect(route('messages.index'));
     }
 
