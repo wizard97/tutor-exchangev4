@@ -9,38 +9,47 @@ use Debugbar;
 class UserRepository extends BaseRepository implements UserRepositoryContract
 {
 
-  public function __construct(User $model)
-  {
-    $this->model = $model;
-  }
-  public function possibleRecipientsQuery($query)
-  {
-    $user = \Auth::user();
-    $keys = preg_split("/[,.]+/", trim(urldecode($query)));
-    $num_keys = count($keys);
-    $search = User::where(function ($query) use($keys){
-      foreach($keys as $key) {
-        $query->orWhere('fname', 'LIKE', '%'.$key.'%')
-        ->orWhere('lname', 'LIKE', '%'.$key.'%');
-      }
-    })
-    //->select('fname', 'lname', 'id')
-    ->where('users.id', '!=', $user->id)
-    ->select(DB::raw("CONCAT(users.fname,' ',users.lname) AS full_name"), 'id', 'account_type', 'address')
-    ->take(10)
-    ->get();
-    //Debugbar::info($search);
-    //Debugbar::warning('Watch out…');
-    return $search;
-  }
-  public function possibleRecipientsPrefetch()
-  {
-    $user = \Auth::user();
-    $prefetch = User::all()
-    //->select('fname', 'lname', 'id')
-    ->where('users.id', '!=', $user->id)
-    ->select(DB::raw("CONCAT(users.fname,' ',users.lname) AS full_name"), 'id', 'account_type', 'address')
-    ->take(100);
-    return $prefetch;
-  }
+    public function __construct(User $model)
+    {
+        $this->model = $model;
+    }
+
+    /**
+    * Returns all the possible recepients from a query (data is client side safe)
+    *
+    * @return mixed
+    */
+    public function possibleRecipientsQuery($query, $user_id)
+    {
+        $keys = preg_split("/[\s,.]+/", trim(urldecode($query)));
+
+
+        $res = $this->model->safeUserInfo()->where('users.id', '!=', $user_id);
+
+        foreach ($keys as $k)
+        {
+            $res->where(function ($query) use ($k)
+            {
+                $query->orWhere('users.fname', 'LIKE', '%'.$k.'%');
+                $query->orWhere('users.lname', 'LIKE', '%'.$k.'%');
+                $query->orWhere('zips.city', 'LIKE', '%'.$k.'%');
+                $query->orWhere('zips.state_prefix', 'LIKE', '%'.$k.'%');
+
+            });
+        }
+
+        return $res->take(10)->get();
+    }
+
+    /**
+    * Returns prefetch for user searches (data is client side safe)
+    *
+    * @return mixed
+    */
+    public function possibleRecipientsPrefetch($user_id)
+    {
+        return $this->model->safeUserInfo()
+        ->where('users.id', '!=', $user_id)
+        ->take(20)->get();
+    }
 }

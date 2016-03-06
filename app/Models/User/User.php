@@ -15,55 +15,68 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     use Messagable;
 
     /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
+    * The database table used by the model.
+    *
+    * @var string
+    */
     protected $table = 'users';
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+    * The attributes that are mass assignable.
+    *
+    * @var array
+    */
     protected $fillable = ['fname', 'lname', 'zip', 'lat', 'lon', 'address', 'email', 'password', 'account_type', 'terms_conditions', 'activation_hash', 'user_active'];
 
     /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
+    * The attributes excluded from the model's JSON form.
+    *
+    * @var array
+    */
     protected $hidden = ['password', 'remember_token', 'activation_hash', 'user_active'];
 
 
     public function tutor()
     {
-      return $this->hasOne('App\Models\Tutor\Tutor', 'user_id', 'id');
+        return $this->hasOne('App\Models\Tutor\Tutor', 'user_id', 'id');
     }
 
     public function saved_tutors()
     {
-      return $this->belongsToMany('App\Models\Tutor\Tutor', 'saved_tutors', 'user_id', 'tutor_id')->withTimestamps();
+        return $this->belongsToMany('App\Models\Tutor\Tutor', 'saved_tutors', 'user_id', 'tutor_id')->withTimestamps();
     }
 
     public function zip()
     {
-      return $this->belongsTo('App\Models\Zip\Zip', 'zip_id', 'id');
+        return $this->belongsTo('App\Models\Zip\Zip', 'zip_id', 'id');
     }
 
     public function reviews()
     {
-      return $this->hasMany('App\Models\Review\Review', 'reviewer_id', 'id');
+        return $this->hasMany('App\Models\Review\Review', 'reviewer_id', 'id');
     }
 
     public function tutor_contacts()
     {
-      return $this->hasMany('App\Models\TutorContact\TutorContact', 'user_id', 'id');
+        return $this->hasMany('App\Models\TutorContact\TutorContact', 'user_id', 'id');
     }
 
     public function getName()
     {
-      return $this->fname.' '.$this->lname;
+        return $this->fname.' '.$this->lname;
+    }
+
+    // SCOPES
+    /**
+    * Get user account and location info that is safe to transmit to client side
+    *
+    */
+    public function scopeSafeUserInfo($query)
+    {
+        return $query
+            ->join('zips', 'zips.id', '=', 'users.zip_id')
+            ->select(\DB::raw("CONCAT(users.fname,' ',users.lname) AS full_name"),
+            'users.id', 'users.account_type', 'zips.city', 'zips.state_prefix');
     }
 
 }
