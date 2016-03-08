@@ -45,12 +45,13 @@ class ThreadRepository extends BaseRepository implements ThreadRepositoryContrac
   {
       return $this->model->latest('updated_at');
   }
-  public function getRecipients($thread_id)
+  public function getRecipients($thread_id, $user_id)
   {
     $recipients = $this->model
     ->findOrFail($thread_id)
     ->participants()//->get()
     ->join('users', 'user_id', '=', 'users.id')
+    ->where('user_id', '!=', $user_id)
     ->select('participants.*', 'users.id as user_id', DB::raw("CONCAT(users.fname,' ',users.lname) AS full_name"), 'users.account_type as account_type')
     ->get();
     return $recipients;

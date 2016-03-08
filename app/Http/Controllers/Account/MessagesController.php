@@ -78,7 +78,7 @@ class MessagesController extends Controller
 
     $thread->markAsRead($userId);
     $recipients = $threadRepository
-    ->getRecipients($id);
+    ->getRecipients($id, $userId);
     return view('account.messenger.show', compact('thread', 'userId', 'recipients'));
   }
 
