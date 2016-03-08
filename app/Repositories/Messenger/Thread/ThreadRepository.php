@@ -5,6 +5,8 @@ use App\Repositories\BaseRepository;
 
 use App\Models\Messenger\Thread;
 use App\Repositories\Participant\ParticipantRepository;
+use DB;
+use Debugbar;
 
 class ThreadRepository extends BaseRepository implements ThreadRepositoryContract
 {
@@ -43,5 +45,14 @@ class ThreadRepository extends BaseRepository implements ThreadRepositoryContrac
   {
       return $this->model->latest('updated_at');
   }
-
+  public function getRecipients($thread_id)
+  {
+    $recipients = $this->model
+    ->findOrFail($thread_id)
+    ->participants()//->get()
+    ->join('users', 'user_id', '=', 'users.id')
+    ->select('participants.*', 'users.id as user_id', DB::raw("CONCAT(users.fname,' ',users.lname) AS full_name"), 'users.account_type as account_type')
+    ->get();
+    return $recipients;
+  }
 }
