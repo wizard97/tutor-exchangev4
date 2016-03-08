@@ -90,7 +90,7 @@
       <script src="/js/bootstrap-tagsinput.js"></script>
 
       <link rel="stylesheet" href="/css/bootstrap-tagsinput.css">
-      <link rel="stylesheet" href="/css/bootstrap-tagsinput.css">
+      <link rel="stylesheet" href="/css/bootstrap-tagsinput-typeahead.css">
 
       <style type="text/css">
       .table tbody>tr>td.vert-align{
