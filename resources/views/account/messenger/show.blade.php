@@ -144,6 +144,9 @@ $(document).ready(function(){
           }
       }
   });
+  @foreach ($recipients as $recipient)
+  $('#recipients').tagsinput('add', { id: '{{ $recipient->user_id }}', full_name: '{{ $recipient->full_name }}', account_type: {{ $recipient->account_type }} });
+  @endforeach
 });
 
 </script>
