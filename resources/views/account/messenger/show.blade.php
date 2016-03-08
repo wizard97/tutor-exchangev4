@@ -54,6 +54,7 @@
         <div class="">
           {!! Form::open(['route' => ['messages.update', $thread->id], 'method' => 'PUT']) !!}
           <div class="form-group">
+            {!! Form::label('recipients', 'Recipients', ['class' => 'control-label']) !!}
             {!! Form::select('recipients[]', [], null, ['class' => 'form-control typeahead', 'id' => 'recipients', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'multiple' => 'multiple']) !!}
             <p class="help-block">
                 Key:
