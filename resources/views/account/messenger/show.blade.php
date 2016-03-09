@@ -50,12 +50,14 @@
     @endforeach
   </div>
   <div class="row">
-    <div class="col-xs-10 col-xs-offset-1">
+    <div class="col-xs-12">
       <div class="well">
+        <div class="">
           <!-- Message Form Input -->
           <div class="form-group">
             {!! Form::textarea('message', null, ['class' => 'form-control', 'placeholder' => 'Write a reply...']) !!}
           </div>
+        </div>
         <!-- Submit Form Input -->
         <div class="form-group">
           {!! Form::submit('Submit', ['class' => 'btn btn-info form-control']) !!}
@@ -64,7 +66,7 @@
     </div>
   </div>
   {!! Form::close() !!}
-</div>
+
 <script type='text/javascript'>
 $(function () {
   // Scroll to bottom
