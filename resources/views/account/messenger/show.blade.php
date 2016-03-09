@@ -26,22 +26,21 @@
     <div class="row">
       @if($m->user->id == $userId)
       <div class="col-xs-offset-1 col-xs-11">
-        @else
-        <div class="col-xs-11">
-          @endif
-          <?php $c = $m->user->id == $userId ? 'panel-info' : 'panel-default'?>
-          <div class="panel hideable {{ $c }}">
-            <div class="panel-body" style="">
-              <div class="row col-xs-12">
-                <span class="text-info">{{ $m->user->getName() }}</span> <small class="pull-right">Sent {!! $m->created_at->diffForHumans() !!}</small>
+      @else
+      <div class="col-xs-11">
+        @endif
+        <?php $c = $m->user->id == $userId ? 'panel-info' : 'panel-default'?>
+        <div class="panel hideable {{ $c }}">
+          <div class="panel-body" style="">
+            <div class="row col-xs-12">
+              <span class="text-info">{{ $m->user->getName() }}</span> <small class="pull-right">Sent {!! $m->created_at->diffForHumans() !!}</small>
+            </div>
+            <div class="row">
+              <div class="col-xs-3 col-sm-1">
+                <img src="{{ route('profileimage.showfull', ['id' => $m->user_id]) }}" class="img-rounded" width="50" height="50">
               </div>
-              <div class="row">
-                <div class="col-xs-3 col-sm-1">
-                  <img src="{{ route('profileimage.showfull', ['id' => $m->user_id]) }}" class="img-rounded" width="50" height="50">
-                </div>
-                <div class="col-xs-7 col-sm-11">
-                  {!! nl2br(strip_tags($m->body)) !!}
-                </div>
+              <div class="col-xs-7 col-sm-11">
+                {!! nl2br(strip_tags($m->body)) !!}
               </div>
             </div>
           </div>
@@ -135,5 +134,7 @@ $(document).ready(function(){
   $('#recipients').tagsinput('add', { id: '{{ $recipient->user_id }}', full_name: '{{ $recipient->full_name }}', account_type: {{ $recipient->account_type }} });
   @endforeach
 });
+
 </script>
+
 @stop
