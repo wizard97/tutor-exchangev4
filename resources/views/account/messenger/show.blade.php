@@ -10,15 +10,17 @@
   <h2 class="page-header">{{ $thread->subject }}</h2>
   @include('templates/feedback')
   {!! Form::open(['route' => ['messages.update', $thread->id], 'method' => 'PUT']) !!}
-  <div class="form-group">
-    {!! Form::label('recipients', 'Recipients', ['class' => 'control-label']) !!}
-    {!! Form::select('recipients[]', [], null, ['class' => 'form-control typeahead', 'id' => 'recipients', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'multiple' => 'multiple']) !!}
-    <p class="help-block">
-      Key:
-      <span class="label label-warning">Standard Users</span>
-      <span class="label label-info">Tutors</span>
-      <span class="label label-success">Professional Tutors</span>
-    </p>
+  <div class="well">
+    <div class="form-group">
+      {!! Form::label('recipients', 'Recipients', ['class' => 'control-label']) !!}
+      {!! Form::select('recipients[]', [], null, ['class' => 'form-control typeahead', 'id' => 'recipients', 'data-provide' => 'typeahead', 'autocomplete' => 'off', 'multiple' => 'multiple']) !!}
+      <p class="help-block">
+        Key:
+        <span class="label label-warning">Standard Users</span>
+        <span class="label label-info">Tutors</span>
+        <span class="label label-success">Professional Tutors</span>
+      </p>
+    </div>
   </div>
 
   <hr>
@@ -27,26 +29,26 @@
     <div class="row">
       @if($m->user->id == $userId)
       <div class="col-xs-offset-1 col-xs-11">
-      @else
-      <div class="col-xs-11">
-        @endif
-        <?php $c = $m->user->id == $userId ? 'panel-info' : 'panel-default'?>
-        <div class="panel hideable {{ $c }}">
-          <div class="panel-body" style="">
-            <div class="row col-xs-12">
-              <span class="text-info">{{ $m->user->getName() }}</span> <small class="pull-right">Sent {!! $m->created_at->diffForHumans() !!}</small>
-            </div>
-            <div class="row">
-              <div class="col-xs-3 col-sm-1">
-                <img src="{{ route('profileimage.showfull', ['id' => $m->user_id]) }}" class="img-rounded" width="50" height="50">
+        @else
+        <div class="col-xs-11">
+          @endif
+          <?php $c = $m->user->id == $userId ? 'panel-info' : 'panel-default'?>
+          <div class="panel hideable {{ $c }}">
+            <div class="panel-body" style="">
+              <div class="row col-xs-12">
+                <span class="text-info">{{ $m->user->getName() }}</span> <small class="pull-right">Sent {!! $m->created_at->diffForHumans() !!}</small>
               </div>
-              <div class="col-xs-7 col-sm-11">
-                {!! nl2br(strip_tags($m->body)) !!}
+              <div class="row">
+                <div class="col-xs-3 col-sm-1">
+                  <img src="{{ route('profileimage.showfull', ['id' => $m->user_id]) }}" class="img-rounded" width="50" height="50">
+                </div>
+                <div class="col-xs-7 col-sm-11">
+                  {!! nl2br(strip_tags($m->body)) !!}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
       </div>
       @endforeach
     </div>
@@ -69,16 +71,16 @@
     {!! Form::close() !!}
   </div>
 </div>
-  <script type='text/javascript'>
-  $(function () {
-    // Scroll to bottom
-    var d = $("#messages");
-    d.scrollTop(d.prop("scrollHeight"));
-    /*
-    $('html, body').animate({
-    scrollTop: $(document).height()
-  }, 'slow');
-  */
+<script type='text/javascript'>
+$(function () {
+  // Scroll to bottom
+  var d = $("#messages");
+  d.scrollTop(d.prop("scrollHeight"));
+  /*
+  $('html, body').animate({
+  scrollTop: $(document).height()
+}, 'slow');
+*/
 });
 $(document).ready(function(){
   var recipientshound = new Bloodhound({
