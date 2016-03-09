@@ -8,6 +8,7 @@
   <br>
   <a href="{{ route('messages.index') }}" class="btn btn-default"><i class="fa fa-chevron-left fa-fw"></i> Message Inbox</a>
   <h2 class="page-header">{{ $thread->subject }}</h2>
+  @include('templates/feedback')
   {!! Form::open(['route' => ['messages.update', $thread->id], 'method' => 'PUT']) !!}
   <div class="form-group">
     {!! Form::label('recipients', 'Recipients', ['class' => 'control-label']) !!}
@@ -19,7 +20,7 @@
       <span class="label label-success">Professional Tutors</span>
     </p>
   </div>
-  @include('templates/feedback')
+
   <hr>
   <div id="messages" class="row">
     @foreach($thread->messages as $m)
@@ -46,37 +47,38 @@
           </div>
         </div>
       </div>
+      </div>
+      @endforeach
     </div>
-    @endforeach
-  </div>
-  <div class="row">
-    <div class="col-xs-12">
-      <div class="well">
-        <div class="">
-          <!-- Message Form Input -->
-          <div class="form-group">
-            {!! Form::textarea('message', null, ['class' => 'form-control', 'placeholder' => 'Write a reply...']) !!}
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="well">
+          <div class="">
+            <!-- Message Form Input -->
+            <div class="form-group">
+              {!! Form::textarea('message', null, ['class' => 'form-control', 'placeholder' => 'Write a reply...']) !!}
+            </div>
           </div>
-        </div>
-        <!-- Submit Form Input -->
-        <div class="form-group">
-          {!! Form::submit('Submit', ['class' => 'btn btn-info form-control']) !!}
+          <!-- Submit Form Input -->
+          <div class="form-group">
+            {!! Form::submit('Submit', ['class' => 'btn btn-info form-control']) !!}
+          </div>
         </div>
       </div>
     </div>
+    {!! Form::close() !!}
   </div>
-  {!! Form::close() !!}
-
-<script type='text/javascript'>
-$(function () {
-  // Scroll to bottom
-  var d = $("#messages");
-  d.scrollTop(d.prop("scrollHeight"));
-  /*
-  $('html, body').animate({
-  scrollTop: $(document).height()
-}, 'slow');
-*/
+</div>
+  <script type='text/javascript'>
+  $(function () {
+    // Scroll to bottom
+    var d = $("#messages");
+    d.scrollTop(d.prop("scrollHeight"));
+    /*
+    $('html, body').animate({
+    scrollTop: $(document).height()
+  }, 'slow');
+  */
 });
 $(document).ready(function(){
   var recipientshound = new Bloodhound({
