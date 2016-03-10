@@ -26,14 +26,29 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     *
     * @var array
     */
-    protected $fillable = ['fname', 'lname', 'zip', 'lat', 'lon', 'address', 'email', 'password', 'account_type', 'terms_conditions', 'activation_hash', 'user_active'];
+    protected $fillable = ['fname', 'lname', 'zip', 'lat', 'lon', 'address',
+        'email', 'password', 'account_type', 'terms_conditions',
+        'activation_hash', 'user_active'];
 
     /**
     * The attributes excluded from the model's JSON form.
     *
     * @var array
     */
-    protected $hidden = ['password', 'remember_token', 'activation_hash', 'user_active'];
+    protected $hidden = ['password', 'remember_token', 'activation_hash',
+        'user_active', 'address', 'lat', 'lon'];
+
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'id' => 'integer',
+        'account_type' => 'integer',
+        'has_picture' => 'boolean',
+        'user_active' => 'boolean'
+    ];
 
 
     public function tutor()
