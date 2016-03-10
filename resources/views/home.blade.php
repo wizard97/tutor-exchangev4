@@ -92,7 +92,7 @@
                 <div class="panel-body">
                   <small class="social-title" style="font-size: 42px">Tutor Matches:</small>
                   <h3 class="count">
-                    <span class="integers" style="font-size: 56px; margin-left: 40px">{{ \App\Models\TutorContact\TutorContact::count() }}
+                    <span class="integers" style="font-size: 56px; margin-left: 40px">{{ $stats->tutor_contacts }}
                     </span>
                   </h3>
                   <i class="fa-stat fa fa-envelope"></i>

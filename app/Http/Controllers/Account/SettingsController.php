@@ -16,26 +16,26 @@ class SettingsController extends Controller
   {
     $this->middleware('auth');
     if (\Auth::check()) {
-      $this->id = \Auth::user()->id;
+    $this->id = \Auth::user()->id;
     }
   }
 
-  public function index() //main settings view
+  public function index()
   {
     return view('account/settings/index');
   }
 
   public function editname(Request $request)
   {
-    $this->validate($request, [ //verify form validity
+    $this->validate($request, [
       'fname' => 'required|max:30|alpha',
       'lname' => 'required|max:30|alpha',
     ]);
 
-    $user = User::findOrFail($this->id); //store user object
-    $user->fname = $request->input('fname'); //set name
+    $user = User::findOrFail($this->id);
+    $user->fname = $request->input('fname');
     $user->lname = $request->input('lname');
-    $user->save(); //update db
+    $user->save();
 
     \Session::put('feedback_positive', 'You have successfully updated your name.');
     return back();
@@ -43,13 +43,13 @@ class SettingsController extends Controller
 
   public function editemail(Request $request)
   {
-    $this->validate($request, [ //verify form validity
+    $this->validate($request, [
       'email' => 'required|email|max:255|unique:users',
     ]);
 
-    $user = User::findOrFail($this->id); //store user object
-    $user->email = $request->input('email'); //set email
-    $user->save(); //update db
+    $user = User::findOrFail($this->id);
+    $user->email = $request->input('email');
+    $user->save();
 
     \Session::put('feedback_positive', 'You have successfully updated your email address.');
     return back();
@@ -57,7 +57,7 @@ class SettingsController extends Controller
 
   public function editaddress(Request $request)
   {
-    $this->validate($request, [ //verify form validity
+    $this->validate($request, [
       'address' => 'required'
     ]);
 
@@ -66,7 +66,7 @@ class SettingsController extends Controller
     $query = $url.http_build_query(['address' => $request->input('address'), 'key' => getenv('GOOGLE_API_KEY')]);
     $response = json_decode(file_get_contents($query));
 
-    if(empty($response->results[0])) //ensure address exists
+    if(empty($response->results[0]))
     {
       \Session::put('feedback_negative', 'We were unable to lookup your address.');
       return back();
@@ -84,21 +84,38 @@ class SettingsController extends Controller
 
     //return var_dump($response->results[0]->geometry->location->lat);
 
-    $user = User::findOrFail($this->id); //store user object
-    $user->address = $response->results[0]->formatted_address; //store address
-    $user->zip_id = Zip::where('zip_code', '=', $zip)->firstOrFail()->id; //"id
-    $user->lat = $response->results[0]->geometry->location->lat; //store location
+    $user = User::findOrFail($this->id);
+    $user->address = $response->results[0]->formatted_address;
+    $user->zip_id = Zip::where('zip_code', '=', $zip)->firstOrFail()->id;
+    $user->lat = $response->results[0]->geometry->location->lat;
     $user->lon = $response->results[0]->geometry->location->lng;
-    $user->save(); //update db
+
+    $user->save();
+
     \Session::put('feedback_positive', 'You have successfully updated your address.');
     return back();
   }
+/* no longer needed
+  public function editzip(Request $request)
+  {
+    $this->validate($request, [
+      'zip'   => 'required|digits:5|numeric|exists:zips,zip_code',
+    ]);
+
+    $user = \App\User::findOrFail($this->id);
+    $user->zip_id = \App\Zip::where('zip_code', '=', $request->input('zip'))->firstOrFail()->id;
+    $user->save();
+
+    \Session::put('feedback_positive', 'You have successfully updated your Zip code.');
+    return back();
+  }
+*/
   public function editaccounttype(Request $request)
   {
-    $this->validate($request, [ //verify form validity
+    $this->validate($request, [
       'account_type' => 'required|integer|min:1|max:3',
     ]);
-    $user = User::findOrFail($this->id); //store user object
+    $user = User::findOrFail($this->id);
 
     if ($user->account_type == $request->input('account_type'))
     {
@@ -110,25 +127,29 @@ class SettingsController extends Controller
     if ($request->input('account_type') == 1)
     {
       //delete tutors classes
-      $tutor = Tutor::findOrFail($this->id); //store tutor object
-      $tutor->levels()->detach(); //remove tutorlevel pivottable entry
-      $tutor->middle_classes()->detach(); //remove tutormiddleschool class pivot entry
-      $tutor->music()->detach(); //remove music pivottable entry
-      $tutor->schools()->detach(); //remove tutorschool pivottable entry
-      $tutor->tutor_active = 0; //deactivate tutoring
-      $tutor->save(); //update db
+      $tutor = Tutor::findOrFail($this->id);
+      $tutor->levels()->detach();
+      $tutor->middle_classes()->detach();
+      $tutor->music()->detach();
+      $tutor->schools()->detach();
+
+      $tutor->tutor_active = 0;
+      $tutor->save();
+
       //delete any refrence to SavedTutor
-      $tutor->user_saves()->detach(); //remove from users' saved tutors
+      $tutor->user_saves()->detach();
+
+      //$user->tutor()->delete();
       $user->account_type = $request->input('account_type');
-      $user->save(); //update db
+      $user->save();
       \Session::put('feedback_positive', 'You have successfully downgraded your account, your tutoring info has been deleted.');
     }
     //if upgrading from standard user
     elseif($user->account_type == 1)
     {
-      $tutor = $user->tutor()->firstOrCreate([]); //set type
+      $tutor = $user->tutor()->firstOrCreate([]);
       $user->account_type = $request->input('account_type');
-      $user->save(); //update db
+      $user->save();
 
 
       \Session::put('feedback_positive', 'You have successfully upgraded your account.');
@@ -136,8 +157,8 @@ class SettingsController extends Controller
     //if only changing tutoring type
     else
     {
-      $user->account_type = $request->input('account_type'); //set type
-      $user->save(); //update db
+      $user->account_type = $request->input('account_type');
+      $user->save();
       \Session::put('feedback_positive', 'You have successfully changed your account type.');
     }
 
@@ -146,13 +167,13 @@ class SettingsController extends Controller
 
   public function editpassword(Request $request)
   {
-    $this->validate($request, [ //verify form validity
+    $this->validate($request, [
       'password' => 'required|confirmed|min:6',
     ]);
 
-    $user = User::findOrFail($this->id); //store user object
-    $user->password = bcrypt($request->input('password')); //create hash
-    $user->save(); //update db
+    $user = User::findOrFail($this->id);
+    $user->password = bcrypt($request->input('password'));
+    $user->save();
 
     \Session::put('feedback_positive', 'You have successfully changed your password.');
     return back();

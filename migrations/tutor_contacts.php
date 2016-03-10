@@ -44,8 +44,8 @@ foreach ($contacts as $c)
   $tutor = $user_fetch->fetch();
 
   //insert review into new db
-  $createThread = $new->prepare("INSERT INTO threads (subject, created_at, updated_at)
-    VALUES (?, ?, ?)");
+  $createThread = $new->prepare("INSERT INTO threads (subject, user_id, created_at, updated_at)
+    VALUES (?, ?, ?, ?)");
 
   $addParticipant = $new->prepare("INSERT INTO participants (thread_id, user_id, last_read, created_at, updated_at)
     VALUES (?, ?, ?, ?, ?)");
@@ -53,7 +53,9 @@ foreach ($contacts as $c)
   $newMessage = $new->prepare("INSERT INTO messages (thread_id, user_id, body, created_at, updated_at)
     VALUES (?, ?, ?, ?, ?)");
 
-  $createThread->execute([$c->subject, date("Y-m-d H:i:s", $c->time_sent), date("Y-m-d H:i:s", $c->time_sent)]);
+  $createThread->execute([$c->subject, get_new_id_by_email($contacter->user_email, $new),
+    date("Y-m-d H:i:s", $c->time_sent), date("Y-m-d H:i:s", $c->time_sent)]);
+    
   echo "Created thread for '{$c->subject} ($c->message_num)'\n";
 
   $threadId = $new->lastInsertId();

@@ -84,7 +84,8 @@ class Thread extends Eloquent
      */
     public function creator()
     {
-        return $this->messages()->oldest()->first()->user;
+        return $this->belongsTo('App\Models\User\User', 'user_id', 'id');
+        //return $this->messages()->oldest()->first()->user;
     }
 
 

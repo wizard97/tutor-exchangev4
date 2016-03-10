@@ -71,11 +71,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->hasMany('App\Models\Review\Review', 'reviewer_id', 'id');
     }
 
-    public function tutor_contacts()
-    {
-        return $this->hasMany('App\Models\TutorContact\TutorContact', 'user_id', 'id');
-    }
-
     public function getName()
     {
         return $this->fname.' '.$this->lname;

@@ -18,45 +18,44 @@ class ProposalController extends Controller
 
     public function index()
     {
-        /*
-        $g = \Geocoder::geocode('909 talamore drive ambler');
-        echo sprintf("%s %s, %s, %s %s", $g->getStreetNumber(), $g->getStreetName(),
-        $g->getCity(), $g->getRegionCode(), $g->getZipCode());
-        */
+      /*
+      $g = \Geocoder::geocode('909 talamore drive ambler');
+      echo sprintf("%s %s, %s, %s %s", $g->getStreetNumber(), $g->getStreetName(),
+          $g->getCity(), $g->getRegionCode(), $g->getZipCode());
+          */
 
-        //var_dump($g->first()->getLatitude());
-        return view('/account/proposals/index');
+      //var_dump($g->first()->getLatitude());
+      return view('/account/proposals/index');
     }
 
-    public function getsubmitclass() //submit class view
+    public function getsubmitclass()
     {
-        return view('/account/proposals/submitclass');
+      return view('/account/proposals/submitclass');
     }
-    public function getSubmitSchool() //submit school view
+    public function getSubmitSchool()
     {
-        return view('/account/proposals/submitschool');
+      return view('/account/proposals/submitschool');
     }
 
     public function postSubmitSchool(ProposeSchoolRequest $request, SchoolProposalRepository $spr)
     {
-        try
-        {
-            $spr->create($request->all(), \Auth::id());
-        }
-        catch(\Exception $e)
-        {
-            $error = $e->getMessage();
-            $request->session()->put('feedback_negative', "An unexpected error occured.");
-            return back();
-        }
-
-        $request->session()->put('feedback_positive', 'Your proposal was recorded.');
+      try
+      {
+        $spr->create($request->all(), \Auth::id());
+      }
+      catch(\Exception $e)
+      {
+        $error = $e->getMessage();
+        $request->session()->put('feedback_negative', "An unexpected error occured.");
         return back();
+      }
+
+      $request->session()->put('feedback_positive', 'Your proposal was recorded.');
+      return back();
     }
 
-
-    public function getsubmitsubject() //submit subject view
+    public function getsubmitsubject()
     {
-        return view('/account/proposals/submitsubject');
+      return view('/account/proposals/submitsubject');
     }
 }

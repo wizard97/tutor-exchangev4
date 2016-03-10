@@ -147,9 +147,6 @@ Route::get('user/feedback', [
       Route::get('savedtutors', [
         'as' => 'myaccount.ajaxsavedtutors', 'uses' => 'MyAccountController@ajaxsavedtutors'
       ]);
-      Route::get('tutorcontacts', [
-        'as' => 'myaccount.ajaxtutorcontacts', 'uses' => 'MyAccountController@ajaxtutorcontacts'
-      ]);
       Route::get('tutorreviews', [
         'as' => 'myaccount.ajaxtutorreviews', 'uses' => 'MyAccountController@ajaxtutorreviews'
       ]);

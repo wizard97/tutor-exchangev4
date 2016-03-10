@@ -43,6 +43,7 @@ class MessagesController extends Controller
   public function index(MessageRepository $messageRepository)
   {
     $currentUserId = Auth::user()->id;
+
     $messages = $messageRepository->getAllUsersLatest($currentUserId, 15);
     $unread =$messageRepository->countUsersUnread($currentUserId);
 
@@ -89,6 +90,7 @@ class MessagesController extends Controller
   public function create()
   {
     $users = User::where('id', '!=', Auth::id())->get();
+
     return view('account.messenger.create', compact('users'));
   }
 
@@ -100,13 +102,11 @@ class MessagesController extends Controller
   public function store(ThreadRepository $threadRepository, MessageRepository $messageRepository,
   Request $request)
   {
-
     $this->validate($request, [
       'subject' => 'required|string',
       'message' => 'required|string',
       'recipients' => 'required|array|not_in:'.\Auth::id()
     ]);
-
 
     $userId = Auth::id();
     $input = $request->all();
@@ -116,14 +116,12 @@ class MessagesController extends Controller
     $messageModel = $messageRepository->create($input, $thread, $userId);
     // Recipients
     if ($request->has('recipients')) {
-
       $thread->addParticipants($request->input('recipients')); // FIX
     }
 
     $this->sendNewMessageEmail($messageModel);
 
     \Session::put('feedback_positive', 'Your message has been successfully sent!');
-
     return redirect(route('messages.index'));
   }
 
@@ -139,7 +137,6 @@ class MessagesController extends Controller
       'subject' => 'required|string',
       'message' => 'required|string',
     ]);
-
 
     $tutor = $tutorRepository->getById($request->get('user_id'));
 
@@ -158,6 +155,7 @@ class MessagesController extends Controller
     return view('templates/feedback');
 
   }
+
 
 
   /**
@@ -212,11 +210,9 @@ class MessagesController extends Controller
     $user = $messageModel->user;
     $from = $user->getName();
 
-
     foreach ($messageModel->getRecipientParticipants() as $participant)
     {
       $to = $participant->user;
-
 
       Mail::queue('emails.messaging.recievedmessage', compact('messageModel', 'user', 'to'), function ($m) use ($to, $from) {
         $m->from('noreply@lextutorexchange.com', 'Lexington Tutor Exchange');
@@ -225,7 +221,6 @@ class MessagesController extends Controller
       });
     }
   }
-
 
 
   public function recipientquery(UserRepository $userRepository, $query)
@@ -244,5 +239,4 @@ class MessagesController extends Controller
     //Debugbar::info($prefetch);
     return $prefetch->toJson();
   }
-
 }
