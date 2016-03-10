@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Session;
 use Mail;
 
 use App\Http\Controllers\Controller;
+use Debugbar;
 
 class MessagesController extends Controller
 {
@@ -44,6 +45,8 @@ class MessagesController extends Controller
     $currentUserId = Auth::user()->id;
     $messages = $messageRepository->getAllUsersLatest($currentUserId, 15);
     $unread =$messageRepository->countUsersUnread($currentUserId);
+
+
     return view('account.messenger.index', compact('messages', 'currentUserId', 'unread'));
   }
 
@@ -73,8 +76,9 @@ class MessagesController extends Controller
     // don't show the current user in list
 
     $thread->markAsRead($userId);
-
-    return view('account.messenger.show', compact('thread', 'userId'));
+    $recipients = $threadRepository
+    ->getRecipients($id, $userId);
+    return view('account.messenger.show', compact('thread', 'userId', 'recipients'));
   }
 
   /**
@@ -96,6 +100,14 @@ class MessagesController extends Controller
   public function store(ThreadRepository $threadRepository, MessageRepository $messageRepository,
   Request $request)
   {
+
+    $this->validate($request, [
+      'subject' => 'required|string',
+      'message' => 'required|string',
+      'recipients' => 'required|array|not_in:'.\Auth::id()
+    ]);
+
+
     $userId = Auth::id();
     $input = $request->all();
     //Create the new thread
@@ -104,9 +116,14 @@ class MessagesController extends Controller
     $messageModel = $messageRepository->create($input, $thread, $userId);
     // Recipients
     if ($request->has('recipients')) {
-      $thread->addParticipants($input['recipients']);
+
+      $thread->addParticipants($request->input('recipients')); // FIX
     }
+
     $this->sendNewMessageEmail($messageModel);
+
+    \Session::put('feedback_positive', 'Your message has been successfully sent!');
+
     return redirect(route('messages.index'));
   }
 
@@ -122,7 +139,10 @@ class MessagesController extends Controller
       'subject' => 'required|string',
       'message' => 'required|string',
     ]);
+
+
     $tutor = $tutorRepository->getById($request->get('user_id'));
+
     $input = $request->all();
     //Create the new thread
     $thread = $threadRepository->create($input, $userId);
@@ -132,9 +152,13 @@ class MessagesController extends Controller
     $messageModel = $messageRepository->create($input, $thread, $userId);
     //Send notification email
     $this->sendNewMessageEmail($messageModel);
+
     \Session::put('feedback_positive', 'Your email to '.$tutor->fname.' '.$tutor->lname.' has been successfully sent!');
+
     return view('templates/feedback');
+
   }
+
 
   /**
   * Adds a new message to a current thread.
@@ -154,8 +178,12 @@ class MessagesController extends Controller
 
       return redirect(route('messages.index'));
     }
+
     $thread->activateAllParticipants();
+
     $messageModel = $messageRepository->create($request->all(), $thread, $userId);
+
+
     // Add replier as a participant
     $participant = $thread->participants()->firstOrCreate(
     [
@@ -164,11 +192,14 @@ class MessagesController extends Controller
     ]);
     $participant->last_read = new Carbon;
     $participant->save();
+
     // Recipients
     if ($request->has('recipients')) {
       $thread->addParticipants($request->get('recipients'));
     }
-    $this->sendNewMessageEmail($messageModel); //send message
+
+    $this->sendNewMessageEmail($messageModel);
+
     return redirect('account/messages/' . $id);
   }
 
@@ -180,10 +211,13 @@ class MessagesController extends Controller
     //var_dump($message->user());
     $user = $messageModel->user;
     $from = $user->getName();
+
+
     foreach ($messageModel->getRecipientParticipants() as $participant)
     {
-      $to = $participant->user; //set recipient
-      //sent email
+      $to = $participant->user;
+
+
       Mail::queue('emails.messaging.recievedmessage', compact('messageModel', 'user', 'to'), function ($m) use ($to, $from) {
         $m->from('noreply@lextutorexchange.com', 'Lexington Tutor Exchange');
         $m->to($to->email, $to->getName());
@@ -191,4 +225,24 @@ class MessagesController extends Controller
       });
     }
   }
+
+
+
+  public function recipientquery(UserRepository $userRepository, $query)
+  {
+
+    $matches = $userRepository
+    ->possibleRecipientsQuery($query, \Auth::id());
+    //Debugbar::info($matches);
+    return $matches->toJson();
+  }
+
+
+  public function recipientprefetch(UserRepository $userRepository)
+  {
+    $prefetch = $userRepository->possibleRecipientsPrefetch(\Auth::id());
+    //Debugbar::info($prefetch);
+    return $prefetch->toJson();
+  }
+
 }

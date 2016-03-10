@@ -87,6 +87,11 @@
 
       <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 
+      <script src="/js/bootstrap-tagsinput.js"></script>
+
+      <link rel="stylesheet" href="/css/bootstrap-tagsinput.css">
+      <link rel="stylesheet" href="/css/bootstrap-tagsinput-typeahead.css">
+
       <style type="text/css">
       .table tbody>tr>td.vert-align{
           vertical-align: middle;
