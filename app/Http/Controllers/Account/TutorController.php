@@ -16,7 +16,7 @@ use App\Models\MiddleClass\MiddleClass;
 use App\Models\Grade\Grade;
 
 // Repositories
-
+use App\Repositories\Messenger\Thread\ThreadRepository;
 
 class TutorController extends Controller
 {
@@ -51,10 +51,11 @@ class TutorController extends Controller
     }
   }
 
-  public function getindex()
+  public function getindex(ThreadRepository $threadRepo)
   {
     $tutor = Tutor::get_tutor_profile($this->id);
     $tutor_model = Tutor::findOrFail($this->id);
+
     $contacts = $tutor_model->contacts()->join('users', 'users.id', '=', 'tutor_contacts.user_id')->select('users.fname', 'users.lname', 'tutor_contacts.*')->orderBy('created_at', 'desc')->get();
 
     //calculate chart

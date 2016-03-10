@@ -39,6 +39,7 @@ class MessageRepository extends BaseRepository implements MessageRepositoryContr
             ->forUser($user_id)->paginate($num_page);
     }
 
+
     /**
     * Returns all of the users unread messages
     *

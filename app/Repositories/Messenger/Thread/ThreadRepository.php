@@ -45,6 +45,22 @@ class ThreadRepository extends BaseRepository implements ThreadRepositoryContrac
   {
       return $this->model->latest('updated_at');
   }
+
+  /**
+   * Returns all of the users private threads
+   *
+   * @return mixed
+   */
+  public function getAllUsersPrivate($user_id)
+  {
+      return $this->model
+        ->join('participants', 'participants.thread_id', '=', 'threads.id')
+        ->where('private', true)
+        ->where('participants.user_id', $user_id)
+        ->latest('updated_at');
+  }
+
+
   public function getRecipients($thread_id, $user_id)
   {
     $recipients = $this->model
