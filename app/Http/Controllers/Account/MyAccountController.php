@@ -42,12 +42,6 @@ class MyAccountController extends Controller
       ->orderBy('reviews.created_at', 'desc')
       ->get();
 
-      //get tutor contacts
-      $contacts = $user->tutor_contacts()
-      ->join('users', 'tutor_contacts.tutor_id', '=', 'users.id')
-      ->select('tutor_contacts.*', 'users.fname', 'users.lname')
-      ->orderBy('tutor_contacts.created_at', 'desc')
-      ->get();
 /*
       //bind data to be printed as json
       //careful not to send any sensitive data!!!!!
@@ -209,22 +203,6 @@ class MyAccountController extends Controller
       return response()->json(['data' => $saved_tutors]);
     }
 
-    //note this method does not give you full tutor profile, only the name and date
-    public function ajaxtutorcontacts(Request $request)
-    {
-      $contacts = User::findOrFail($this->id)->tutor_contacts()
-      ->leftJoin('saved_tutors', function($join)
-      {
-        $join->on('saved_tutors.user_id', '=', 'tutor_contacts.user_id');
-        $join->on('saved_tutors.tutor_id', '=', 'tutor_contacts.tutor_id');
-      })
-      ->join('users', 'tutor_contacts.tutor_id', '=', 'users.id')
-      ->select('tutor_contacts.*', 'users.fname', 'users.lname', \DB::raw("CASE WHEN saved_tutors.user_id IS NULL THEN 'FALSE' ELSE 'TRUE' END  AS saved"))
-      ->orderBy('tutor_contacts.created_at', 'desc')
-      ->get();
-
-      return response()->json(['data' => $contacts]);
-    }
 
     public function ajaxtutorreviews(Request $request)
     {

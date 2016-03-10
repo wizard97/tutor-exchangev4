@@ -56,8 +56,7 @@ class TutorController extends Controller
     $tutor = Tutor::get_tutor_profile($this->id);
     $tutor_model = Tutor::findOrFail($this->id);
 
-    $contacts = $tutor_model->contacts()->join('users', 'users.id', '=', 'tutor_contacts.user_id')->select('users.fname', 'users.lname', 'tutor_contacts.*')->orderBy('created_at', 'desc')->get();
-
+    $contacts = $threadRepo->getAllUsersRecvPrivate(\Auth::id());
     //calculate chart
     $total_contacts = 0;
     $contacts_asc = $contacts->reverse();

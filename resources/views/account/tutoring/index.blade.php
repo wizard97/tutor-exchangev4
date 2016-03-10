@@ -115,37 +115,6 @@
                         </div>
                     </div>
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <i class="fa fa-comments fa-fw"></i> Tutoring Inquiries
-                        </div>
-                        <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped site-datatable">
-                                    <thead>
-                                        <tr>
-                                            <th>From</th>
-                                            <th>Subject</th>
-                                            <th>Message</th>
-                                            <th>Date</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($contacts as $contact)
-                                        <tr>
-                                            <td>{{ $contact->fname.' '.$contact->lname }}</td>
-                                            <td><div class="contact-subject">{{ $contact->subject }}</div></td>
-                                            <td> <div class="contact-message">{!! nl2br($contact->message) !!}</div></td>
-                                            <td>{{ date ("m/d/Y", strtotime($contact->created_at)) }}</td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-
-                        </div>
-                    </div>
-
                 </div>
 
                 <div class="col-lg-5">

@@ -40,16 +40,6 @@
 
     </div>
 
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <i class="fa fa-comments"></i> Tutoring Inquiries
-      </div>
-      <div class="panel-body">
-        <div class="table-responsive">
-          <table id="contacts" class="table table-striped table-bordered table-hover"></table>
-        </div>
-      </div>
-    </div>
 
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -201,88 +191,6 @@ $( document ).ready(function() {
         }
       );
 
-      var getContacts = "{{route('myaccount.ajaxtutorcontacts')}}";
-      var $contacts = $('#contacts');
-      $contacts.DataTable(
-        {
-          ajax: getContacts,
-          columns: [
-            {
-              "title": 'To', "data": "fname", "defaultcontent": null, createdCell: function (td, cellData, rowData, row, col)
-              {
-                if ((rowData.fname != null) && (rowData.lname != null))
-                {
-                  $(td).html(rowData.fname + ' ' + rowData.lname);
-                }
-                else
-                {
-                  $(td).html('N/A');
-                }
-              }
-            },
-            {
-              "title": 'Subject', "data": "subject", "defaultContent": null, createdCell: function (td, cellData, rowData, row, col)
-              {
-                if (rowData.subject != null)
-                {
-                  $info = $('<div class="readmore"><p></p></div>');
-                  $info.find('p').text(rowData.subject);
-                  $(td).html($info[0].outerHTML);
-                }
-                else
-                {
-                  $(td).html('N/A');
-                }
-              }
-            },
-            {
-              "title": 'Message', "data": "message", "defaultContent": null, createdCell: function (td, cellData, rowData, row, col)
-              {
-                if (rowData.message != null)
-                {
-                  $info = $('<div class="readmore"><p></p></div>');
-                  $info.find('p').text(rowData.message);
-                  $(td).html($info[0].outerHTML);
-                }
-                else
-                {
-                  $(td).html('N/A');
-                }
-              }
-            },
-            {
-              "title": 'Date', "data": "created_at", "defaultContent": null, createdCell: function (td, cellData, rowData, row, col)
-              {
-                if (rowData.created_at != null)
-                {
-                  var date = new Date(rowData.created_at);
-                  $(td).html(date.toLocaleDateString());
-                }
-                else
-                {
-                  $(td).html('N/A');
-                }
-              }
-            },
-            {
-              "title": 'Options', "data": null, "defaultContent": null, orderable: false, createdCell: function (td, cellData, rowData, row, col)
-              {
-                $(td).addClass('text-center');
-                var profileLink = ("{{ route('search.showtutorprofile', ['id' => '0']) }}" + rowData.tutor_id);
-                if (rowData.saved == 'TRUE') {
-                  $(td).html('<span class="text-nowrap"><a href="javascript:void(0)"><i style="font-size: 20px;" class="fa fa-fw fa-times text-danger"></i></a><a href=' + profileLink + ' target="_blank"><i style="font-size: 20px;" class="fa fa-fw fa-user text-primary"></i></a>'
-                  + '<a href="javascript:void(0)"><i style="font-size: 20px" class="fa fa-fw fa-envelope text-primary" data-toggle="modal" data-target="#contactModal" data-userid=' + rowData.tutor_id + '></i></a></span>');
-                }
-                else {
-                  $(td).html('<span class="text-nowrap"><a href="javascript:void(0)"><i style="font-size: 20px;" class="fa fa-fw fa-plus text-success"></i></a><a href=' + profileLink + ' target="_blank"><i style="font-size: 20px;" class="fa fa-fw fa-user text-primary"></i></a>'
-                  + '<a href="javascript:void(0)"><i style="font-size: 20px" class="fa fa-fw fa-envelope text-primary" data-toggle="modal" data-target="#contactModal" data-userid=' + rowData.tutor_id + '></i></a></span>');
-                }
-              }
-            }
-          ]
-
-        }
-      );
       var $reviews = $('#reviews');
       var getReviews = "{{route('myaccount.ajaxtutorreviews')}}";
       $reviews.DataTable(

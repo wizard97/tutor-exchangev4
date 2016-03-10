@@ -12,6 +12,9 @@ use App\Models\MiddleClass\MiddleClass;
 use App\Models\Statistic\Stat;
 use App\Models\Zip\Zip;
 
+// Repositories
+use App\Repositories\Messenger\Thread\ThreadRepository;
+
 class MiddleSearchController extends Controller
 {
   public function classes(Request $request)
@@ -51,13 +54,13 @@ class MiddleSearchController extends Controller
 
       $request->session()->put('middle_search_classes', $input);
 
-      \App\Stat::incr_search();
+      Stat::incr_search();
 
       //otherwise everything is good
       return response()->json(route('middle.showresults'));
     }
 
-    public function run_search(Request $request)
+    public function run_search(ThreadRepository $threadRepo, Request $request)
     {
       $search = new MiddleClass;
 
@@ -304,7 +307,7 @@ class MiddleSearchController extends Controller
     if (\Auth::check())
     {
 
-      $tutor_contacts = \Auth::user()->tutor_contacts()->select('tutor_id')->get()->pluck('tutor_id')->toArray();
+      $tutor_contacts = $threadRepo->getUsersPrivateSentIds(\Auth::id());
       $saved_tutors = \Auth::user()->saved_tutors()->join('users', 'tutor_id', '=', 'users.id')->get()->pluck('tutor_id')->toArray();
       return view('search/school/showschoolresults', ['results' => $results, 'num_results' => $num_rows, 'paginator' => $paginator, 'sort_options' => $sort_options,
        'sort_by' => $sort_by, 'num_classes' => $num_classes, 'num_availability' => $num_availability, 'tutor_contacts' => $tutor_contacts]);

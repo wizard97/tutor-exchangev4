@@ -14,6 +14,9 @@ use App\Models\SchoolClass\SchoolClass;
 use App\Models\Statistic\Stat;
 use App\Models\Zip\Zip;
 
+// Repositories
+use App\Repositories\Messenger\Thread\ThreadRepository;
+
 class HsSearchController extends Controller
 {
 
@@ -116,7 +119,7 @@ class HsSearchController extends Controller
         return response()->json(route('hs.showresults'));
     }
 
-    public function run_hs_search(Request $request)
+    public function run_hs_search(ThreadRepository $threadRepo, Request $request)
     {
         $search = new Level;
 
@@ -381,7 +384,7 @@ class HsSearchController extends Controller
         if (\Auth::check())
         {
 
-            $tutor_contacts = \Auth::user()->tutor_contacts()->select('tutor_id')->get()->pluck('tutor_id')->toArray();
+            $tutor_contacts = $threadRepo->getUsersPrivateSentIds(\Auth::id());
             $saved_tutors = \Auth::user()->saved_tutors()->join('users', 'tutor_id', '=', 'users.id')->get()->pluck('tutor_id')->toArray();
             return view('search/school/showschoolresults', ['results' => $results, 'num_results' => $num_rows, 'paginator' => $paginator, 'sort_options' => $sort_options,
             'sort_by' => $sort_by, 'num_classes' => $num_classes, 'num_availability' => $num_availability, 'tutor_contacts' => $tutor_contacts]);
