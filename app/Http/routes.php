@@ -16,12 +16,6 @@ Route::get('/', function () {
 });
 
 //some static pages
-Route::get('test', [
-  'as' => 'test', 'uses' => 'Account\ProposalController@index'
-]);
-Route::get('mess', ['as' => 'messenger.index', function() { return View::make('account.messages.test'); }]);
-
-//some static pages
 Route::get('home', [
   'as' => 'home', 'uses' => 'HomeController@index'
 ]);
@@ -115,6 +109,7 @@ Route::get('user/feedback', [
     // Messaging
     Route::group(['prefix' => 'messages'], function () {
       Route::get('/', ['as' => 'messages.index', 'uses' => 'MessagesController@index']);
+      Route::get('sent', ['as' => 'messages.sent', 'uses' => 'MessagesController@viewSent']);
       Route::get('create', ['as' => 'messages.create', 'uses' => 'MessagesController@create']);
       Route::post('/', ['as' => 'messages.store', 'uses' => 'MessagesController@store']);
       Route::post('ajax/store', ['as' => 'messages.storeAjax', 'uses' => 'MessagesController@storeAjax']);

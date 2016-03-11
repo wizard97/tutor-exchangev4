@@ -36,6 +36,23 @@ class MessagesController extends Controller
   }
 
   /**
+  * Show all of the message the user sent
+  *
+  * @return mixed
+  */
+  public function viewSent(MessageRepository $messageRepository)
+  {
+    $currentUserId = Auth::user()->id;
+
+    $messages = $messageRepository->getAllUsersSentLatest($currentUserId, 15);
+    $unread =$messageRepository->countUsersUnread($currentUserId);
+
+
+    return view('account.messenger.index', compact('messages', 'currentUserId', 'unread'));
+  }
+
+
+  /**
   * Show all of the message threads to the user.
   *
   * @return mixed

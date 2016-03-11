@@ -41,6 +41,18 @@ class MessageRepository extends BaseRepository implements MessageRepositoryContr
 
 
     /**
+    * Returns all of the latest messages with thread by updated_at date.
+    *
+    * @return mixed
+    */
+    public function getAllUsersSentLatest($user_id, $num_page=15)
+    {
+        return $this->model->with('thread')->latest('messages.updated_at')
+            ->fromUser($user_id)->paginate($num_page);
+    }
+
+
+    /**
     * Returns all of the users unread messages
     *
     * @return mixed

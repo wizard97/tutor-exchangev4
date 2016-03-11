@@ -64,8 +64,8 @@ hr { margin-top: 5px;margin-bottom: 10px; }
                 </ul>
             </div>
           -->
-            <a href="{{route('messages.index')}}" type="button" class="btn btn-default" data-toggle="tooltip" title="Refresh">
-                   <span class="glyphicon glyphicon-refresh"></span>   </a>
+            <button id="refresh-btn" type="button" class="btn btn-default" data-toggle="tooltip" title="Refresh">
+                   <span class="glyphicon glyphicon-refresh"></span>   </button>
             <!-- Single button -->
             <!--
             <div class="btn-group">
@@ -97,9 +97,9 @@ hr { margin-top: 5px;margin-bottom: 10px; }
             <a href="{{ route('messages.create') }}" class="btn btn-danger btn-sm btn-block" role="button">COMPOSE</a>
             <hr />
             <ul class="nav nav-pills nav-stacked">
-                <li class="active"><a href="{{route('messages.index')}}"><span class="badge pull-right">{{ $unread }}</span> Inbox </a>
+                <li class="{{ isActiveRoute('messages.index') }}"><a href="{{route('messages.index')}}"><span class="badge pull-right">{{ $unread }}</span> Inbox </a>
                 </li>
-                <li><a href="">Sent Mail</a></li>
+                <li class="{{ isActiveRoute('messages.sent') }}"><a href="{{route('messages.sent')}}">Sent Mail</a></li>
             </ul>
         </div>
         <div class="col-sm-9 col-md-10">
@@ -172,6 +172,10 @@ hr { margin-top: 5px;margin-bottom: 10px; }
 <script>
 $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();
+    // Refresh button
+    $('#refresh-btn').click(function() {
+        location.reload();
+    });
 });
 </script>
 @stop
