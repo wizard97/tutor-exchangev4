@@ -95,12 +95,31 @@ class Message extends Eloquent
     public function scopeForUser($query, $userId)
     {
       $participantTable = $this->getParticipantTable();
-
         return $query
           ->join($participantTable, $participantTable. '.thread_id', '=', $this->getTable(). '.thread_id')
           ->where($participantTable . '.user_id', $userId)
           ->whereNull($participantTable . '.deleted_at')
           ->where($this->getTable().'.user_id', '!=', $userId)
+          ->select($this->getTable().'.*');
+    }
+
+
+    /**
+     * Returns messages adressed from user.
+     *
+     * @param $query
+     * @param $userId
+     * @return mixed
+     */
+    public function scopeFromUser($query, $userId)
+    {
+      $participantTable = $this->getParticipantTable();
+
+        return $query
+          ->join($participantTable, $participantTable. '.thread_id', '=', $this->getTable(). '.thread_id')
+          ->where($participantTable . '.user_id', $userId)
+          ->whereNull($participantTable . '.deleted_at')
+          ->where($this->getTable().'.user_id', '=', $userId)
           ->select($this->getTable().'.*');
     }
 
