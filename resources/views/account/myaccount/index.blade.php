@@ -313,13 +313,6 @@ $( document ).ready(function() {
       $(".clickable-row").click(function() {
         window.document.location = $(this).data("href");
       });
-      $contacts.on( 'draw.dt', function () {
-        $(this).find("td .readmore").readmore({
-          collapsedHeight: 41,
-          moreLink: '<a href="#">Read more</a>',
-          lessLink: '<a href="#">Read less</a>'
-        });
-      } );
       $reviews.on( 'draw.dt', function () {
         $(this).find("td .readmore").readmore({
           collapsedHeight: 41,
@@ -339,7 +332,6 @@ $( document ).ready(function() {
           success : function(data){
             $saved_tutors.DataTable().row($clicked_row).remove();
             $saved_tutors.DataTable().ajax.reload();
-            $contacts.DataTable().ajax.reload();
             $reviews.DataTable().ajax.reload();
             $.ajax({
               type: "GET",
@@ -357,34 +349,6 @@ $( document ).ready(function() {
       });
 
 
-      $('#contacts').on('click', 'i.fa-times, i.fa-plus', function () {
-        var $clicked_row = $(this).closest('tr');
-        var $icon = $clicked_row.find("i.fa");
-        var data = $contacts.DataTable().row($clicked_row).data();
-
-
-        $.ajax({
-          type: "POST",
-          url : "{{route('myaccount.ajaxsavetutor')}}",
-          data : {user_id: data.tutor_id},
-          success : function(data){
-            $saved_tutors.DataTable().ajax.reload();
-            $contacts.DataTable().ajax.reload();
-            $reviews.DataTable().ajax.reload();
-            $.ajax({
-              type: "GET",
-              url : "{{ route('feedback') }}",
-              success: function (data){
-                $("#feedback").replaceWith(function() {
-                  return $(data).hide().fadeIn('slow');
-                });
-
-              }
-            });
-          }
-        });
-
-      });
       $('#reviews').on('click', 'i.fa-times, i.fa-plus', function () {
         var $clicked_row = $(this).closest('tr');
         var $icon = $clicked_row.find("i.fa");
@@ -396,7 +360,6 @@ $( document ).ready(function() {
           data : {user_id: data.tutor_id},
           success : function(data){
             $saved_tutors.DataTable().ajax.reload();
-            $contacts.DataTable().ajax.reload();
             $reviews.DataTable().ajax.reload();
             $.ajax({
               type: "GET",
@@ -412,9 +375,7 @@ $( document ).ready(function() {
         });
 
       });
-      $(document).on("lex:contact_submit", function() {
-        $contacts.DataTable().ajax.reload();
-      });
+
       $(window).load(function(){
         //your code here
         $(".readmore").readmore();
