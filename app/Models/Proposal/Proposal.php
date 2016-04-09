@@ -18,39 +18,47 @@ class Proposal extends Model
     return $this->belongsTo('App\Models\Pending\Status', 'status_id', 'id');
     }
 
-    public function pending_school()
+    /////////////// POLYMORPHIC RELATIONSHIPS FOR PROPOSALS /////////////
+    public function school_proposal()
     {
-        return $this->hasOne('App\Models\Pending\PendingSchool', 'proposal_id', 'id');
+        return $this->morphedByMany('App\Models\Proposal\SchoolProposal', 'proposable');
+        //return $this->hasOne('App\Models\Pending\PendingSchool', 'proposal_id', 'id');
     }
 
-    public function pending_school_subject()
+    public function school_subject_proposal()
     {
-        return $this->hasOne('App\Models\Pending\PendingSchoolSubject', 'proposal_id', 'id');
+        return $this->morphedByMany('App\Models\Proposal\SchoolSubjectProposal', 'proposable');
+        //return $this->hasOne('App\Models\Pending\PendingSchoolSubject', 'proposal_id', 'id');
     }
 
-    public function pending_class()
+    public function class_proposal()
     {
-        return $this->hasOne('App\Models\Pending\PendingClass', 'proposal_id', 'id');
+        return $this->morphedByMany('App\Models\Proposal\ClassProposal', 'proposable');
+        //return $this->hasOne('App\Models\Pending\PendingClass', 'proposal_id', 'id');
     }
 
-    public function pending_level()
+    public function level_proposals()
     {
-        return $this->hasOne('App\Models\Pending\PendingLevel', 'proposal_id', 'id');
+        return $this->morphedByMany('App\Models\Proposal\LevelProposal', 'proposable');
+        //return $this->hasOne('App\Models\Pending\PendingLevel', 'proposal_id', 'id');
     }
 
 
-    public function pending_middle_class()
+    public function middle_class_proposal()
     {
-        return $this->hasOne('App\Models\Pending\PendingMiddleClass', 'proposal_id', 'id');
+        return $this->morphedByMany('App\Models\Proposal\MiddleClassProposal', 'proposable');
+        //return $this->hasOne('App\Models\Pending\PendingMiddleClass', 'proposal_id', 'id');
     }
 
-    public function pending_middle_subject()
+    public function middle_subject_proposal()
     {
-        return $this->hasOne('App\Models\Pending\PendingMiddleSubject', 'proposal_id', 'id');
+        return $this->morphedByMany('App\Models\Proposal\MiddleSubjectProposal', 'proposable');
+        //return $this->hasOne('App\Models\Pending\PendingMiddleSubject', 'proposal_id', 'id');
     }
 
-    public function pending_music()
+    public function music_proposal()
     {
-        return $this->hasOne('App\Models\Pending\PendingMusic', 'proposal_id', 'id');
+        return $this->morphedByMany('App\Models\Proposal\MusicProposal', 'proposable');
+        //return $this->hasOne('App\Models\Pending\PendingMusic', 'proposal_id', 'id');
     }
 }
