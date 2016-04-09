@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Models\Pending;
+namespace App\Models\Proposal;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PendingLevel extends PendingBase
+class LevelProposal extends BaseProposal
 {
-    protected $table = 'pending_levels';
+    protected $table = 'level_proposals';
 
     public function level()
     {
@@ -18,9 +18,9 @@ class PendingLevel extends PendingBase
       return $this->belongsTo('App\Models\SchoolClass\SchoolClass', 'class_id', 'id');
     }
 
-    public function pending_school_class()
+    public function school_class_proposal()
     {
-      return $this->belongsTo('App\Models\Pending\PendingClass', 'pending_class_id', 'id');
+      return $this->belongsTo('App\Models\Proposal\ClassProposal', 'class_proposal_id', 'id');
     }
 
 }

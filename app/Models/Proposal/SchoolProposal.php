@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Models\Pending;
+namespace App\Models\Proposal;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PendingSchool extends PendingBase
+class SchoolProposal extends BaseProposal
 {
-    protected $table = 'pending_schools';
+    protected $table = 'school_proposals';
 
     public function school()
     {
@@ -18,14 +18,14 @@ class PendingSchool extends PendingBase
         return $this->belongsTo('App\Models\Zip\Zip', 'zip_id', 'id');
     }
 
-    public function pending_classes()
+    public function class_proposals()
     {
-      return $this->hasMany('App\Models\Pending\PendingClass', 'pending_school_id', 'id');
+      return $this->hasMany('App\Models\Proposal\PendingClass', 'school_proposal_id', 'id');
     }
 
     public function pending_subjects()
     {
-      return $this->hasMany('App\Models\Pending\PendingSchoolSubject', 'pending_school_id', 'id');
+      return $this->hasMany('App\Models\Proposal\SchoolSubjectProposal', 'school_proposal_id', 'id');
     }
 
 

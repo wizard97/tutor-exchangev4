@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePendingLevelsTable extends Migration
+class CreateLevelProposalsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,18 +12,15 @@ class CreatePendingLevelsTable extends Migration
      */
     public function up()
     {
-        Schema::create('pending_levels', function (Blueprint $table) {
+        Schema::create('level_proposals', function (Blueprint $table) {
           $table->increments('id')->unsigned();
           $table->integer('class_id')->unsigned()->nullable();
           $table->integer('level_num')->unsigned();
           $table->string('level_name', 50);
           //pending refrence to new entry
-          $table->integer('pending_class_id')->unsigned()->nullable();
+          $table->integer('class_proposal_id')->unsigned()->nullable();
           // Refrence back to original if editing
           $table->integer('level_id')->unsigned()->nullable();
-          // Refrence to proposal_table
-          $table->integer('proposal_id')->unsigned()->index();
-          $table->foreign('proposal_id')->references('id')->on('proposals')->onDelete('cascade');
           $table->boolean('to_delete')->default(0);
         });
     }
@@ -35,6 +32,6 @@ class CreatePendingLevelsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('pending_levels');
+        Schema::drop('level_proposals');
     }
 }

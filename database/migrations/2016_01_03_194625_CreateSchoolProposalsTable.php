@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePendingSchoolsTable extends Migration
+class CreateSchoolProposalsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class CreatePendingSchoolsTable extends Migration
      */
     public function up()
     {
-        Schema::create('pending_schools', function (Blueprint $table) {
+        Schema::create('school_proposals', function (Blueprint $table) {
           $table->increments('id');
           $table->integer('zip_id')->unsigned()->index();
           $table->foreign('zip_id')->references('id')->on('zips')->onDelete('cascade');
@@ -23,8 +23,6 @@ class CreatePendingSchoolsTable extends Migration
           // Refrence back to original if editing
           $table->integer('school_id')->unsigned()->nullable();
           // Refrence to proposal_table
-          $table->integer('proposal_id')->unsigned()->index();
-          $table->foreign('proposal_id')->references('id')->on('proposals')->onDelete('cascade');
           $table->boolean('to_delete')->default(0);
 
         });
@@ -37,6 +35,6 @@ class CreatePendingSchoolsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('pending_schools');
+        Schema::drop('school_proposals');
     }
 }

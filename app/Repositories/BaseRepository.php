@@ -1,4 +1,5 @@
 <?php namespace App\Repositories;
+
 abstract class BaseRepository {
 	/**
 	 * The Model instance.
@@ -9,7 +10,7 @@ abstract class BaseRepository {
 	/**
 	 * Get number of records.
 	 *
-	 * @return 
+	 * @return
 	 */
 	public function getNumber()
 	{

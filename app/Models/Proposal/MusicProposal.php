@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Models\Pending;
+namespace App\Models\Proposal;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PendingMusic extends PendingBase
+class MusicProposal extends BaseProposal
 {
-    protected $table = 'pending_music';
+    protected $table = 'music_proposals';
 
     public function music()
     {

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Models\Pending;
+namespace App\Models\Proposal;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PendingMiddleClass extends PendingBase
+class MiddleClassProposal extends BaseProposal
 {
-    protected $table = 'pending_middle_classes';
+    protected $table = 'middle_class_proposals';
 
     public function middle_class()
     {
@@ -18,9 +18,9 @@ class PendingMiddleClass extends PendingBase
       return $this->belongsTo('App\Models\MiddleSubject\MiddleSubject', 'middle_subject_id', 'id');
     }
 
-    public function pending_subject()
+    public function subject_proposal()
     {
-      return $this->belongsTo('App\Models\Pending\PendingMiddleSubject', 'pending_middle_subject_id', 'id');
+      return $this->belongsTo('App\Models\Proposal\MiddleSubjectProposal', 'middle_subject_proposal_id', 'id');
     }
 
 }

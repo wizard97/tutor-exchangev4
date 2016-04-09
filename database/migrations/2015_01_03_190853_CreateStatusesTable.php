@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use App\Models\Pending\Status;
+use App\Models\Proposal\Status;
 
 class CreateStatusesTable extends Migration
 {
