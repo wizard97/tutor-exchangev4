@@ -22,8 +22,11 @@ class CreateSchoolProposalsTable extends Migration
           $table->float('lon');
           // Refrence back to original if editing
           $table->integer('school_id')->unsigned()->nullable();
-          // Refrence to proposal_table
           $table->boolean('to_delete')->default(0);
+
+          // Refrence to proposal_table
+          $table->integer('proposal_id')->unsigned()->index();
+          $table->foreign('proposal_id')->references('id')->on('proposals')->onDelete('cascade');
 
         });
     }

@@ -8,6 +8,11 @@ class Proposal extends Model
 {
     protected $table = 'proposals';
 
+    public function proposable()
+    {
+        return $this->hasMany($this->proposable_type, 'proposal_id', 'id');
+    }
+/*
     public function user()
     {
       return $this->belongsTo('App\Models\User\User', 'user_id', 'id');
@@ -61,4 +66,5 @@ class Proposal extends Model
         return $this->morphedByMany('App\Models\Proposal\MusicProposal', 'proposable');
         //return $this->hasOne('App\Models\Pending\PendingMusic', 'proposal_id', 'id');
     }
+    */
 }

@@ -2,9 +2,8 @@
 namespace App\Repositories\Proposals\Proposal;
 
 use App\Repositories\BaseRepository;
-
-use App\Models\Pending\Proposal;
-
+use App\Models\Proposal\Proposal;
+use App\Models\Proposal\BaseProposal;
 use App\Repositories\Proposals\Status\StatusRepository;
 
 class ProposalRepository extends BaseRepository implements ProposalRepositoryContract
@@ -16,12 +15,20 @@ class ProposalRepository extends BaseRepository implements ProposalRepositoryCon
     $this->statusRepository = $statusRepository;
   }
 
-  public function create($user_id)
+  public function getUsersProposals(int $user_id)
+  {
+      $this->model->where('user_id', $user_id)->with('proposable')->all();
+  }
+
+
+  public function create(int $user_id, BaseProposal $proposable)
   {
     $p = new $this->model;
     $p->status()->associate($this->statusRepository->findBySlug('pend_acpt'));
     $p->user_id = $user_id;
+    $p->proposable_type = $proposable->getMorphClass();
     $p->save();
+    $p->proposable()->save($proposable);
     return $p;
   }
 }

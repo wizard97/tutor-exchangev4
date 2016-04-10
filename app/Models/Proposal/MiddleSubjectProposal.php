@@ -8,6 +8,8 @@ class MiddleSubjectProposal extends BaseProposal
 {
     protected $table = 'middle_subject_proposals';
 
+    protected $proposalType = "Middle School Subject Proposal";
+
     public function middle_subject()
     {
         return $this->belongsTo('App\Models\MiddleSubject\MiddleSubject', 'middle_subject_id', 'id');

@@ -36,4 +36,10 @@ abstract class BaseRepository {
 	{
 		return $this->model->findOrFail($id);
 	}
+
+
+	public function getAll()
+	{
+		return $this->model->all();
+	}
 }

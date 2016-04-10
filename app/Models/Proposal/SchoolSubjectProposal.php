@@ -8,6 +8,8 @@ class SchoolSubjectProposal extends BaseProposal
 {
     protected $table = 'school_subject_proposalss';
 
+    protected $proposalType = "School Subject Proposal";
+
     public function school_subject()
     {
         return $this->belongsTo('App\Models\SchoolSubject\SchoolSubject', 'school_subject_id', 'id');

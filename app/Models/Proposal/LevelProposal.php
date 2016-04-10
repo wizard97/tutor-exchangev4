@@ -8,6 +8,8 @@ class LevelProposal extends BaseProposal
 {
     protected $table = 'level_proposals';
 
+    protected $proposalType = "Level Proposal";
+
     public function level()
     {
         return $this->belongsTo('App\Models\Level\Level', 'level_id', 'id');
