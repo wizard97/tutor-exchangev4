@@ -15,9 +15,9 @@ class ProposalRepository extends BaseRepository implements ProposalRepositoryCon
     $this->statusRepository = $statusRepository;
   }
 
-  public function getUsersProposals(int $user_id)
+  public function getUsersProposals(int $user_id, $per_page = 15)
   {
-      return $this->model->where('user_id', $user_id)->get();
+      return $this->model->where('user_id', $user_id)->paginate($per_page);
   }
 
 

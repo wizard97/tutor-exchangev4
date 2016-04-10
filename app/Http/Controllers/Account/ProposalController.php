@@ -19,7 +19,7 @@ class ProposalController extends Controller
 
     public function index(ProposalRepository $pr)
     {
-        $proposals = $pr->getUsersProposals(\Auth::id());
+        $proposals = $pr->getUsersProposals(\Auth::id(), 15);
         return view('/account/proposals/index', compact('proposals'));
     }
 
