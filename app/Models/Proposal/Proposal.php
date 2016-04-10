@@ -12,7 +12,13 @@ class Proposal extends Model
     {
         return $this->hasMany($this->proposable_type, 'proposal_id', 'id');
     }
-/*
+
+    public function getProposalType()
+    {
+        return $this->proposable()->first()->getProposalType();
+    }
+
+
     public function user()
     {
       return $this->belongsTo('App\Models\User\User', 'user_id', 'id');
@@ -20,9 +26,9 @@ class Proposal extends Model
 
     public function status()
     {
-    return $this->belongsTo('App\Models\Pending\Status', 'status_id', 'id');
+    return $this->belongsTo('App\Models\Proposal\Status', 'status_id', 'id');
     }
-
+/*
     /////////////// POLYMORPHIC RELATIONSHIPS FOR PROPOSALS /////////////
     public function school_proposal()
     {

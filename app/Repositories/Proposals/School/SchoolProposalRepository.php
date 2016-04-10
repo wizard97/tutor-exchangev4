@@ -3,7 +3,7 @@ namespace App\Repositories\Proposals\School;
 
 use App\Repositories\BaseRepository;
 
-use App\Models\Pending\PendingSchool;
+use App\Models\Proposal\PendingSchool;
 
 use App\Repositories\Proposals\Proposal\ProposalRepository;
 use App\Repositories\Proposals\Status\StatusRepository;

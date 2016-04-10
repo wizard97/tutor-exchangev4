@@ -3,7 +3,7 @@ namespace App\Repositories\Proposals\Status;
 
 use App\Repositories\BaseRepository;
 
-use App\Models\Pending\Status;
+use App\Models\Proposal\Status;
 
 class StatusRepository extends BaseRepository implements StatusRepositoryContract
 {

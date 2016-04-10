@@ -7,11 +7,11 @@ abstract class BaseProposal extends Model
 {
     public $timestamps = false;
 
-    protected $proposalType = "";
+    protected $proposalType = " ";
 
     public function getProposalType()
     {
-        return $proposalType;
+        return $this->proposalType;
     }
 
     public function proposal()

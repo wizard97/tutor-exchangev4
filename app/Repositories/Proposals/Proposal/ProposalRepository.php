@@ -17,7 +17,7 @@ class ProposalRepository extends BaseRepository implements ProposalRepositoryCon
 
   public function getUsersProposals(int $user_id)
   {
-      $this->model->where('user_id', $user_id)->with('proposable')->all();
+      return $this->model->where('user_id', $user_id)->get();
   }
 
 
