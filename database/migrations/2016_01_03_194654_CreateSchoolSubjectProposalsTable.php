@@ -23,9 +23,8 @@ class CreateSchoolSubjectProposalsTable extends Migration
           $table->integer('school_subject_id')->unsigned()->nullable();
           $table->boolean('to_delete')->default(0);
 
-          // Refrence to proposal_table
-          $table->integer('proposal_id')->unsigned()->index();
-          $table->foreign('proposal_id')->references('id')->on('proposals')->onDelete('cascade');
+          // to allow polymorphic relation
+          //$table->increments('proposal_id');
         });
     }
 

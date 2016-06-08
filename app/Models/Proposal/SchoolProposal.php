@@ -10,6 +10,7 @@ class SchoolProposal extends BaseProposal
 
     protected $proposalType = "School Proposal";
 
+    // Replacing
     public function school()
     {
         return $this->belongsTo('App\Models\School\School', 'school_id', 'id');

@@ -8,8 +8,9 @@ class MiddleClassProposal extends BaseProposal
 {
     protected $table = 'middle_class_proposals';
 
-    protected $proposalType = "Middle School Class Proposal";
+    protected $proposing= "Middle School Class Proposal";
 
+    // Replacing
     public function middle_class()
     {
         return $this->belongsTo('App\Models\MiddleClass\MiddleClass', 'middle_class_id', 'id');

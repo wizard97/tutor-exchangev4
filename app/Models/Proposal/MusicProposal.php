@@ -8,8 +8,9 @@ class MusicProposal extends BaseProposal
 {
     protected $table = 'music_proposals';
 
-    protected $proposalType = "Music Proposal";
+    protected $proposing = "Music Proposal";
 
+    // Replacing
     public function music()
     {
         return $this->belongsTo('App\Models\Music\Music', 'music_id', 'id');

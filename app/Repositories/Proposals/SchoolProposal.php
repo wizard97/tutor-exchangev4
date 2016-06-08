@@ -1,183 +1,99 @@
 <?php
 namespace App\Repositories\Proposals;
-use App\Models\Pending\Proposal;
-use App\Models\Pending\PendingSchool;
-use App\Models\Pending\Status;
-use App\School;
-use App\Zip;
-use App\User;
+use App\Models\Proposal\Proposal;
+use App\Models\Proposal\SchoolProposal;
+use App\Models\Proposal\Status;
+use App\Models\School\School;
+use App\Models\Zip\Zip;
+use App\Models\Proposal\ProposalType;
+use App\Exceptions\ProposalException;
+/*
+Must impliment the following:
+protected abstract function createProposable($input);
+public abstract function validate(); // throws ProposalException
+public abstract function parent(); // throws ProposalException
+public abstract function children(); // throws ProposalException
+public abstract function getType();
+*/
 
 class SchoolProposal extends BaseProposal implements ProposalContract
 {
-  protected $status;
-  protected $zip;
-  protected $user;
 
-  protected $pend_school;
-  protected $schl;
-
-  protected $pend_school_model;
-  protected $school_model;
-
-  // True if editing, false if new
-  protected $is_edit;
-
-  public function __construct(Proposal $prop, Status $status, Zip $zip, User $user, PendingSchool $pendSchool, School $school)
-  {
-    Parent::__construct($prop, $status, $user);
-    $this->zip = $zip;
-    $this->pend_school = $pendSchool;
-    $this->schl = $school;
-  }
-
-  public function load_by_id($pid)
-  {
-    Parent::load_by_id($pid);
-    $this->pend_school_model = $this->prop_model->pending_school;
-    $this->update();
-    $this->validate();
-  }
-
-  public function create_new($input)
-  {
-    Parent::create_new($input['uid']);
-
-    $this->pend_school_model = new $this->pend_school;
-    $this->pend_school_model->to_delete = $to_delete;
-
-    if (!is_null($input['school_id'])) $this->pend_school_model->school_id = $input['school_id'];
-
-    if ($input['to_delete'])
+    public function __construct(Proposal $prop, Status $status, Zip $zip, SchoolProposal $pendSchool, School $school)
     {
-      $scl = $this->schl->findOrFail($input['school_id']);
-      $this->pend_school_model->school_name = $scl->school_name;
-      $this->pend_school_model->zip_id = $scl->zip_id;
+        Parent::__construct($prop, $status);
+        $this->zip = $zip;
+        $this->pend_school = $pendSchool;
+        $this->schl = $school;
+        $this->model = new $this->pend_school;
     }
-    else {
-      $this->pend_school_model->school_name = $input['school_name'];
-      $this->pend_school_model->zip_id = $this->zip->findOrFail($input['zip_id'])->id;
-    }
-    $this->update();
-    $this->validate();
-  }
 
-  public function save()
-  {
-    $this->validate();
-    return $this->save_helper();
-  }
-
-  protected function save_helper()
-  {
-    Parent::save_helper();
-
-    $this->pend_school_model->proposal_id = $this->prop_model->id;
-    $this->pend_school_model->save();
-    $this->update();
-    return $this->prop_model->id;
-  }
-
-  public function accept()
-  {
-    $this->validate();
-    Parent::accept();
-
-    $sid = null;
-
-    if($this->is_edit())
+    public function parent()
     {
-      //delete?
-      if ($this->pend_school_model->to_delete)
-      {
-        $this->school_model->delete();
-        $sid = null;
-      }
-      else {
-        //update attributes
-        $this->school_model->zip_id = $this->pend_school_model->zip_id;
-        $this->school_model->school_name = $this->pend_school_model->school_name;
-        $this->school_model->save();
-        $sid = $this->school_model->id;
-      }
-
-    }
-    else {
-      $to_save = new $this->schl;
-      $to_save->zip_id = $this->pend_school_model->zip_id;
-      $to_save->school_name = $this->pend_school_model->school_name;
-      $to_save->save();
-      $sid = $to_save->id;
+        return NULL;
     }
 
-    $this->pend_school_model->school_id = $sid;
-    // Save without validation
-    $this->save_helper();
-    $this->update();
-    return $this->prop_model->id;
-  }
-
-
-  public function validate()
-  {
-    $this->update();
-
-    $p = true;
-
-    // Make sure proposal is valid
-    $p &= Parent::validate();
-
-    // Make sure school_id is set if edit
-    if ($this->is_edit())
+    public function children()
     {
-      // Are there any pending edits?
-      $sid = $this->status->where('slug', 'pend_acpt')->firstOrFail()->id;
-      $qry = $this->pend_school
-          ->join('proposals', 'proposals.id', '=', 'pending_schools.proposal_id')
-          ->where('proposals.status_id', $sid)
-          ->where('pending_schools.school_id', $this->pend_school_model->school_id);
-
-      if ($this->is_saved())
-      {
-        $qry->where('pending_schools.proposal_id', '!=', $this->prop_model->id);
-      }
-      $count =$qry->get()->count();
-      if ($count !== 0) throw new \Exception('There are existing pending edits for school.');
-
-      $p &= !is_null($this->pend_school_model->school()->first());
-      if (!$p) throw new \Exception('Trying to edit an unknown school.');
+        // TODO:
+        return array();
     }
-    else
+
+    public function getType()
     {
-      //must be false
-      $p &= $this->pend_school_model->to_delete == false;
-      if (!$p) throw new \Exception('Can not delete an unknown school.');
+        if ($this->model->to_delete)
+            return ProposalType::DELETE;
+        else if (!is_null($this->model->school_id))
+            return ProposalType::EDIT;
+        else
+            return ProposalType::ADD;
     }
 
-    $p &= !is_null($this->pend_school_model->zip);
-    if (!$p) throw new \Exception('Unknown zip_id.');
-    return true;
-  }
+    protected function createProposable($input)
+    {
+        $this->model = new $this->pend_school;
 
-  public function dependencies()
-  {
-    // no dependencies
-    return [];
-  }
+        if (!is_null($input['school_id'])) $this->model->school_id = $input['school_id'];
 
-  public function is_edit()
-  {
-    return $this->is_edit;
-  }
+        if ($input['to_delete'])
+        {
+            $scl = $this->schl->findOrFail($input['school_id']);
+            $this->model->school_name = $scl->school_name;
+            $this->model->zip_id = $scl->zip_id;
+            $this->model->to_delete = true;
+        }
+        else {
+            $this->model->school_name = $input['school_name'];
+            $this->model->zip_id = $this->zip->findOrFail($input['zip_id'])->id;
+            $this->model->to_delete = false;
+        }
+    }
 
-  public function is_saved()
-  {
-    return !is_null($this->pend_school_model->proposal_id) && Parent::is_saved();
-  }
+    public function validate()
+    {
+        // Make sure school_id is set if edit
+        if ($this->getType() === ProposalType::EDIT || $this->getType() === ProposalType::DELETE)
+        {
+            // Are there any pending edits?
+            $sid = $this->status->getStatusId("pend_acpt");
+            $qry = $this->pend_school->where("school_id", $sid)->has('proposal');
 
-  private function update()
-  {
-    // Can be null
-    $this->school_model = $this->pend_school_model->school()->first();
-    $this->is_edit = !is_null($this->school_model);
-  }
+            if ($qry->get()->count() !== 0)
+                throw new ProposalException('There are existing pending edits for school.');
+
+
+            if (is_null($this->model->school()->first()))
+                throw new ProposalException('Trying to edit an unknown school.');
+        }
+
+        if (is_null($this->model->school_name))
+            throw new ProposalException('All the fields must be filled out.');
+
+        if (is_null($this->model->zip))
+            throw new ProposalException('Unknown town/city.');
+
+    }
+
+
+
 }

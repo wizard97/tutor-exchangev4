@@ -3,6 +3,7 @@
 namespace App\Models\Proposal;
 
 use Illuminate\Database\Eloquent\Model;
+use ProposalType;
 
 class Proposal extends Model
 {
@@ -10,12 +11,12 @@ class Proposal extends Model
 
     public function proposable()
     {
-        return $this->hasMany($this->proposable_type, 'proposal_id', 'id');
+        return $this->morphTo();
     }
 
-    public function getProposalType()
+    public function getProposalName()
     {
-        return $this->proposable()->first()->getProposalType();
+        return $this->proposable()->getProposalName();
     }
 
 
@@ -28,6 +29,8 @@ class Proposal extends Model
     {
     return $this->belongsTo('App\Models\Proposal\Status', 'status_id', 'id');
     }
+
+
 /*
     /////////////// POLYMORPHIC RELATIONSHIPS FOR PROPOSALS /////////////
     public function school_proposal()

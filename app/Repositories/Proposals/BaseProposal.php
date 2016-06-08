@@ -1,85 +1,86 @@
 <?php
 namespace App\Repositories\Proposals;
-use App\Models\Pending\Proposal;
-use App\User;
-use App\Models\Pending\Status;
+use App\Exception\ProposalException;
+use App\Models\Proposal\Status;
+use App\Repositories\Proposals\Proposal\ProposalRepository;
+use App\Models\Proposal\Proposal;
+use App\Models\Proposal\ProposalType;
+use App\Models\Proposal\BaseProposal as BaseProposalModel;
 
 abstract class BaseProposal implements ProposalContract
 {
-  protected $prop_model;
   protected $prop;
+  protected $model;
+  protected $type;
 
-  public function __construct(Proposal $proposal, Status $status, User $user)
+  public function __construct(Proposal $proposal, Status $stat)
   {
-    $this->prop = $proposal;
-    $this->status = $status;
-    $this->user = $user;
+    $this->status = $stat;
+    $this->prop = new $proposal;
+    $this->model = NULL;
   }
 
-  public function load_by_id($prop_id)
+  // Returns an instance of BaseProposal
+  protected abstract function createProposable($input);
+  public abstract function validate(); // throws ProposalException
+  public abstract function parent(); // throws ProposalException
+  public abstract function children(); // throws ProposalException
+  public abstract function getType();
+
+
+
+  public function create($uid, $input)
   {
-    $this->prop_model = $this->prop->where('id', $prop_id)->firstOrFail();
+      $this->createProposable($input); //should fill in model field
+      $this->prop->type = $this->getType();
+      $this->prop->user_id = $uid;
+      $this->prop->title = $input['title'];
+      $this->prop->status_id = $this->status->getStatusId("pend_acpt");
   }
 
-  public function create_new($uid)
+  public function find($pid)
   {
-    $this->prop_model = new $this->prop;
-    // Figure out if updating or adding new listing
-    $this->prop_model->status_id = $this->status->where('slug', 'pend_acpt')->firstOrFail()->id;
-    $this->prop_model->user_id = $this->user->findOrFail($uid)->id;
+      $this->prop = $this->prop->findOrFail($pid);
+      $this->model = $this->prop->proposal;
   }
 
   public function save()
   {
-    $this->validate();
-    return $this->save_helper();
+      $this->validate();
+      \DB::transaction(function () {
+          $this->model->save();
+          $this->model->proposal()->save($this->prop);
+      });
   }
-  protected function save_helper()
-  {
-    $this->prop_model->save();
-    return $this->prop_model->id;
-  }
+
 
   public function reject()
   {
-    $this->prop_model->status_id = $this->status->where('slug', 'rejected')->firstOrFail()->id;
-    $this->prop_model->save();
-    return $this->prop_model->id;
+      foreach ($this->children() as $c)
+      {
+          $c->reject();
+      }
+      $this->prop->status()->attach($this->status->getStatusId('rejected'));
   }
 
   public function accept()
   {
-    $this->validate();
-    $this->prop_model->status_id = $this->status->where('slug', 'accepted')->firstOrFail()->id;
-    $this->prop_model->save();
-
-    return $this->prop_model->id;
+      foreach ($this->children() as $c)
+      {
+          $c->accept();
+      }
+      $this->prop->status()->attach($this->status->getStatusId('accepted'));
   }
 
-  public function validate()
-  {
-
-    $p = true;
-
-    $p &= !is_null($this->prop_model->status);
-    if (!$p) throw new \Exception('Unknown status.');
-
-    $p &= $this->prop_model->status()->first()->slug === 'pend_acpt';
-    if (!$p) throw new \Exception('The request is closed.');
-
-    $p &= !is_null($this->prop_model->user);
-    if (!$p) throw new \Exception('Unknown user.');
-    return $p;
-  }
 
   public function is_accepted()
   {
-    return $this->prop_model->status()->first()->slug === 'accepted';
+    return $this->model->status()->first()->slug === 'accepted';
   }
 
   public function is_saved()
   {
-    return !is_null($this->prop_model->id);
+    return !is_null($this->model->proposal->id);
   }
 
 }

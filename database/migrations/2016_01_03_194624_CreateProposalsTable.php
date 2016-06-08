@@ -21,7 +21,10 @@ class CreateProposalsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
 
+            // Kind
+            $table->string('type')->index();
             //Crap for polymorphic relationship
+            $table->integer('proposable_id')->unsigned();
             $table->string('proposable_type');
         });
     }
