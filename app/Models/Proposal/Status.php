@@ -13,4 +13,9 @@ class Status extends Model
     {
         return $this->where('slug', $slug)->firstOrFail()->id;
     }
+
+    public function proposals()
+    {
+        return $this->hasMany('App\Models\Proposal\Proposal');
+    }
 }

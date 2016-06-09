@@ -9,7 +9,7 @@ use App\Models\Proposal\BaseProposal as BaseProposalModel;
 
 abstract class BaseProposal implements ProposalContract
 {
-  protected $prop;
+  private $prop;
   protected $model;
   protected $type;
 
@@ -22,6 +22,7 @@ abstract class BaseProposal implements ProposalContract
 
   // Returns an instance of BaseProposal
   protected abstract function createProposable($input);
+  protected abstract function acceptProposal();
   public abstract function validate(); // throws ProposalException
   public abstract function parent(); // throws ProposalException
   public abstract function children(); // throws ProposalException
@@ -56,20 +57,23 @@ abstract class BaseProposal implements ProposalContract
 
   public function reject()
   {
+      if ($this->status->slug === 'accepted')
+            throw new \Exception("The proposal has already been accepted");
+
       foreach ($this->children() as $c)
-      {
           $c->reject();
-      }
-      $this->prop->status()->attach($this->status->getStatusId('rejected'));
+
+      $this->prop->status()->associate($this->status->getStatusId('rejected'))->save();
   }
 
   public function accept()
   {
+      $this->acceptProposal();
+      $this->prop->status()->associate($this->status->getStatusId('accepted'))->save();
+
       foreach ($this->children() as $c)
-      {
           $c->accept();
-      }
-      $this->prop->status()->attach($this->status->getStatusId('accepted'));
+
   }
 
 

@@ -27,7 +27,7 @@ class Proposal extends Model
 
     public function status()
     {
-    return $this->belongsTo('App\Models\Proposal\Status', 'status_id', 'id');
+        return $this->belongsTo('App\Models\Proposal\Status', 'status_id', 'id');
     }
 
 

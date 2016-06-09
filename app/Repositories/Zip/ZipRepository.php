@@ -35,4 +35,11 @@ class ZipRepository extends BaseRepository implements ZipRepositoryContract
 
     return $matches;
   }
+
+  public function find($zip, $city)
+  {
+      $search = new $this->model;
+      return $search->where("zip_code", $zip)->where('city', $city)->firstOrFail();
+  }
+
 }
